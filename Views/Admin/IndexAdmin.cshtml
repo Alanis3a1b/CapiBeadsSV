@@ -1,8 +1,8 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "_LayoutAdmin"; // Aquí indicas el layout específico
+    ViewData["Title"] = "Home Page";
+    var tickets = ViewBag.Tickets; // Otros datos que necesitas pasar
 }
-
-
 <main>
     <section class="row" aria-labelledby="aspnetTitle">
         <h1 id="title">ASP.NET</h1>
