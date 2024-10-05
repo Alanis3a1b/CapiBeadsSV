@@ -1,22 +1,128 @@
-html {
-  font-size: 14px;
-}
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
+    font-size: 14px;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+}
+
+.bg-purple {
+    background-image: url('../images/fondoMontanasMoradas.jpg');
+    background-size: cover;
+    background-position:center;
+}
+
+.btnEmpleado {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    width: 650px;
+}
+
+.btnEmpleado {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    width: 650px;
+    float: right;
+}
+
+hr {
+    border-top: 1px solid #ccc;
+    margin-top: 20px;
+}
+
+/*login*/
+.Fondo {
+    margin-top: -55px;
+    padding-top: 120px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-left: -15px;
+    margin-right: -15px;
+    background-image: url('/images/fondoLogin2.jpg');
+    padding-bottom: 120px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    background-color: rgba(59, 2, 66, 0.8);
+    border-radius: 10px;
+    box-shadow: rgba(44, 44, 44, 0.1));
+    text-align: center;
+    padding: 20px 30px 40px;
+    margin-top: 200px;
+}
+
+form {
+    /*display: flex;*/
+    flex-direction: column;
+}
+
+
+
+/*TicketsEmpleado*/
+.button-custom {
+    background-color: #562888;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    justify-content: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px; /* Optional: adds rounded corners */
+}
+
+.Con {
+    display: flex;
+    justify-content: space-between; /* Ajusta el espacio entre los contenedores */
+}
+
+.box {
+    display: inline-block;
+    width: 45%; /* Ajusta el ancho de cada contenedor */
+    padding: 20px;
+    margin: 0 2.5%; /* Espacio entre los contenedores */
+    background-color: #d3d3d3;
+    /*border: 1px solid black;*/
+    vertical-align: top; /* Alineación vertical */
+}
+
+.btnGuaradar {
+    margin: 5px;
+}
+
+.left-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+/*TicketsClientes*/
+.contact-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px; /* Ajusta el espacio entre columnas */
 }
