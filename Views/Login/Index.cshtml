@@ -1,5 +1,5 @@
 ﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+    Aqui arriba agregare el layout del inicio
 *@
 @{
 }
@@ -19,7 +19,7 @@
                  style="max-width: 400px; margin-left: auto; margin-right: auto; padding-bottom: 30px; margin-bottom: 20%; border-radius: 8px; margin-top: 10%; padding-top: 10px; font-family: 'Montserrat' , sans-serif;">
                 
                 <div class="img-fluid mx-auto d-block mb-3" style="width: 30%">
-                    <img src="/images/logo.svg" />
+                    @*<img src="/images/logo.svg" />*@
                 </div>
 
                 <div class="m-5 text-white">
@@ -29,24 +29,25 @@
                 <div class="col-sm-2 text-white">
                     <label>Usuario</label>
                 </div>
-                <div class="col-sm-4" style="width: 100%; padding: 10px; margin-bottom: 10px;  border-radius: 4px;">
-                    @Html.TextBox("usuario", "", new { @class = "form-control", style = "background-color: #1e0029; color: white;" })
-                </div>
+                <!--Esto funcionara una vez ya cree la base de datos, por ahorita solo es de ejemplo-->
+                <!div class="col-sm-4" style="width: 100%; padding: 10px; margin-bottom: 10px;  border-radius: 4px;">
+                   @* @Html.TextBox("usuario", "", new { @class = "form-control", style = "background-color: #1e0029; color: white;" }) *@
+                </!div>
 
                 <div class="col-sm-2 text-white">
                     <label>Contraseña</label>
                 </div>
                 <div class="col-sm-4" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
-                    @Html.TextBox("contrasenya", "", new { @class = "form-control", type = "password", style = "background-color: #1e0029; color: white;" })
+                    @* @Html.TextBox("contrasenya", "", new { @class = "form-control", type = "password", style = "background-color: #1e0029; color: white;" }) *@
                 </div>
 
                 <!--Comprobacion por si hay algun mensaje enviado proveniente del backend-->
-                @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+                @* @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
                 {
                     <div class="alert alert-danger" role="alert">
                         @ViewBag.Mensaje
                     </div>
-                }
+                } *@ 
 
                 <input type="submit" class="btn btn-light" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #1e0029; border-radius: 4px;" value="Iniciar Sesión" />
 
