@@ -12,9 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Admin\" />
-    <Folder Include="Views\Usuario\" />
-    <Folder Include="Views\Vendedor\" />
     <Folder Include="wwwroot\IMG\" />
   </ItemGroup>
 
