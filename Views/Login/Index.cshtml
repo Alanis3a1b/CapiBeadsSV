@@ -2,6 +2,7 @@
     Aqui arriba agregare el layout del inicio
 *@
 @{
+    Layout = "_LoginLayout";
 }
 
 <head>
@@ -11,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
-<form asp-action="ValidarUsuario"> <!--Por ahorita este metodo no funcionara porque aun no he creado la bd de las validaciones-->
+<form asp-action="ValidarUsuario"> 
     <!--Lineas para capturar la informacion-->
     <div class="Fondo">
         <div class="container-fluid">
@@ -23,13 +24,23 @@
                 <h4>Bienvenido</h4>
 
                 <!-- Campo de Email -->
-                <label>Email</label>
-                <input type="text" name="email" class="form-control" placeholder="Ingresa tu email">
+                <label>Usuario</label>
+                <div class="col-sm-4" style="width: 100%; padding: 10px; margin-bottom: 10px;  border-radius: 4px;">
+                    @Html.TextBox("usuario", "", new { @class = "form-control", style = "background-color: #1e0029; color: white;" })
+                </div>
 
                 <!-- Campo de Contraseña -->
                 <label>Contraseña</label>
-                <input type="password" name="password" class="form-control" placeholder="Ingresa tu contraseña">
+                <div class="col-sm-4" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
+                    @Html.TextBox("contrasenya", "", new { @class = "form-control", type = "password", style = "background-color: #1e0029; color: white;" })
+                </div>
 
+                @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @ViewBag.Mensaje
+                    </div>
+                }
                 <!-- Botón de Iniciar Sesión -->
                 <input type="submit" class="btn-login" value="Iniciar Sesión">
 
