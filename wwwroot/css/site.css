@@ -99,6 +99,9 @@ h4{
     border-radius: 4px;
     font-family: 'Press Start 2P', sans-serif;
 }
+    .btn-login:hover {
+        background: #856743;
+    }
 p{
     margin-top:20px;
 }
