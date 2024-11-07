@@ -1,0 +1,47 @@
+﻿<head>
+    <link rel="stylesheet" href="/css/site.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<form asp-action="ValidarUsuario">
+    <!--Lineas para capturar la informacion-->
+    <div class="Fondo">
+        <div class="container-fluid">
+            <div class="login-container">
+                <!-- Logo -->
+                <img src="/IMG/logo.jpg" alt="CapiBeads Logo" class="img-fluid mx-auto d-block mb-3" style="width: 250px; border-radius: 8px;">
+
+                <!-- Encabezado -->
+                <h4>Bienvenido</h4>
+
+                <!-- Campo de Email -->
+                <label>Usuario</label>
+                <div class="col-sm-4" style="width: 100%; padding: 10px; margin-bottom: 10px;  border-radius: 4px;">
+                    @Html.TextBox("usuario", "", new { @class = "form-control", style = "background-color: #1e0029; color: white;" })
+                </div>
+
+                <!-- Campo de Contraseña -->
+                <label>Contraseña</label>
+                <div class="col-sm-4" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
+                    @Html.TextBox("contrasenya", "", new { @class = "form-control", type = "password", style = "background-color: #1e0029; color: white;" })
+                </div>
+
+                @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @ViewBag.Mensaje
+                    </div>
+                }
+                <!-- Botón de Iniciar Sesión -->
+                <input type="submit" class="btn-login" value="Iniciar Sesión">
+
+                <!-- Enlace de Crear cuenta -->
+                <p>¿Todavía no tienes una cuenta creada? <a href="#" class="text-link">Crea una ahora</a></p>
+            </div>
+        </div>
+    </div>
+
+
+</form>
