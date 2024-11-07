@@ -20,3 +20,100 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+.bg-purple {
+    background-color: #0A280D;
+    background-size: cover;
+    background-position: center;
+}
+
+.btnEmpleado {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    width: 650px;
+}
+
+.btnEmpleado {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    width: 650px;
+    float: right;
+}
+
+hr {
+    border-top: 1px solid #FFFFFF;
+    margin-top: 20px;
+}
+
+
+.login-container {
+    background-color: #0A280D;
+    max-width: 500px;
+    padding: 20px;
+    border-radius: 8px;
+    margin: auto;
+    margin-top: 5%;
+    text-align: center;
+}
+
+    .login-container h4 {
+        font-family: 'Press Start 2P', sans-serif;
+        font-size: 24px;
+        color: #ffffff;
+    }
+
+label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px; /* Añade un pequeño margen debajo del label para separar del input */
+}
+
+h4 {
+    margin-bottom: 30px;
+}
+
+.form-control {
+    background-color: #856743;
+    color: white;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+    .form-control::placeholder {
+        color: white;
+        opacity: 0.5;
+    }
+
+.btn-login {
+    background: linear-gradient( #856743 0%, #2F261B 100%);
+    border: none;
+    color: white;
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    border-radius: 4px;
+    font-family: 'Press Start 2P', sans-serif;
+}
+
+    .btn-login:hover {
+        background: #856743;
+    }
+
+p {
+    margin-top: 20px;
+}
+
+.text-link {
+    margin-top: 20px;
+    color: #A5D6A7;
+    text-decoration: none;
+}
+
+    .text-link:hover {
+        text-decoration: underline;
+    }
