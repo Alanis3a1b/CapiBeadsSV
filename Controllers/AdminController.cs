@@ -3,64 +3,74 @@ using CapiBeadsSV.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CapiBeadsSV.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly capibeadsBDContext _context;
+        private readonly capibeadsBDContext _capibeadsDBContext;
 
-        public AdminController(capibeadsBDContext context)
+        public AdminController(capibeadsBDContext capibeadsDBContext)
         {
-            _context = context;
+            _capibeadsDBContext = capibeadsDBContext;
         }
 
         // GET: Admin/Usuarios
         public async Task<IActionResult> IndexAdmin()
         {
-            var usuarios = await _context.usuarios.ToListAsync();
-            return View(usuarios);
+            var usuarios = (from m in _capibeadsDBContext.usuarios
+                                   join r in _capibeadsDBContext.rol on m.id_rol equals r.id_rol
+                                   select new
+                                   {
+                                       m.id_usuario,
+                                       m.nombre,
+                                       m.correo,
+                                       rol = r.nombre_rol,
+                                       m.telefono_contacto,
+                                       m.usuario,
+                                       m.contrasenya
+                                   }).ToList();
+
+            ViewBag.usuarios = usuarios;
+
+            return View();
         }
 
-        // GET: Admin/CreateUsuario
-        public IActionResult CreateUsuario()
+        public IActionResult CreateUsuarioAdmin()
+        {
+            //Lista de los roles
+            var listaDeRoles = (from m in _capibeadsDBContext.rol
+                                select m).ToList();
+            ViewData["listadoDeRoles"] = new SelectList(listaDeRoles, "id_rol", "nombre_rol");
+
+            return View();
+        }
+
+        //AA: Funcion para agregar los usuarios
+        public IActionResult CreateUsuarios(usuarios usuarioNuevo)
+        {
+            _capibeadsDBContext.Add(usuarioNuevo);
+            _capibeadsDBContext.SaveChanges();
+            return RedirectToAction("Success");
+        }
+
+        public IActionResult Success()
         {
             return View();
         }
 
-        // POST: Admin/CreateUsuario
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateUsuario(usuarios usuario)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(usuario);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(IndexAdmin));
-            }
-            return View(usuario);
-        }
-
-        // GET: Admin/EditUsuario/5
-        public async Task<IActionResult> EditUsuario(int? id)
+        //AA: Funciones para editar usuarios
+        public IActionResult EditUsuario(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var usuario = await _context.usuarios.FindAsync(id);
-            if (usuario == null)
-            {
-                return NotFound();
-            }
-            return View(usuario);
+            return View();
         }
 
-        // POST: Admin/EditUsuario/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUsuario(int id, usuarios usuario)
         {
             if (id != usuario.id_usuario)
@@ -70,40 +80,28 @@ namespace CapiBeadsSV.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Update(usuario);
-                await _context.SaveChangesAsync();
+                _capibeadsDBContext.Update(usuario);
+                await _capibeadsDBContext.SaveChangesAsync();
                 return RedirectToAction(nameof(IndexAdmin));
             }
             return View(usuario);
         }
 
-        // GET: Admin/DeleteUsuario/5
-        public async Task<IActionResult> DeleteUsuario(int? id)
+        //AA: Funcion para eliminar
+        public IActionResult DeleteUsuario(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var usuario = await _context.usuarios
-                .FirstOrDefaultAsync(m => m.id_usuario == id);
+            var usuario = (from m in _capibeadsDBContext.usuarios
+                                   where m.id_usuario == id
+                                   select m).FirstOrDefault();
             if (usuario == null)
-            {
-                return NotFound();
-            }
+                return NotFound ();
 
-            return View(usuario);
+            _capibeadsDBContext.usuarios.Attach(usuario);
+            _capibeadsDBContext.usuarios.Remove(usuario);
+            _capibeadsDBContext.SaveChanges();
+
+            return RedirectToAction("IndexAdmin");
         }
 
-        // POST: Admin/DeleteUsuario/5
-        [HttpPost, ActionName("DeleteUsuario")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var usuario = await _context.usuarios.FindAsync(id);
-            _context.usuarios.Remove(usuario);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(IndexAdmin));
-        }
     }
 }

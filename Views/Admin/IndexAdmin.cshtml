@@ -1,11 +1,12 @@
 ﻿@{
-    Layout = "_LayoutAdmin"; // Aquí indicas el layout específico
+    Layout = "_LayoutAdmin"; 
+    var usuarios = ViewBag.usuarios;
 }
 <main>
-    @model IEnumerable<CapiBeadsSV.Models.usuarios>
+    @*model IEnumerable<CapiBeadsSV.Models.usuarios>*@
 
     <h2>Usuarios</h2>
-    <a asp-action="CreateUsuario" class="btn btn-primary">Agregar Usuario</a>
+    <a asp-action="CreateUsuarioAdmin" class="btn btn-primary">Agregar Usuario</a>
     <table class="table">
         <thead>
             <tr>
@@ -18,14 +19,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var usuario in Model)
+            @foreach (var usuario in usuarios)
             {
                 <tr>
                     <td>@usuario.nombre</td>
                     <td>@usuario.correo</td>
                     <td>@usuario.telefono_contacto</td>
                     <td>@usuario.usuario</td>
-                    <td>@usuario.id_rol</td>
+                    <td>@usuario.rol</td>
                     <td>
                         <a asp-action="EditUsuario" asp-route-id="@usuario.id_usuario" class="btn btn-warning">Editar</a>
                         <a asp-action="DeleteUsuario" asp-route-id="@usuario.id_usuario" class="btn btn-danger">Eliminar</a>
