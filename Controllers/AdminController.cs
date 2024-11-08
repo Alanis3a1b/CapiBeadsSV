@@ -1,85 +1,109 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using CapiBeadsSV.Models;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CapiBeadsSV.Controllers
 {
     public class AdminController : Controller
     {
-        // GET: AdminController
-        public ActionResult IndexAdmin()
+        private readonly capibeadsBDContext _context;
+
+        public AdminController(capibeadsBDContext context)
+        {
+            _context = context;
+        }
+
+        // GET: Admin/Usuarios
+        public async Task<IActionResult> IndexAdmin()
+        {
+            var usuarios = await _context.usuarios.ToListAsync();
+            return View(usuarios);
+        }
+
+        // GET: Admin/CreateUsuario
+        public IActionResult CreateUsuario()
         {
             return View();
         }
 
-        // GET: AdminController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: AdminController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AdminController/Create
+        // POST: Admin/CreateUsuario
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> CreateUsuario(usuarios usuario)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                _context.Add(usuario);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(IndexAdmin));
             }
-            catch
-            {
-                return View();
-            }
+            return View(usuario);
         }
 
-        // GET: AdminController/Edit/5
-        public ActionResult Edit(int id)
+        // GET: Admin/EditUsuario/5
+        public async Task<IActionResult> EditUsuario(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var usuario = await _context.usuarios.FindAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            return View(usuario);
         }
 
-        // POST: AdminController/Edit/5
+        // POST: Admin/EditUsuario/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> EditUsuario(int id, usuarios usuario)
         {
-            try
+            if (id != usuario.id_usuario)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            if (ModelState.IsValid)
             {
-                return View();
+                _context.Update(usuario);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(IndexAdmin));
             }
+            return View(usuario);
         }
 
-        // GET: AdminController/Delete/5
-        public ActionResult Delete(int id)
+        // GET: Admin/DeleteUsuario/5
+        public async Task<IActionResult> DeleteUsuario(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var usuario = await _context.usuarios
+                .FirstOrDefaultAsync(m => m.id_usuario == id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            return View(usuario);
         }
 
-        // POST: AdminController/Delete/5
-        [HttpPost]
+        // POST: Admin/DeleteUsuario/5
+        [HttpPost, ActionName("DeleteUsuario")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var usuario = await _context.usuarios.FindAsync(id);
+            _context.usuarios.Remove(usuario);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(IndexAdmin));
         }
-
-
     }
 }
