@@ -10,6 +10,7 @@
     <table class="table">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Nombre</th>
                 <th>Correo</th>
                 <th>Teléfono</th>
@@ -22,6 +23,7 @@
             @foreach (var usuario in usuarios)
             {
                 <tr>
+                    <td>@usuario.id_usuario</td>
                     <td>@usuario.nombre</td>
                     <td>@usuario.correo</td>
                     <td>@usuario.telefono_contacto</td>
@@ -29,6 +31,8 @@
                     <td>@usuario.rol</td>
                     <td>
                         <a asp-action="EditUsuario" asp-route-id="@usuario.id_usuario" class="btn btn-warning">Editar</a>
+                        @*<button class="button-custom" onclick="location.href='@Url.Action("EditUsuario", "Admin", new { id = usuario.id_usuario })'">Trabajar</button>*@
+
                         <a asp-action="DeleteUsuario" asp-route-id="@usuario.id_usuario" class="btn btn-danger">Eliminar</a>
                     </td>
                 </tr>
@@ -37,3 +41,4 @@
     </table>
 
 </main>
+

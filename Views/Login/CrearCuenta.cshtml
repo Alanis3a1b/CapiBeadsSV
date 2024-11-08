@@ -1,0 +1,53 @@
+﻿@{
+    Layout = "_LoginLayout";
+}
+
+<div class="container mt-5">
+    <div class="card mb-3">
+        <div class="card-header" style="background-color: #582889; color: white;">
+            GESTIONAR USUARIO
+        </div>
+        <div class="card-body" style="background-color: #d3d3d3; color: black;">
+            <p class="font-weight-bold" style="text-align: left;">
+                REGISTRO
+            </p>
+            <hr>
+            <form asp-action="CrearrCuenta">
+                <div class="form-group">
+                    <label for="nombre_ticket" class="font-weight-bold">Ingrese el nombre del usuario: <span style="color: red;">*</span></label>
+                    @Html.TextBox("nombre", "", new { @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label for="correo" class="font-weight-bold">Ingrese el correo del usuario: <span style="color: red;">*</span></label>
+                    @Html.TextBox("correo", "", new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label for="rol" class="font-weight-bold">Seleccione el tipo de usuario a crear: <span style="color: red;">*</span></label>
+                    @Html.DropDownList("id_rol", ViewData["listadoDeRoles"] as SelectList, "--Sin rol--", new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label for="telefono_contacto" class="font-weight-bold">Ingrese su teléfono: <span style="color: red;">*</span></label>
+                    @Html.TextBox("telefono_contacto", "", new { @class = "form-control" })
+                </div>
+                <hr>
+                <div class="form-group" style="text-align: left;">
+                    <label for="usuario" class="font-weight-bold">Ingrese el usuario con el que se autenticará (No mayor de 20 caracteres): <span style="color: red;">*</span></label>
+                    @Html.TextBox("usuario", "", new { @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label for="contraseña" class="font-weight-bold">Ingrese la contraseña del usuario: <span style="color: red;">*</span></label>
+                    @Html.TextBox("contrasenya", "", new { @class = "form-control" })
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <!-- Utiliza un botón de tipo "button" para evitar envíos de formulario -->
+                    <input type="submit" class="btn btn-primary btn-lg small" value="CREAR CUENTA" />
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

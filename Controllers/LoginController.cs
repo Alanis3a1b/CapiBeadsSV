@@ -72,5 +72,31 @@ namespace CapiBeadsSV.Controllers
             //return RedirectToAction("Index", "Home");
         }
 
+
+        public IActionResult CrearCuenta()
+        {
+            //Lista de los roles
+            var listaDeRoles = (from m in _capibeadsDBContext.rol
+                                where m.id_rol != 1
+                                select m).ToList();
+
+            ViewData["listadoDeRoles"] = new SelectList(listaDeRoles, "id_rol", "nombre_rol");
+
+            return View();
+        }
+
+        public IActionResult CrearrCuenta(usuarios usuarioNuevo)
+        {
+            _capibeadsDBContext.Add(usuarioNuevo);
+            _capibeadsDBContext.SaveChanges();
+            return RedirectToAction("Success");
+        }
+
+        public IActionResult Success()
+        {
+            return View();
+        }
+
+
     }
 }

@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "EditUsuario";
+    Layout = "_LayoutAdmin";
+    var usuario = ViewBag.usuario;
+}
+}
+
+@*AA: ESTA EN PROCESOOOOOOO*@
+
+<div class="container mt-5">
+    <div class="card mb-3">
+        <div class="card-header" style="background-color: #562888; color: white;">
+            Usuario ID # @usuario.id_usuario
+        </div>
+
+        <div class="card-body" style="background-color: #d3d3d3; color: black;">
+            <p class="fw-bold">
+                Información de contacto
+            </p>
+
+            <div class="contact-info">
+
+
+
+                <div>
+                    <div class="form-group">
+                        <label for="fullName" class="fw-bold">Nombre completo:</label>
+                        <input type="text" class="form-control" id="fullName" value="@usuario.nombre" readonly>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="form-group">
+                        <label for="phone" class="fw-bold">Número de teléfono:</label>
+                        <input type="text" class="form-control" id="phone" value="@usuario.telefono_contacto" readonly>
+                    </div>
+                </div>
+
+
+                <div>
+                    <div class="form-group">
+                        <label for="email" class="fw-bold">Email:</label>
+                        <input type="email" class="form-control" id="email" value="@usuario.correo" readonly>
+                    </div>
+                </div>
+
+            </div>
+            @* fin Apartado info Contacto *@
+        </div>
+    </div>
+    <hr>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary btn-lg small p-2 m-2" style="background-color: #562888;  padding-bottom" onclick="history.back()">REGRESAR</button>
+    </div>
+</div>

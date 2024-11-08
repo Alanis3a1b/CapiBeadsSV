@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net.Sockets;
 
 namespace CapiBeadsSV.Controllers
 {
@@ -63,28 +64,30 @@ namespace CapiBeadsSV.Controllers
         //AA: Funciones para editar usuarios
         public IActionResult EditUsuario(int? id)
         {
-            if (id == null)
+            var usuario = (from m in _capibeadsDBContext.usuarios
+                           join r in _capibeadsDBContext.rol on m.id_rol equals r.id_rol
+                           where m.id_usuario == id
+                            select new
+                            {
+                                m.id_usuario,
+                                m.nombre,
+                                m.correo,
+                                rol = r.nombre_rol,
+                                m.telefono_contacto,
+                                m.usuario,
+                                m.contrasenya
+                            }).FirstOrDefault();
+
+            ViewBag.usuario = usuario;
+
+            if (usuario == null)
             {
                 return NotFound();
             }
+
+            ViewData["Usuario"] = usuario;
 
             return View();
-        }
-
-        public async Task<IActionResult> EditUsuario(int id, usuarios usuario)
-        {
-            if (id != usuario.id_usuario)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                _capibeadsDBContext.Update(usuario);
-                await _capibeadsDBContext.SaveChangesAsync();
-                return RedirectToAction(nameof(IndexAdmin));
-            }
-            return View(usuario);
         }
 
         //AA: Funcion para eliminar
