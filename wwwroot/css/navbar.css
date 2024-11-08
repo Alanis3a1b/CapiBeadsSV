@@ -1,0 +1,114 @@
+﻿
+.navbar-container {
+    width: 1147px;
+    height: 292px;
+    position: relative;
+}
+
+.navbar-header {
+    width: 1147px;
+    height: 145px;
+    position: absolute;
+}
+
+.navbar-background {
+    width: 1147px;
+    height: 145px;
+    position: absolute;
+    background: rgba(217, 217, 217, 0.58);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+}
+
+.logo {
+    width: 355.44px;
+    height: 119px;
+    position: absolute;
+    left: 333px;
+    top: 15px;
+}
+
+.carrito {
+    width: 141px;
+    height: 124px;
+    position: absolute;
+    left: 41px;
+    top: 17px;
+}
+
+.figura {
+    width: 129.56px;
+    height: 142.18px;
+    position: absolute;
+    left: 182px;
+    top: 8.15px;
+    transform: rotate(-0.95deg);
+    transform-origin: 0 0;
+}
+
+.user-section {
+    width: 312px;
+    height: 289px;
+    position: absolute;
+    left: 511px;
+    top: 3px;
+}
+
+.user-icon {
+    width: 113.11px;
+    height: 132px;
+    position: absolute;
+    left: 198.89px;
+    top: 0px;
+}
+
+.search-bar {
+    width: 305px;
+    height: 67px;
+    position: absolute;
+    left: 832px;
+    top: 39px;
+}
+
+.search-background {
+    width: 305px;
+    height: 67px;
+    position: absolute;
+    background: #FFFDFD;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+.search-icon-background {
+    width: 42px;
+    height: 41px;
+    position: absolute;
+    left: 256px;
+    top: 13px;
+    background: #E4DCC4;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+}
+
+.search-icon {
+    width: 16.27px;
+    height: 22.88px;
+    position: absolute;
+    left: 269px;
+    top: 22px;
+}
+
+.search-text {
+    width: 233px;
+    height: 31px;
+    position: absolute;
+    left: 12px;
+    top: 18px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.51);
+    font-size: 18px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    word-wrap: break-word;
+}

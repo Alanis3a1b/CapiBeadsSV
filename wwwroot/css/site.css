@@ -21,3 +21,90 @@ body {
   margin-bottom: 60px;
   background-image:url(../fondo.jpg)
 }
+
+/* site.css */
+.pato-img {
+    width: 300px;
+    height: 300px;
+    transform: rotate(180deg);
+    transform-origin: 0 0;
+}
+
+.redes-container, .destacado-container, .nuevo-container {
+    width: 232px;
+    height: 52px;
+    position: relative;
+    margin-left: 200px;
+}
+
+.redes-background, .destacado-background, .nuevo-background {
+    width: 232px;
+    height: 52px;
+    position: absolute;
+    background: rgba(217, 217, 217, 0.58);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+}
+
+.redes-text, .destacado-text, .nuevo-text {
+    position: absolute;
+    text-align: center;
+    color: black;
+    font-size: 20px;
+    font-family: 'Press Start 2P', cursive;
+    font-weight: 400;
+    word-wrap: break-word;
+}
+
+.redes-text {
+    left: 66px;
+    top: 16px;
+}
+
+.destacado-text, .nuevo-text {
+    left: 26px;
+    top: 16px;
+}
+
+.images-group {
+    margin-left: 250px;
+}
+
+.image {
+    width: 288px;
+    height: 288px;
+    border-radius: 10px;
+}
+
+.image-rounded {
+    border-radius: 20px;
+}
+
+.banners-group {
+    margin-left: 250px;
+}
+
+.banner {
+    border-radius: 20px;
+}
+
+    .banner:first-child {
+        width: 364px;
+        height: 149px;
+    }
+
+    .banner:nth-child(2) {
+        width: 382px;
+        height: 149px;
+    }
+
+    .banner:nth-child(3) {
+        width: 416px;
+        height: 156px;
+    }
+
+.sr-capy-img {
+    width: 300px;
+    height: 300px;
+    margin-left: 1600px;
+}

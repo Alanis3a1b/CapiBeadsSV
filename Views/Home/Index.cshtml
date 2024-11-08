@@ -2,69 +2,72 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div style="width: 1147px; height: 292px; position: relative">
-    <div style="width: 1147px; height: 145px; left: 0px; top: 0px; position: absolute">
-        <div style="width: 1147px; height: 145px; left: 0px; top: 0px; position: absolute; background: rgba(217, 217, 217, 0.58); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 20px"></div>
-        <img style="width: 355.44px; height: 119px; left: 333px; top: 15px; position: absolute" src="~/pastocapi.jpg" />
-        <img style="width: 141px; height: 124px; left: 41px; top: 17px; position: absolute" src="~/capicarrito (1).png" />
+
+<div class="navbar-container">
+    <div class="navbar-header">
+        <div class="navbar-background"></div>
+        <img class="logo" src="~/pastocapi.jpg" alt="Logo Principal" />
+        <img class="carrito" src="~/capicarrito (1).png" alt="Carrito" />
     </div>
-    <img style="width: 129.56px; height: 142.18px; left: 182px; top: 8.15px; position: absolute; transform: rotate(-0.95deg); transform-origin: 0 0" src="~/capifigura.png" />
-    <div style="width: 312px; height: 289px; left: 511px; top: 3px; position: absolute">
-        <img style="width: 113.11px; height: 132px; left: 198.89px; top: 0px; position: absolute" src="~/capiuser.png" />
+    <img class="figura" src="~/capifigura.png" alt="Figura" />
+    <div class="user-section">
+        <img class="user-icon" src="~/capiuser.png" alt="Usuario" />
     </div>
-    <div style="width: 305px; height: 67px; left: 832px; top: 39px; position: absolute">
-        <div style="width: 305px; height: 67px; left: 0px; top: 0px; position: absolute; background: #FFFDFD; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 10px; border: 1px black solid"></div>
-        <div style="width: 42px; height: 41px; left: 256px; top: 13px; position: absolute; background: #E4DCC4; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 6px"></div>
-        <img style="width: 16.27px; height: 22.88px; left: 269px; top: 22px; position: absolute" src="~/lipa.png" />
-        <div style="width: 233px; height: 31px; left: 12px; top: 18px; position: absolute; text-align: center; color: rgba(0, 0, 0, 0.51); font-size: 18px; font-family: Inter; font-weight: 400; word-wrap: break-word">productos </div>
+    <div class="search-bar">
+        <div class="search-background"></div>
+        <div class="search-icon-background"></div>
+        <img class="search-icon" src="~/lipa.png" alt="Buscar" />
+        <div class="search-text">productos</div>
     </div>
 </div>
 
-<img style="width: 300px; height: 300px; transform: rotate(180deg); transform-origin: 0 0" src="~/pato.png" />
+<link rel="stylesheet" href="~/css/navbar.css" />
 
-<div style="width: 232px; height: 52px; position: relative">
-    <div style="width: 232px; height: 52px; left: 0px; top: 0px; position: absolute; background: rgba(217, 217, 217, 0.58); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 20px"></div>
-    <div style="left: 66px; top: 16px; position: absolute; text-align: center; color: black; font-size: 20px; font-family: Press Start 2P; font-weight: 400; word-wrap: break-word">Redes</div>
+
+
+<img class="pato-img" src="~/pato.png" />
+
+<div class="redes-container">
+    <div class="redes-background"></div>
+    <div class="redes-text">Redes</div>
 </div>
 
-<div>
-    <img style="width: 288px; height: 288px; border-radius: 10px" src="~/HAUNT.jpg" />
-    <img style="width: 288px; height: 288px; border-radius: 10px" src="~/kirbi2.webp" />
-    <img style="width: 288px; height: 288px; border-radius: 10px" src="~/king.jpg" />
-    <img style="width: 288px; height: 288px; border-radius: 20px" src="~/cuchillo.jpg" />
-</div>
-<br <br <br
-<div>
-    <img style="width: 288px; height: 288px; border-radius: 20px" src="~/boo.jpg" />
-    <img style="width: 288px; height: 288px; border-radius: 10px" src="~/diablo.webp" />
-    <img style="width: 288px; height: 288px; border-radius: 10px" src="~/capicapi.jpg" />
-    <img style="width: 288px; height: 288px; border-radius: 10px" src="~/kirby.jpg" />
+<div class="images-group">
+    <img class="image" src="~/HAUNT.jpg" />
+    <img class="image" src="~/kirbi2.webp" />
+    <img class="image" src="~/king.jpg" />
+    <img class="image image-rounded" src="~/cuchillo.jpg" />
 </div>
 
-
-<div style="width: 232px; margin-left: 200px; height: 52px; position: relative">
-    <div style="width: 232px; height: 52px; left: 0px; top: 0px; position: absolute; background: rgba(217, 217, 217, 0.58); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 20px"></div>
-    <div style="left: 26px; top: 16px; position: absolute; text-align: center; color: black; font-size: 20px; font-family: Press Start 2P; font-weight: 400; word-wrap: break-word">Destacado</div>
+<div class="images-group">
+    <img class="image image-rounded" src="~/boo.jpg" />
+    <img class="image" src="~/diablo.webp" />
+    <img class="image" src="~/capicapi.jpg" />
+    <img class="image" src="~/kirby.jpg" />
 </div>
 
-<div style="margin-left: 250px">
-<img style="width: 364px; height: 149px; border-radius: 20px" src="~/catbanner.jpeg" />
-<img style="width: 382px; height: 149px; border-radius: 20px" src="~/Bannersharly.png" />
-<img style="width: 416px; height: 156px; border-radius: 20px" src="~/pastocapi.jpg" />
+<div class="destacado-container">
+    <div class="destacado-background"></div>
+    <div class="destacado-text">Destacado</div>
 </div>
 
-<div style="width: 232px;margin-left: 200px; height: 52px; position: relative">
-    <div style="width: 232px; height: 52px; left: 0px; top: 0px; position: absolute; background: rgba(217, 217, 217, 0.58); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 20px"></div>
-    <div style="left: 66px; top: 16px; position: absolute; text-align: center; color: black; font-size: 20px; font-family: Press Start 2P; font-weight: 400; word-wrap: break-word">Nuevo</div>
+<div class="banners-group">
+    <img class="banner" src="~/catbanner.jpeg" />
+    <img class="banner" src="~/Bannersharly.png" />
+    <img class="banner" src="~/pastocapi.jpg" />
 </div>
 
-<div style="margin-left: 250px">
-<img style="width: 288px; height: 288px; border-radius: 20px" src="~/cuadro.jpg" />
-<img style="width: 288px; height: 288px; border-radius: 10px" src="~/catv.jpg" />
-<img style="width: 288px; height: 288px; border-radius: 10px" src="~/poros.webp" />
-<img style="width: 288px; height: 288px; border-radius: 10px" src="~/dino.jpg" />
+<div class="nuevo-container">
+    <div class="nuevo-background"></div>
+    <div class="nuevo-text">Nuevo</div>
 </div>
 
+<div class="images-group">
+    <img class="image image-rounded" src="~/cuadro.jpg" />
+    <img class="image" src="~/catv.jpg" />
+    <img class="image" src="~/poros.webp" />
+    <img class="image" src="~/dino.jpg" />
+</div>
 
-<img style="width: 300px; margin-left: 1600px ;height: 300px" src="~/Sr_Capy.png" />
+<img class="sr-capy-img" src="~/Sr_Capy.png" />
 
