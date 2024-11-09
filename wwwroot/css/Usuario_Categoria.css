@@ -1,0 +1,291 @@
+﻿body {
+}
+
+.Sr_Capy-img {
+    width: 300px;
+    height: 300px;
+    transform: rotate(180deg);
+    transform-origin: 0 0;
+}
+
+
+.categoria-card {
+    width: 410px;
+    height: 346px;
+    position: relative;
+}
+
+.categoria-background {
+    width: 100%;
+    height: 100%;
+    background: rgba(217, 217, 217, 0.58);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    border: 1px solid black;
+    position: absolute;
+    top: 1px;
+    left: 0;
+}
+
+.categoria-header {
+    width: 100%;
+    height: 48px;
+    background: #856743;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border: 1px solid black;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+}
+
+.categoria-title {
+    color: white;
+    font-size: 20px;
+    font-family: 'Press Start 2P', sans-serif;
+    font-weight: 400;
+}
+
+.categoria-list {
+    width: 220px;
+    position: absolute;
+    top: 83px;
+    left: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.categoria-item {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-family: 'Press Start 2P', sans-serif;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.67);
+}
+
+.circle {
+    width: 19px;
+    height: 20px;
+    background: #D9D9D9;
+    border-radius: 50%;
+    border: 1px solid black;
+    margin-right: 10px;
+}
+
+
+.tienda-card {
+    width: 410px;
+    height: 256px;
+    position: relative;
+}
+
+.tienda-background {
+    width: 100%;
+    height: 100%;
+    background: rgba(217, 217, 217, 0.58);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    border: 1px solid black;
+    position: absolute;
+    top: 1px;
+    left: 0;
+}
+
+.tienda-header {
+    width: 100%;
+    height: 47px;
+    background: #856743;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border: 1px solid black;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+}
+
+.tienda-title {
+    color: white;
+    font-size: 20px;
+    font-family: 'Press Start 2P', sans-serif;
+    font-weight: 400;
+}
+
+.tienda-list {
+    width: 180px;
+    position: absolute;
+    top: 83px;
+    left: 68px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tienda-item {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-family: 'Press Start 2P', sans-serif;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.67);
+}
+
+.circle {
+    width: 19px;
+    height: 20px;
+    background: #D9D9D9;
+    border-radius: 50%;
+    border: 1px solid black;
+    margin-right: 10px;
+}
+
+    .circle.active {
+        background: #567392;
+    }
+
+
+
+.container {
+    display: flex;
+    gap: 20px;
+}
+
+.tienda-card {
+    width: 410px;
+    height: 256px;
+    position: relative;
+}
+
+.tienda-background {
+    width: 100%;
+    height: 100%;
+    background: rgba(217, 217, 217, 0.58);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    border: 1px solid black;
+    position: absolute;
+    top: 1px;
+    left: 0;
+}
+
+.tienda-header {
+    width: 100%;
+    height: 47px;
+    background: #856743;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border: 1px solid black;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+}
+
+.tienda-title {
+    color: white;
+    font-size: 20px;
+    font-family: 'Press Start 2P', sans-serif;
+    font-weight: 400;
+}
+
+.tienda-list {
+    width: 180px;
+    position: absolute;
+    top: 83px;
+    left: 68px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tienda-item {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-family: 'Press Start 2P', sans-serif;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.67);
+}
+
+.circle {
+    width: 19px;
+    height: 20px;
+    background: #D9D9D9;
+    border-radius: 50%;
+    border: 1px solid black;
+    margin-right: 10px;
+}
+
+    .circle.active {
+        background: #567392;
+    }
+
+.product-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 810px; /* Ajusta el ancho según necesites */
+}
+
+.product-item {
+    width: 383px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .product-item img {
+        width: 100%;
+        height: 360px;
+        border-radius: 20px;
+    }
+
+.product-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 20px;
+    font-family: 'Press Start 2P', sans-serif;
+    color: white;
+}
+
+.price {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    text-align: right;
+}
+
+.add-to-cart {
+    width: 285px;
+    padding: 9px 0;
+    background: #856743;
+    border-radius: 4px;
+    border: 1px solid #2F261B;
+    color: white;
+    font-size: 12px;
+    font-family: 'Press Start 2P', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+    .add-to-cart::before {
+        content: "";
+        width: 14px;
+        height: 14px;
+        border-radius: 6px;
+        border: 2px solid white;
+        display: inline-block;
+    }
