@@ -54,7 +54,7 @@ namespace CapiBeadsSV.Controllers
             if (usuario.id_rol == 3)
             {
                 HttpContext.Session.SetString("user", datoUsuario);
-                return RedirectToAction("HomeCliente", "Cliente");
+                return RedirectToAction("IndexCliente", "Cliente");
             }
             if (usuario.id_rol == 1)
             {

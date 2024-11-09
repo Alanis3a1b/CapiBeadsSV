@@ -71,7 +71,6 @@ hr {
 label {
     display: block;
     text-align: left;
-    margin-bottom: 5px; /* Añade un pequeño margen debajo del label para separar del input */
 }
 h4{
     margin-bottom:30px;
@@ -113,4 +112,31 @@ p{
 
     .text-link:hover {
         text-decoration: underline;
+    }
+.login-container-2 {
+    background-color: #0A280D;
+    max-width: 700px;
+    padding: 20px;
+    border-radius: 8px;
+    margin: auto;
+    margin-top: 5%;
+    text-align: center;
+}
+
+    .login-container-2 h4 {
+        font-family: 'Press Start 2P', sans-serif;
+        font-size: 24px;
+        color: #ffffff;
+        margin-bottom:20px;
+    }
+.btn-primary {
+    background: linear-gradient( #856743 0%, #2F261B 100%);
+    border: none;
+    font-size: 1rem;
+    font-weight: 300;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+    .btn-primary:hover {
+        background: #856743;
     }

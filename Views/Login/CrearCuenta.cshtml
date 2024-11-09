@@ -1,18 +1,24 @@
 ﻿@{
     Layout = "_LoginLayout";
 }
+<head>
+    <link rel="stylesheet" href="/css/site.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
 
-<div class="container mt-5">
-    <div class="card mb-3">
-        <div class="card-header" style="background-color: #582889; color: white;">
-            GESTIONAR USUARIO
-        </div>
-        <div class="card-body" style="background-color: #d3d3d3; color: black;">
-            <p class="font-weight-bold" style="text-align: left;">
-                REGISTRO
-            </p>
-            <hr>
-            <form asp-action="CrearrCuenta">
+<form asp-action="CrearrCuenta">
+    <!--Lineas para capturar la informacion-->
+    <div class="Fondo">
+        <div class="container-fluid">
+            <div class="login-container-2">
+                <!-- Logo -->
+                <img src="/IMG/logo.jpg" alt="CapiBeads Logo" class="img-fluid mx-auto d-block mb-3" style="width: 350px; border-radius: 8px;">
+
+                <!-- Encabezado -->
+                <h4>Registrarse</h4>
+
                 <div class="form-group">
                     <label for="nombre_ticket" class="font-weight-bold">Ingrese el nombre del usuario: <span style="color: red;">*</span></label>
                     @Html.TextBox("nombre", "", new { @class = "form-control" })
@@ -45,9 +51,9 @@
                     <!-- Utiliza un botón de tipo "button" para evitar envíos de formulario -->
                     <input type="submit" class="btn btn-primary btn-lg small" value="CREAR CUENTA" />
                 </div>
-
-            </form>
-
+            </div>
         </div>
     </div>
-</div>
+
+
+</form>

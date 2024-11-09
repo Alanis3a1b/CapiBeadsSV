@@ -101,7 +101,7 @@ body {
     text-align: var(--bs-body-text-align);
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    background-image: url(/IMG/pasto.jpg);
+    background-image: url(/IMG/Fondo.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -12871,7 +12871,6 @@ body {
     border-radius: 0.375rem !important;
 }
 
-
 /* Estilo para el título */
 h2 {
     color: #fff;
@@ -12882,7 +12881,7 @@ h2 {
 /* Estilo para la tabla */
 .table {
     width: 100%;
-    margin-top:30px;
+    margin-top: 30px;
     background-color: #ffffff;
     border-collapse: collapse;
     border-radius: 8px;
@@ -12913,8 +12912,87 @@ h2 {
         text-align: left;
         font-family: Arial, sans-serif;
     }
-/* Aumentar el tamaño de los botones dentro de las celdas */
-.table .btn {
-    font-size: 0.9em;
-    padding: 5px 10px;
+
+
+/* Contenedor principal */
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Tarjeta */
+.card {
+    border: none;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Encabezado de la tarjeta */
+.card-header {
+    background-color: #6d4c41;
+    color: white;
+    font-weight: bold;
+    font-size: 1.25rem;
+    text-align: center;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+/* Cuerpo de la tarjeta */
+.card-body {
+    background-color: #f7f7f7;
+    color: #333;
+    padding: 25px;
+}
+
+    /* Título del formulario */
+    .card-body p {
+        font-weight: bold;
+        color: #6d4c41;
+        font-size: 1.1rem;
+    }
+
+    /* Etiquetas de campos */
+    .card-body label {
+        font-weight: 600;
+        color: #555;
+    }
+
+/* Campos de entrada */
+.form-control {
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s ease;
+}
+
+    .form-control:focus {
+        border-color: #6d4c41;
+        box-shadow: 0 0 5px rgba(109, 76, 65, 0.3);
+    }
+
+/* Botón de envío */
+.btn-primary {
+    background-color: #6d4c41;
+    border-color: #6d4c41;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #5a3a30;
+        box-shadow: 0 4px 10px rgba(90, 58, 48, 0.3);
+    }
+
+/* Estilo del texto de error */
+.text-danger {
+    color: red;
+    font-weight: bold;
+}
+
+/* Alineación de etiquetas y campos */
+.form-group {
+    margin-bottom: 1.5rem;
 }

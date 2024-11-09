@@ -25,14 +25,14 @@
 
                 <!-- Campo de Email -->
                 <label>Usuario</label>
-                <div class="col-sm-4" style="width: 100%; padding: 10px; margin-bottom: 10px;  border-radius: 4px;">
-                    @Html.TextBox("usuario", "", new { @class = "form-control", style = "background-color: #1e0029; color: white;" })
+                <div class="col-sm-4" style="width: 100%; padding: 10px; border-radius: 4px;">
+                    @Html.TextBox("usuario", "", new { @class = "form-control" })
                 </div>
 
                 <!-- Campo de Contraseña -->
                 <label>Contraseña</label>
-                <div class="col-sm-4" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
-                    @Html.TextBox("contrasenya", "", new { @class = "form-control", type = "password", style = "background-color: #1e0029; color: white;" })
+                <div class="col-sm-4" style="width: 100%; padding: 10px; border-radius: 4px;">
+                    @Html.TextBox("contrasenya", "", new { @class = "form-control", type = "password" })
                 </div>
 
                 @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
