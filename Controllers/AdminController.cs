@@ -21,17 +21,17 @@ namespace CapiBeadsSV.Controllers
         public async Task<IActionResult> IndexAdmin()
         {
             var usuarios = (from m in _capibeadsDBContext.usuarios
-                                   join r in _capibeadsDBContext.rol on m.id_rol equals r.id_rol
-                                   select new
-                                   {
-                                       m.id_usuario,
-                                       m.nombre,
-                                       m.correo,
-                                       rol = r.nombre_rol,
-                                       m.telefono_contacto,
-                                       m.usuario,
-                                       m.contrasenya
-                                   }).ToList();
+                            join r in _capibeadsDBContext.rol on m.id_rol equals r.id_rol
+                            select new
+                            {
+                                m.id_usuario,
+                                m.nombre,
+                                m.correo,
+                                rol = r.nombre_rol,
+                                m.telefono_contacto,
+                                m.usuario,
+                                m.contrasenya
+                            }).ToList();
 
             ViewBag.usuarios = usuarios;
 
@@ -64,35 +64,65 @@ namespace CapiBeadsSV.Controllers
         //AA: Funciones para editar usuarios
         public IActionResult EditUsuario(int? id)
         {
+            var listaDeRoles = (from m in _capibeadsDBContext.rol
+                                select m).ToList();
+            ViewData["listadoDeRoles"] = new SelectList(listaDeRoles, "id_rol", "nombre_rol");
+
             var usuario = (from m in _capibeadsDBContext.usuarios
                            join r in _capibeadsDBContext.rol on m.id_rol equals r.id_rol
                            where m.id_usuario == id
-                            select new
-                            {
-                                m.id_usuario,
-                                m.nombre,
-                                m.correo,
-                                rol = r.nombre_rol,
-                                m.telefono_contacto,
-                                m.usuario,
-                                m.contrasenya
-                            }).FirstOrDefault();
+                           select new
+                           {
+                               m.id_usuario,
+                               m.nombre,
+                               m.correo,
+                               rol = r.nombre_rol,
+                               m.telefono_contacto,
+                               m.usuario,
+                               m.contrasenya,
+                               m.foto
+                           }).FirstOrDefault();
 
             ViewBag.usuario = usuario;
-
-            if (usuario == null)
-            {
-                return NotFound();
-            }
 
             ViewData["Usuario"] = usuario;
 
             return View();
         }
 
+        public IActionResult Editarusuario(int? id, usuarios usuarioModificar)
+        {
+            //int verID = (int)id;
+
+            var listaDeRoles = (from m in _capibeadsDBContext.rol
+                                select m).ToList();
+            ViewData["listadoDeRoles"] = new SelectList(listaDeRoles, "id_rol", "nombre_rol");
+
+            usuarios? usuarioActual = (from m in _capibeadsDBContext.usuarios
+                                       join r in _capibeadsDBContext.rol on m.id_rol equals r.id_rol
+                                       where m.id_usuario == id
+                                       select m).FirstOrDefault();
+
+            usuarioActual.nombre = usuarioModificar.nombre;
+            usuarioActual.correo = usuarioModificar.correo;
+            usuarioActual.telefono_contacto = usuarioModificar.telefono_contacto;
+            usuarioActual.id_rol = usuarioModificar.id_rol;
+
+            _capibeadsDBContext.Entry(usuarioActual).State = EntityState.Modified;
+            _capibeadsDBContext.SaveChanges();
+            return RedirectToAction("SuccessModificar");
+        }
+
+        public IActionResult SuccessModificar()
+        {
+            return View();
+        }
+
         //AA: Funcion para eliminar
         public IActionResult DeleteUsuario(int? id)
         {
+            //int verID = (int)id;
+
             var usuario = (from m in _capibeadsDBContext.usuarios
                                    where m.id_usuario == id
                                    select m).FirstOrDefault();
