@@ -30,7 +30,7 @@
                     <li><a class="dropdown-item" href="#!">Settings</a></li>
                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                     <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    <li><a class="dropdown-item" asp-area="" asp-controller="Login" asp-action="Index">Logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -41,28 +41,30 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Resumen</div>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" asp-area="Dashboard" asp-controller="Admin" asp-action="Dashboard">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
-                        </a>
-                        <a class="nav-link" href="#">
+                        </a><br />
+                        <a class="nav-link" asp-area="Usuarios" asp-controller="Admin" asp-action="IndexAdmin">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Usuarios
                         </a>
+
                         <div class="sb-sidenav-menu-heading">Mantenimiento</div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+
+                        <a class="nav-link collapsed" asp-area="Categorias" asp-controller="Admin" asp-action="Categorias">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                             Categorias
                         </a>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                        <a class="nav-link collapsed" asp-area="Tiendas" asp-controller="Admin" asp-action="Tiendas">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                             Tiendas
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" asp-area="Productos" asp-controller="Admin" asp-action="Productos">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Productos
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" asp-area="Pedidos" asp-controller="Admin" asp-action="Pedidos">
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Pedidos
                         </a>

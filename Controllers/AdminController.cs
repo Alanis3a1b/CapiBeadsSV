@@ -167,5 +167,35 @@ namespace CapiBeadsSV.Controllers
             return RedirectToAction("IndexAdmin");
         }
 
+        //AA: Las demas vistas que faltaban
+        public IActionResult Dashboard()
+        {
+
+            return View();
+        }
+
+        public IActionResult Categorias()
+        {
+
+            return View();
+        }
+
+        public IActionResult Tiendas()
+        {
+
+            return View();
+        }
+
+        public IActionResult Productos()
+        {
+
+            return View();
+        }
+
+        public IActionResult Pedidos()
+        {
+
+            return View();
+        }
     }
 }

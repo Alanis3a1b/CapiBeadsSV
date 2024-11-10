@@ -38,7 +38,7 @@ namespace CapiBeadsSV.Models
         public int id_tienda { get; set; }
         public int id_usuario { get; set; }
         public string nombreTienda { get; set; }
-        public byte[]? imagenFondo { get; set; } // Añadido para la foto
+        public byte[]? imagenFondo { get; set; } // Esta es la imagen de perfil
         public string descripcionTienda { get; set; }
 
         [NotMapped]
