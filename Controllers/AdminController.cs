@@ -182,10 +182,126 @@ namespace CapiBeadsSV.Controllers
 
         public IActionResult Tiendas()
         {
+            var tiendas = (from t in _capibeadsDBContext.tiendas
+                           join u in _capibeadsDBContext.usuarios on t.id_usuario equals u.id_usuario
+                           select new
+                           {
+                               t.id_tienda,
+                               t.nombreTienda,
+                               t.descripcionTienda,
+                               UsuarioNombre = u.nombre
+                           }).ToList();
+
+            ViewBag.tiendas = tiendas;
+            return View();
+        }
+        // GET: Admin/CreateTienda
+        public IActionResult CreateTienda()
+        {
+            var usuarios = (from u in _capibeadsDBContext.usuarios
+                            select new { u.id_usuario, u.nombre }).ToList();
+            ViewData["Usuarios"] = new SelectList(usuarios, "id_usuario", "nombre");
 
             return View();
         }
 
+        // POST: Admin/CreateTienda
+        [HttpPost]
+        public async Task<IActionResult> CreateTienda(tiendas nuevaTienda, IFormFile imagenFondo)
+        {
+            if (imagenFondo != null && imagenFondo.Length > 0)
+            {
+                using (var ms = new System.IO.MemoryStream())
+                {
+                    imagenFondo.CopyTo(ms);
+                    nuevaTienda.imagenFondo = ms.ToArray();
+                }
+            }
+
+            _capibeadsDBContext.tiendas.Add(nuevaTienda);
+            await _capibeadsDBContext.SaveChangesAsync();
+            return RedirectToAction("Success");
+        }
+
+        // GET: Admin/EditTienda/5
+        public async Task<IActionResult> EditTienda(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var tienda = await _capibeadsDBContext.tiendas.FindAsync(id);
+            if (tienda == null) return NotFound();
+
+            var usuarios = (from u in _capibeadsDBContext.usuarios
+                            select new { u.id_usuario, u.nombre }).ToList();
+            ViewData["Usuarios"] = new SelectList(usuarios, "id_usuario", "nombre", tienda.id_usuario);
+
+            ViewBag.tienda = tienda;
+            return View();
+        }
+
+        // POST: Admin/EditTienda/5
+        [HttpPost]
+        public async Task<IActionResult> EditTienda(int id, tiendas tiendaModificada, IFormFile imagenFondo)
+        {
+            if (id != tiendaModificada.id_tienda) return NotFound();
+
+            var tienda = await _capibeadsDBContext.tiendas.FindAsync(id);
+            if (tienda == null) return NotFound();
+
+            tienda.nombreTienda = tiendaModificada.nombreTienda;
+            tienda.descripcionTienda = tiendaModificada.descripcionTienda;
+            tienda.id_usuario = tiendaModificada.id_usuario;
+
+            if (imagenFondo != null && imagenFondo.Length > 0)
+            {
+                using (var ms = new System.IO.MemoryStream())
+                {
+                    imagenFondo.CopyTo(ms);
+                    tienda.imagenFondo = ms.ToArray();
+                }
+            }
+
+            _capibeadsDBContext.Entry(tienda).State = EntityState.Modified;
+            await _capibeadsDBContext.SaveChangesAsync();
+
+            return RedirectToAction("SuccessModificar");
+        }
+
+        // GET: Admin/DeleteTienda/5
+        public async Task<IActionResult> DeleteTienda(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var tienda = (from t in _capibeadsDBContext.tiendas
+                          join u in _capibeadsDBContext.usuarios on t.id_usuario equals u.id_usuario
+                          where t.id_tienda == id
+                          select new
+                          {
+                              t.id_tienda,
+                              t.nombreTienda,
+                              t.descripcionTienda,
+                              UsuarioNombre = u.nombre
+                          }).FirstOrDefault();
+
+            if (tienda == null) return NotFound();
+
+            ViewBag.tienda = tienda;
+            return View();
+        }
+
+        // POST: Admin/ConfirmDeleteTienda/5
+        [HttpPost, ActionName("ConfirmDeleteTienda")]
+        public async Task<IActionResult> ConfirmDeleteTienda(int id)
+        {
+            var tienda = await _capibeadsDBContext.tiendas.FindAsync(id);
+            if (tienda == null) return NotFound();
+
+            _capibeadsDBContext.tiendas.Remove(tienda);
+            await _capibeadsDBContext.SaveChangesAsync();
+
+            TempData["Mensaje"] = "Tienda eliminada correctamente.";
+            return RedirectToAction("IndexTiendas");
+        }
         public IActionResult Productos()
         {
 

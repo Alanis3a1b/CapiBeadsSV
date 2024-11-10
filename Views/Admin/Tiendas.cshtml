@@ -1,3 +1,37 @@
 ﻿@{
+    ViewData["Title"] = "Tiendas";
     Layout = "_LayoutAdmin";
 }
+
+<h1>Lista de Tiendas</h1>
+<a href="@Url.Action("CreateTienda")" class="btn btn-primary">Crear Nueva Tienda</a>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre de la Tienda</th>
+            <th>Descripción</th>
+            <th>Propietario</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tienda in ViewBag.tiendas)
+        {
+            <tr>
+                <td>@tienda.id_tienda</td>
+                <td>@tienda.nombreTienda</td>
+                <td>@tienda.descripcionTienda</td>
+                <td>@tienda.UsuarioNombre</td>
+                <td>
+                    <a href="@Url.Action("EditTienda", new { id = tienda.id_tienda })">Editar</a> |
+                    <a href="@Url.Action("DeleteTienda", new { id = tienda.id_tienda })">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

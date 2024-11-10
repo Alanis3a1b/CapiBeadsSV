@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Crear Tienda";
+    Layout = "_LayoutAdmin";
+}
+
+<h1>Crear Nueva Tienda</h1>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="nombreTienda">Nombre de la Tienda</label>
+        <input type="text" class="form-control" id="nombreTienda" name="nombreTienda" required />
+    </div>
+
+    <div class="form-group">
+        <label for="descripcionTienda">Descripción de la Tienda</label>
+        <textarea class="form-control" id="descripcionTienda" name="descripcionTienda" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="id_usuario">Propietario</label>
+        <select class="form-control" id="id_usuario" name="id_usuario">
+            @foreach (var usuario in ViewData["Usuarios"] as SelectListItem[])
+            {
+                <option value="@usuario.Value">@usuario.Text</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="PhotoUpload">Imagen de Fondo</label>
+        <input type="file" class="form-control" id="PhotoUpload" name="PhotoUpload" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Crear Tienda</button>
+</form>
+
+<a href="@Url.Action("IndexTiendas")" class="btn btn-secondary mt-2">Volver a la Lista de Tiendas</a>
