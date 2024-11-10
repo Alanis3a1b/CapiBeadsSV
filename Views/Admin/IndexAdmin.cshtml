@@ -1,9 +1,16 @@
 ﻿@{
-    Layout = "_LayoutAdmin"; 
+    Layout = "_LayoutAdmin";
     var usuarios = ViewBag.usuarios;
 }
+
 <main>
-    @*model IEnumerable<CapiBeadsSV.Models.usuarios>*@
+    @* Mostrar mensaje de confirmación *@
+    @if (TempData["Mensaje"] != null)
+    {
+        <div id="mensajeTemp" class="alert alert-success">
+            @TempData["Mensaje"]
+        </div>
+    }
 
     <h2>Usuarios</h2>
     <a asp-action="CreateUsuarioAdmin" class="btn btn-primary">Agregar Usuario</a>
@@ -31,14 +38,20 @@
                     <td>@usuario.rol</td>
                     <td>
                         <a asp-action="EditUsuario" asp-route-id="@usuario.id_usuario" class="btn btn-warning">Editar</a>
-                        @*<button class="button-custom" onclick="location.href='@Url.Action("EditUsuario", "Admin", new { id = usuario.id_usuario })'">Trabajar</button>*@
-
                         <a asp-action="DeleteUsuario" asp-route-id="@usuario.id_usuario" class="btn btn-danger">Eliminar</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-
 </main>
 
+<script>
+    // Temporizador para ocultar el mensaje después de 5 segundos (5000 ms)
+    setTimeout(function () {
+        var mensaje = document.getElementById("mensajeTemp");
+        if (mensaje) {
+            mensaje.style.display = "none";
+        }
+    }, 5000); // Ajusta el tiempo (en milisegundos) según lo que necesites
+</script>

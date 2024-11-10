@@ -23,16 +23,16 @@
                 <!-- Encabezado -->
                 <h4>Bienvenido</h4>
 
-                <!-- Campo de Email -->
+                <!-- Campo de Usuario -->
                 <label>Usuario</label>
                 <div class="col-sm-4" style="width: 100%; padding: 10px; border-radius: 4px;">
-                    @Html.TextBox("usuario", "", new { @class = "form-control" })
+                    @Html.TextBox("usuario", "", new { @class = "form-control", maxlength = "20", pattern = "[A-Za-z0-9_]{1,20}", title = "Usuario (máximo 20 caracteres alfanuméricos y guiones bajos)" })
                 </div>
 
                 <!-- Campo de Contraseña -->
                 <label>Contraseña</label>
                 <div class="col-sm-4" style="width: 100%; padding: 10px; border-radius: 4px;">
-                    @Html.TextBox("contrasenya", "", new { @class = "form-control", type = "password" })
+                    @Html.TextBox("contrasenya", "", new { @class = "form-control", type = "password", minlength = "6", maxlength = "20", title = "Contraseña (8-20 caracteres)" })
                 </div>
 
                 @if (!string.IsNullOrEmpty(ViewBag.Mensaje))

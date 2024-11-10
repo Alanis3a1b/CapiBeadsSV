@@ -64,9 +64,9 @@ namespace CapiBeadsSV.Controllers
         //AA: Funciones para editar usuarios
         public IActionResult EditUsuario(int? id)
         {
+            // Obtenemos la lista de roles y seleccionamos el rol del usuario actual
             var listaDeRoles = (from m in _capibeadsDBContext.rol
                                 select m).ToList();
-            ViewData["listadoDeRoles"] = new SelectList(listaDeRoles, "id_rol", "nombre_rol");
 
             var usuario = (from m in _capibeadsDBContext.usuarios
                            join r in _capibeadsDBContext.rol on m.id_rol equals r.id_rol
@@ -80,28 +80,30 @@ namespace CapiBeadsSV.Controllers
                                m.telefono_contacto,
                                m.usuario,
                                m.contrasenya,
-                               m.foto
+                               m.foto,
+                               m.id_rol  // Incluimos id_rol para seleccionarlo en la lista
                            }).FirstOrDefault();
 
-            ViewBag.usuario = usuario;
+            // Configuramos el SelectList con el rol seleccionado
+            ViewData["listadoDeRoles"] = new SelectList(listaDeRoles, "id_rol", "nombre_rol", usuario.id_rol);
 
-            ViewData["Usuario"] = usuario;
+            ViewBag.usuario = usuario;
 
             return View();
         }
 
+
         public IActionResult Editarusuario(int? id, usuarios usuarioModificar)
         {
-            //int verID = (int)id;
+            if (id == null || usuarioModificar == null)
+                return NotFound();
 
-            var listaDeRoles = (from m in _capibeadsDBContext.rol
-                                select m).ToList();
-            ViewData["listadoDeRoles"] = new SelectList(listaDeRoles, "id_rol", "nombre_rol");
+            var usuarioActual = (from m in _capibeadsDBContext.usuarios
+                                 where m.id_usuario == id
+                                 select m).FirstOrDefault();
 
-            usuarios? usuarioActual = (from m in _capibeadsDBContext.usuarios
-                                       join r in _capibeadsDBContext.rol on m.id_rol equals r.id_rol
-                                       where m.id_usuario == id
-                                       select m).FirstOrDefault();
+            if (usuarioActual == null)
+                return NotFound();
 
             usuarioActual.nombre = usuarioModificar.nombre;
             usuarioActual.correo = usuarioModificar.correo;
@@ -110,6 +112,7 @@ namespace CapiBeadsSV.Controllers
 
             _capibeadsDBContext.Entry(usuarioActual).State = EntityState.Modified;
             _capibeadsDBContext.SaveChanges();
+
             return RedirectToAction("SuccessModificar");
         }
 
@@ -121,18 +124,46 @@ namespace CapiBeadsSV.Controllers
         //AA: Funcion para eliminar
         public IActionResult DeleteUsuario(int? id)
         {
-            //int verID = (int)id;
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var usuario = (from m in _capibeadsDBContext.usuarios
-                                   where m.id_usuario == id
-                                   select m).FirstOrDefault();
-            if (usuario == null)
-                return NotFound ();
+                           join r in _capibeadsDBContext.rol on m.id_rol equals r.id_rol
+                           where m.id_usuario == id
+                           select new
+                           {
+                               m.id_usuario,
+                               m.nombre,
+                               m.correo,
+                               m.usuario,
+                               m.telefono_contacto,
+                               m.id_rol,
+                               NombreRol = r.nombre_rol // Obtener el nombre del rol
+                           }).FirstOrDefault();
 
-            _capibeadsDBContext.usuarios.Attach(usuario);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Usuario = usuario;
+            return View();
+        }
+
+
+        public IActionResult ConfirmDelete(int? id)
+        {
+            var usuario = _capibeadsDBContext.usuarios.FirstOrDefault(m => m.id_usuario == id);
+
+            if (usuario == null)
+                return NotFound();
+
             _capibeadsDBContext.usuarios.Remove(usuario);
             _capibeadsDBContext.SaveChanges();
 
+            TempData["Mensaje"] = "Usuario eliminado correctamente.";
             return RedirectToAction("IndexAdmin");
         }
 

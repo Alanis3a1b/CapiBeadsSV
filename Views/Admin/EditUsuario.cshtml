@@ -1,4 +1,5 @@
-﻿@{
+﻿@model dynamic
+@{
     ViewBag.Title = "EditUsuario";
     Layout = "_LayoutAdmin";
     var usuario = ViewBag.usuario;
@@ -9,68 +10,15 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
+
+
 <div class="container mt-5">
-    <div class="card mb-3">
-        <div class="card-header" style="background-color: #935E34; color: white;">
-            Usuario ID # @usuario.id_usuario
-        </div>
-
-        <div class="card-body" style="background-color: #d3d3d3; color: black;">
-            <p class="fw-bold">
-                Información de contacto
-            </p>
-
-            <div class="contact-info">
-
-                @*Mi proposito es que se despliegue la foto de perfil del usuario aqui*@
-                <div class="mb-3">
-                    @if (ViewBag.FotoUsuario != null)
-                    {
-                        <img id="profileImage" src="@ViewBag.FotoUsuario" alt="Foto de perfil" style="width: 150px; height: 150px;">
-                    }
-                </div>
-
-                <div>
-                    <div class="form-group">
-                        <label for="fullName" class="fw-bold">Nombre completo:</label>
-                        <input type="text" class="form-control" id="fullName" value="@usuario.nombre" readonly>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="form-group">
-                        <label for="email" class="fw-bold">Email:</label>
-                        <input type="email" class="form-control" id="email" value="@usuario.correo" readonly>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="form-group">
-                        <label for="phone" class="fw-bold">Número de teléfono:</label>
-                        <input type="text" class="form-control" id="phone" value="@usuario.telefono_contacto" readonly>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="form-group">
-                        <label for="phone" class="fw-bold">Rol del usuario:</label>
-                        <input type="text" class="form-control" id="phone" value="@usuario.rol" readonly>
-                    </div>
-                </div>
-
-
-            </div>
-            @* fin Apartado info Contacto *@
-        </div>
-    </div>
-    <hr>
-
-    @*PARTE PARA EDITAR LOS DATOS ANTERIMENTE DESPLEGADOS DEL USUARIO*@
     <div class="card mb-3">
         <div class="card-header" style="background-color: #935E34; color: white;">
             EDITAR DATOS DEL USUARIO
         </div>
 
+        <div class="card-body" style="background-color: #d3d3d3; color: black;">
             <div class="contact-info">
 
                 @*Mi proposito es que se despliegue la foto de perfil del usuario aqui*@
@@ -81,43 +29,58 @@
                     }
                 </div>
 
-            <form asp-action="Editarusuario" asp-route-id="@usuario.id_usuario">
-                <div class="card-header" style="background-color: #935E34; color: white;">
-                    Usuario ID # @usuario.id_usuario
-                </div>
+                <form asp-action="Editarusuario" asp-route-id="@usuario.id_usuario">
+                    <div class="card-header" style="background-color: #935E34; color: white;">
+                        Usuario ID # @usuario.id_usuario
+                    </div>
 
-                <div class="form-group">
-                    <label for="fullName" class="fw-bold">Nombre completo:</label>
-                    @Html.TextBox("nombre", "", new { @class = "form-control" })
-                </div>
+                    <div class="form-group">
+                        <label for="nombre" class="fw-bold">Nombre completo:</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" value="@usuario.nombre"
+                               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios" required />
+                    </div>
 
-                <div class="form-group">
-                    <label for="email" class="fw-bold">Email:</label>
-                    @Html.TextBox("correo", "", new { @class = "form-control" })
-                </div>
-                <div class="form-group">
-                    <label for="phone" class="fw-bold">Número de teléfono:</label>
-                    @Html.TextBox("telefono_contacto", "", new { @class = "form-control" })
-                </div>
-                <hr>
-                <div class="form-group">
-                    <label for="phone" class="fw-bold">Rol del usuario:</label>
-                    @Html.DropDownList("id_rol", ViewData["listadoDeRoles"] as SelectList, "--Sin rol--", new { @class = "form-control" })
-                </div>
+                    <div class="form-group">
+                        <label for="correo" class="fw-bold">Email:</label>
+                        <input type="email" class="form-control" id="correo" name="correo" value="@usuario.correo"
+                               required title="Por favor, ingrese un correo válido" />
+                    </div>
 
-                <div class="d-flex justify-content-end">
-                    <!-- Utiliza un botón de tipo "button" para evitar envíos de formulario -->
-                    <input type="submit" class="btn btn-primary btn-lg small" value="MODIFICAR USUARIO" />
-                </div>
-            </form>
+                    <div class="form-group">
+                        <label for="telefono_contacto" class="fw-bold">Número de teléfono:</label>
+                        <input type="text" class="form-control" id="telefono_contacto" name="telefono_contacto"
+                               pattern="\d{4}-\d{4}" maxlength="9" title="Formato: 1234-5678" value="@usuario.telefono_contacto" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_rol" class="fw-bold">Rol del usuario:</label>
+                        @Html.DropDownList("id_rol", ViewData["listadoDeRoles"] as SelectList, "--Sin rol--", new { @class = "form-control", required = "required" })
+                    </div>
+
+
+                    <div class="d-flex justify-content-end">
+                        <!-- Utiliza un botón de tipo "button" para evitar envíos de formulario -->
+                        <input type="submit" class="btn btn-primary btn-lg small" value="MODIFICAR USUARIO" />
+                    </div>
+                </form>
 
 
             </div>
             @* fin Apartado info Contacto *@
         </div>
+        
     </div>
     <hr>
     <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-primary btn-lg small p-2 m-2" style="background-color: #562888;  padding-bottom" onclick="history.back()">REGRESAR</button>
     </div>
-</div>
+
+    <script>
+        document.getElementById("telefono_contacto").addEventListener("input", function (e) {
+            let input = e.target.value.replace(/\D/g, ''); // Elimina cualquier carácter que no sea un número
+            if (input.length > 4) {
+                input = input.slice(0, 4) + '-' + input.slice(4, 8); // Agrega el guion en la posición correcta
+            }
+            e.target.value = input;
+        });
+    </script>

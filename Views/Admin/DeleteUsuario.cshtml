@@ -1,0 +1,38 @@
+﻿@model CapiBeadsSV.Models.usuarios
+
+@{
+    ViewBag.Title = "Confirmar Eliminación";
+    Layout = "_LayoutAdmin";
+}
+
+@if (ViewBag.Usuario != null)
+{
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header" style="background-color: #935E34; color: white;">
+                Confirmación de Eliminación
+            </div>
+            <div class="card-body">
+                <p>¿Estás seguro de que deseas eliminar al siguiente usuario?</p>
+                <p><strong>Nombre:</strong> @ViewBag.Usuario.nombre</p>
+                <p><strong>Email:</strong> @ViewBag.Usuario.correo</p>
+                <p><strong>Teléfono:</strong> @ViewBag.Usuario.telefono_contacto</p>
+                <p><strong>Usuario:</strong> @ViewBag.Usuario.usuario</p>
+                <p><strong>Rol:</strong> @ViewBag.Usuario.NombreRol</p> <!-- Mostrar el nombre del rol -->
+
+                <div class="d-flex justify-content-between">
+                    <!-- Botones para confirmar o cancelar -->
+                    <form asp-action="ConfirmDelete" asp-route-id="@ViewBag.Usuario.id_usuario">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+
+                    <a href="@Url.Action("IndexAdmin", "Admin")" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p class="text-danger">El usuario no existe o ya ha sido eliminado.</p>
+}
