@@ -9,19 +9,14 @@
     <table class="table">
         <thead>
             <tr>
-                <th>ID Tienda</th>
                 <th>Nombre Tienda</th>
                 <th>Descripcion Tienda</th>
-                <th></th>
-                <th></th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var tienda in tiendas)
             {
                 <tr>
-                    <td>@tienda.id_tienda</td>
                     <td>@tienda.nombreTienda</td>
                     <td>@tienda.descripcionTienda</td>
                     <td>
