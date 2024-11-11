@@ -1,0 +1,30 @@
+﻿@model CapiBeadsSV.Models.tiendas
+@{
+    ViewData["Title"] = "Eliminar Tienda";
+    Layout = "_LayoutAdmin";
+}
+
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header" style="background-color: #935E34; color: white;">
+            Confirmación de Eliminación
+        </div>
+        <div class="card-body">
+            <p> ¿Estás seguro de que deseas eliminar la Tienda <strong>@ViewBag.tienda.nombreTienda</strong>?</p>
+            <p><strong>NombreTienda:</strong> @ViewBag.tienda.nombreTienda</p>
+            <p><strong>Descripcion:</strong> @ViewBag.tienda.descripcionTienda</p>
+            <p><strong>Usuario:</strong> @ViewBag.tienda.UsuarioNombre</p>
+
+            <div class="d-flex justify-content-between">
+                <!-- Botones para confirmar o cancelar -->
+                <form asp-action="DeleteTienda" method="post">
+                    <input type="hidden" asp-for="id_tienda" value="@ViewBag.tienda.id_tienda" />
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <a asp-action="Tiendas" class="btn btn-secondary">Cancelar</a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

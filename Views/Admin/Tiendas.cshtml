@@ -14,6 +14,7 @@
             <th>Nombre de la Tienda</th>
             <th>Descripción</th>
             <th>Propietario</th>
+            <th>Imagen</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -23,11 +24,12 @@
             <tr>
                 <td>@tienda.id_tienda</td>
                 <td>@tienda.nombreTienda</td>
-                <td>@tienda.descripcionTienda</td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@tienda.descripcionTienda</td>
                 <td>@tienda.UsuarioNombre</td>
+                <td>@tienda.imagenFondo</td>
                 <td>
-                    <a href="@Url.Action("EditTienda", new { id = tienda.id_tienda })">Editar</a> |
-                    <a href="@Url.Action("DeleteTienda", new { id = tienda.id_tienda })">Eliminar</a>
+                    <a class="btn btn-warning" href="@Url.Action("EditTienda", new { id = tienda.id_tienda })">Editar</a> |
+                    <a class="btn btn-danger" href="@Url.Action("DeleteTienda", new { id = tienda.id_tienda })">Eliminar</a>
                 </td>
             </tr>
         }

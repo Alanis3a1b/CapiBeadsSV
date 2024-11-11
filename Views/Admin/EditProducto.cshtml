@@ -1,0 +1,58 @@
+﻿@model CapiBeadsSV.Models.productos
+
+@{
+    ViewData["Title"] = "Editar Producto";
+    Layout = "_LayoutAdmin";
+}
+<div class="container mt-5">
+    <div class="card mb-3">
+        <div class="card-header" style="background-color: #935E34; color: white;">
+            Editar Producto
+        </div>
+
+        <div class="card-body" style="background-color: #d3d3d3; color: black;">
+            <form asp-action="EditProducto" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="id_producto" />
+
+                <div class="form-group">
+                    <label asp-for="nombreProducto"></label>
+                    <input asp-for="nombreProducto" class="form-control" required />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="descripcion"></label>
+                    <textarea asp-for="descripcion" class="form-control" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="precio"></label>
+                    <input asp-for="precio" class="form-control" type="number" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Tienda</label>
+                    <select asp-for="id_tienda" asp-items="ViewBag.Tiendas" class="form-control"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select asp-for="id_categoria" asp-items="ViewBag.Categorias" class="form-control"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Estado Producto</label>
+                    <select asp-for="id_estadoProducto" asp-items="ViewBag.Estados" class="form-control"></select>
+                </div>
+
+
+                <div class="form-group">
+                    <label>Imagen del Producto</label>
+                    <input type="file" name="imagenProducto" class="form-control" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                <a asp-action="Productos" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>

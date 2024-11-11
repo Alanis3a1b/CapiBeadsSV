@@ -2,36 +2,50 @@
     ViewData["Title"] = "Crear Tienda";
     Layout = "_LayoutAdmin";
 }
+<head>
+    <link rel="stylesheet" href="/css/Admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
 
-<h1>Crear Nueva Tienda</h1>
+<div class="container mt-5">
+    <div class="card mb-3">
+        <div class="card-header" style="background-color: #935E34; color: white;">
+            Crear Nueva Tienda
+        </div>
+        <div class="card-body" style="background-color: #d3d3d3; color: black;">
+            <hr>
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="nombreTienda">Nombre de la Tienda</label>
+                    <input type="text" class="form-control" id="nombreTienda" name="nombreTienda" required />
+                </div>
 
-<form method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="nombreTienda">Nombre de la Tienda</label>
-        <input type="text" class="form-control" id="nombreTienda" name="nombreTienda" required />
+                <div class="form-group">
+                    <label for="descripcionTienda">Descripción de la Tienda</label>
+                    <textarea class="form-control" id="descripcionTienda" name="descripcionTienda" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_usuario">Propietario</label>
+                    <select class="form-control" id="id_usuario" name="id_usuario">
+                        @foreach (var usuario in ViewData["Usuarios"] as SelectList)
+                        {
+                            <option value="@usuario.Value">@usuario.Text</option>
+                        }
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="PhotoUpload">Imagen de Fondo</label>
+                    <input type="file" class="form-control" id="PhotoUpload" name="PhotoUpload" />
+                </div>
+
+                <button type="submit" class="btn btn-success">Crear Tienda</button>
+                <a href="@Url.Action("Tiendas")" class="btn btn-secondary mt-2">Volver a la Lista de Tiendas</a>
+            </form>
+            
+        </div>
     </div>
-
-    <div class="form-group">
-        <label for="descripcionTienda">Descripción de la Tienda</label>
-        <textarea class="form-control" id="descripcionTienda" name="descripcionTienda" required></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="id_usuario">Propietario</label>
-        <select class="form-control" id="id_usuario" name="id_usuario">
-            @foreach (var usuario in ViewData["Usuarios"] as SelectListItem[])
-            {
-                <option value="@usuario.Value">@usuario.Text</option>
-            }
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="PhotoUpload">Imagen de Fondo</label>
-        <input type="file" class="form-control" id="PhotoUpload" name="PhotoUpload" />
-    </div>
-
-    <button type="submit" class="btn btn-success">Crear Tienda</button>
-</form>
-
-<a href="@Url.Action("IndexTiendas")" class="btn btn-secondary mt-2">Volver a la Lista de Tiendas</a>
+</div>

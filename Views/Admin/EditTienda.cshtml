@@ -1,0 +1,47 @@
+﻿@model CapiBeadsSV.Models.tiendas
+
+@{
+    ViewData["Title"] = "Editar Tienda";
+    Layout = "_LayoutAdmin";
+}
+<div class="container mt-5">
+    <div class="card mb-3">
+        <div class="card-header" style="background-color: #935E34; color: white;">
+            Editar Tienda
+        </div>
+
+        <div class="card-body" style="background-color: #d3d3d3; color: black;">
+            <div class="contact-info">
+
+                <form asp-action="EditTienda" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="id_tienda" />
+
+                    <div class="form-group">
+                        <label asp-for="nombreTienda"></label>
+                        <input asp-for="nombreTienda" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="descripcionTienda"></label>
+                        <textarea asp-for="descripcionTienda" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <select asp-for="id_usuario" asp-items="ViewBag.Usuarios" class="form-control"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Imagen de Fondo</label>
+                        <input type="file" name="imagenFondo" class="form-control" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <a asp-action="Tiendas" class="btn btn-secondary">Cancelar</a>
+                </form>
+
+
+            </div>
+        </div>
+
+    </div>
