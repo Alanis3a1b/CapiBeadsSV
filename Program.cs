@@ -1,5 +1,6 @@
 using CapiBeadsSV.Models;
 using Microsoft.EntityFrameworkCore;
+using CapiBeadsSV.Serv;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,14 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// Añade IWebHostEnvironment a los servicios
+builder.Services.AddSingleton<IWebHostEnvironment>(builder.Environment);
+
+// Registrar IHttpContextAccessor
+builder.Services.AddHttpContextAccessor();
+
+// Registrar IUserService y su implementación
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
