@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Admin\Usuario\" />
-    <Folder Include="wwwroot\IMG\" />
   </ItemGroup>
 
 </Project>

@@ -75,135 +75,116 @@ namespace CapiBeadsSV.Controllers
             ViewBag.Productos = productoUsuario;
             return View();
         }
-
-        public ActionResult Perfil()
+        public IActionResult Perfil()
         {
             var datosUsuario = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
-            ViewBag.NombreUsuario = datosUsuario.nombre;
-            ViewBag.CorreoUsuario = datosUsuario.correo;
-            ViewBag.FotoUsuario = datosUsuario.foto;
-
-            //if (datosUsuario.foto != null)
-            //{
-            //    string base64Image = Convert.ToBase64String(datosUsuario.foto);
-            //    ViewBag.FotoUsuario = $"data:image/png;base64,{base64Image}";
-            //}
-            //else if (!string.IsNullOrEmpty(datosUsuario.usuario))
-            //{
-            //    ViewBag.FotoUsuario = "/" + datosUsuario.usuario.Replace("\\", "/");
-            //}
-            //else
-            //{
-            //    ViewBag.FotoUsuario = null;
-            //}
+            if (datosUsuario != null)
+            {
+                ViewBag.NombreUsuario = datosUsuario.nombre;
+                ViewBag.CorreoUsuario = datosUsuario.correo;
+                ViewBag.FotoUsuario = datosUsuario.foto != null
+                    ? $"data:image/png;base64,{Convert.ToBase64String(datosUsuario.foto)}"
+                    : null;
+            }
 
             return View();
         }
 
-        private async Task<string> UploadPhoto(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-            {
-                return null;
-            }
-
-            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-            string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "ProfileImg");
-
-            if (!Directory.Exists(uploadPath))
-            {
-                Directory.CreateDirectory(uploadPath);
-            }
-
-            string filePath = Path.Combine(uploadPath, fileName);
-
-            try
-            {
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            return Path.Combine("ProfileImg", fileName);
-        }
-
-
-        //Se supone que funciona pero no guarda nada
         [HttpPost]
         public async Task<IActionResult> CambiarFotoPerfil(IFormFile photoUpload)
         {
             var datosUsuario = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
-            var usuarioF = await _userService.GetCurrentUserAsync();
 
-            if (photoUpload != null && photoUpload.Length > 0)
+            if (datosUsuario == null || photoUpload == null || photoUpload.Length == 0)
             {
-                if (!string.IsNullOrEmpty(usuarioF.usuario))
-                {
-                    string existingFilePath = Path.Combine(_webHostEnvironment.WebRootPath, usuarioF.usuario);
-                    if (System.IO.File.Exists(existingFilePath))
-                    {
-                        System.IO.File.Delete(existingFilePath);
-                    }
-                }
-
-                string newFilePath = await UploadPhoto(photoUpload);
-                if (!string.IsNullOrEmpty(newFilePath))
-                {
-                    usuarioF.foto = System.IO.File.ReadAllBytes(Path.Combine(_webHostEnvironment.WebRootPath, newFilePath));
-                    usuarioF.usuario = newFilePath;
-                }
-
-                _capibeadsDBContext.Update(usuarioF);
-                await _capibeadsDBContext.SaveChangesAsync();
-
-                // Actualizar el objeto de usuario en la sesión
-                var usuarioSesion = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
-                if (newFilePath != null)
-                {
-                    usuarioSesion.usuario = newFilePath; // Actualizar la ruta en el objeto de sesión
-                }
-                HttpContext.Session.SetString("user", JsonSerializer.Serialize(usuarioSesion));
-
-                return Json(new { success = true, newImageUrl = "/" + newFilePath.Replace("\\", "/") });
+                TempData["Message"] = "Error al cargar la imagen.";
+                return RedirectToAction("Perfil");
             }
 
-            return Json(new { success = false, message = "No se proporcionó ninguna imagen para actualizar." });
+            try
+            {
+                // Consultar el usuario de la base de datos para obtener todos sus campos
+                var usuario = await _capibeadsDBContext.usuarios
+                    .FirstOrDefaultAsync(u => u.id_usuario == datosUsuario.id_usuario);
+
+                if (usuario == null)
+                {
+                    TempData["Message"] = "Usuario no encontrado.";
+                    return RedirectToAction("Perfil");
+                }
+
+                // Guardar la foto en el servidor
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(photoUpload.FileName);
+                string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "ProfileImg");
+
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+
+                string filePath = Path.Combine(uploadPath, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photoUpload.CopyToAsync(stream);
+                }
+
+                // Actualizar la foto en el objeto usuario
+                usuario.foto = System.IO.File.ReadAllBytes(filePath);
+                _capibeadsDBContext.usuarios.Update(usuario);
+                await _capibeadsDBContext.SaveChangesAsync();
+
+                // Actualizar sesión con los datos completos
+                HttpContext.Session.SetString("user", JsonSerializer.Serialize(usuario));
+
+                TempData["Message"] = "Foto actualizada correctamente.";
+            }
+            catch (Exception)
+            {
+                TempData["Message"] = "Hubo un error al guardar la imagen.";
+            }
+
+            return RedirectToAction("Perfil");
         }
 
         [HttpPost]
         public async Task<IActionResult> CambiarContrasena(string currentPassword, string newPassword, string confirmNewPassword)
         {
+            // Obtenemos los datos del usuario desde la sesión
             var datosUsuario = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+            if (datosUsuario == null)
+            {
+                TempData["ErrorMessage"] = "Usuario no encontrado.";
+                return RedirectToAction("Perfil");
+            }
 
-            var usuario = _capibeadsDBContext.usuarios.FirstOrDefault(u => u.contrasenya == currentPassword);
+            // Verificar si la contraseña actual coincide
+            var usuario = await _capibeadsDBContext.usuarios
+                                    .FirstOrDefaultAsync(u => u.id_usuario == datosUsuario.id_usuario && u.contrasenya == currentPassword);
 
             if (usuario == null)
             {
-                ModelState.AddModelError("currentPassword", "La contraseña actual es incorrecta.");
-                return View("Settings");
+                TempData["ErrorMessage"] = "La contraseña actual es incorrecta.";
+                return RedirectToAction("Perfil");
             }
 
-            if (!string.IsNullOrEmpty(newPassword) && newPassword != confirmNewPassword)
+            // Validar que la nueva contraseña y la confirmación coincidan
+            if (newPassword != confirmNewPassword)
             {
-                ModelState.AddModelError("confirmNewPassword", "Las contraseñas no coinciden.");
-                return View("Settings");
+                TempData["ErrorMessage"] = "Las contraseñas nuevas no coinciden.";
+                return RedirectToAction("Perfil");
             }
 
-            if (!string.IsNullOrEmpty(newPassword))
-            {
-                usuario.contrasenya = newPassword;
-                _capibeadsDBContext.Update(usuario);
-                await _capibeadsDBContext.SaveChangesAsync();
-            }
+            // Actualizar la contraseña en la base de datos
+            usuario.contrasenya = newPassword;
+            _capibeadsDBContext.usuarios.Update(usuario);
+            await _capibeadsDBContext.SaveChangesAsync();
 
-            return Json(new { success = true, message = "Contraseña actualizada correctamente." });
+            // Actualizar la sesión con los nuevos datos del usuario
+            HttpContext.Session.SetString("user", JsonSerializer.Serialize(usuario));
+
+            TempData["SuccessMessage"] = "Contraseña actualizada correctamente.";
+            return RedirectToAction("Perfil");
         }
-
 
         public async Task<IActionResult> DeleteTienda(int? id)
         {

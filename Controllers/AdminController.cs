@@ -30,6 +30,7 @@ namespace CapiBeadsSV.Controllers
                                 rol = r.nombre_rol,
                                 m.telefono_contacto,
                                 m.usuario,
+                                FotoBase64 = m.foto != null ? Convert.ToBase64String(m.foto) : null,  // Convertir a base64
                                 m.contrasenya
                             }).ToList();
 

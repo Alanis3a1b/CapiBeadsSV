@@ -2,9 +2,7 @@
     Layout = "_LayoutAdmin";
     var usuarios = ViewBag.usuarios;
 }
-
 <main>
-    @* Mostrar mensaje de confirmación *@
     @if (TempData["Mensaje"] != null)
     {
         <div id="mensajeTemp" class="alert alert-success">
@@ -13,8 +11,9 @@
     }
 
     <h2>Usuarios</h2>
-    <a asp-action="CreateUsuarioAdmin" class="btn btn-primary">Agregar Usuario</a>
-    <table class="table">
+    <a asp-action="CreateUsuarioAdmin" class="btn btn-primary mb-3">Agregar Usuario</a>
+
+    <table class="table table-bordered text-center table-sm" style="font-size: 0.9em;">
         <thead>
             <tr>
                 <th>ID</th>
@@ -23,6 +22,7 @@
                 <th>Teléfono</th>
                 <th>Usuario</th>
                 <th>Rol</th>
+                <th>Perfil</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -32,13 +32,25 @@
                 <tr>
                     <td>@usuario.id_usuario</td>
                     <td>@usuario.nombre</td>
-                    <td>@usuario.correo</td>
+                    <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        @usuario.correo
+                    </td>
                     <td>@usuario.telefono_contacto</td>
                     <td>@usuario.usuario</td>
                     <td>@usuario.rol</td>
+                    <td style="max-width: 80px; white-space: nowrap;">
+                        @if (!string.IsNullOrEmpty(usuario.FotoBase64))
+                        {
+                            <img src="data:image/png;base64,@usuario.FotoBase64" alt="Foto de perfil" style="width: 70px; height: 70px; border-radius: 12px;" />
+                        }
+                        else
+                        {
+                            <span style="font-size: 0.8em;">No disponible</span>
+                        }
+                    </td>
                     <td>
-                        <a asp-action="EditUsuario" asp-route-id="@usuario.id_usuario" class="btn btn-warning">Editar</a>
-                        <a asp-action="DeleteUsuario" asp-route-id="@usuario.id_usuario" class="btn btn-danger">Eliminar</a>
+                        <a asp-action="EditUsuario" asp-route-id="@usuario.id_usuario" class="btn btn-warning btn-sm">Editar</a>
+                        <a asp-action="DeleteUsuario" asp-route-id="@usuario.id_usuario" class="btn btn-danger btn-sm">Eliminar</a>
                     </td>
                 </tr>
             }
@@ -47,11 +59,19 @@
 </main>
 
 <script>
-    // Temporizador para ocultar el mensaje después de 5 segundos (5000 ms)
     setTimeout(function () {
         var mensaje = document.getElementById("mensajeTemp");
         if (mensaje) {
             mensaje.style.display = "none";
         }
-    }, 5000); // Ajusta el tiempo (en milisegundos) según lo que necesites
+    }, 5000);
 </script>
+
+<style>
+    /* Ajustar el ancho máximo de la columna de correo electrónico */
+    table th, table td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>

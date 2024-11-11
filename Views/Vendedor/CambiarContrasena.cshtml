@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "_LayoutVendedor";
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<h2>Cambiar Contraseña</h2>
+<form asp-action="CambiarContrasena" method="post">
+    <div class="form-group">
+        <label for="currentPassword">Contraseña Actual</label>
+        <input type="password" name="currentPassword" id="currentPassword" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="newPassword">Nueva Contraseña</label>
+        <input type="password" name="newPassword" id="newPassword" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="confirmNewPassword">Confirmar Nueva Contraseña</label>
+        <input type="password" name="confirmNewPassword" id="confirmNewPassword" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
+</form>
+
+<a href="@Url.Action("Perfil", "Vendedor")" class="btn btn-secondary">Perfil</a>
+
+<style>
+    /* Estilos para hacer desaparecer el mensaje después de 3 segundos */
+    #tempMessage {
+        transition: opacity 3s ease - out;
+    }
+</style>
+<script>
+
+    // Script para ocultar el mensaje después de 3 segundos
+    setTimeout(function () {
+        var message = document.getElementById("tempMessage");
+        if (message) {
+            message.style.opacity = "0";
+            setTimeout(() => message.remove(), 3000);  // Remueve el elemento completamente después de 3 segundos
+        }
+    }, 3000);
+</script>
