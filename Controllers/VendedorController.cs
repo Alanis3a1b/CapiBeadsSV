@@ -223,67 +223,40 @@ namespace CapiBeadsSV.Controllers
             return RedirectToAction("IndexVendedor");
         }
 
-        //MORE METODS
-        public ActionResult Details(int id)
+        //Crear tienda para los vendedores
+        public IActionResult CreateTienda()
         {
-            return View();
-        }
-         
-        // POST: VendedorController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            // Filtramos los usuarios con id_rol = 2
+            var listaDeUsuarios = _capibeadsDBContext.usuarios
+                                                    .Where(u => u.id_rol == 2)
+                                                    .ToList();
 
-        // GET: VendedorController/Edit/5
-        public ActionResult Edit(int id)
-        {
+            // Asignamos la lista filtrada al ViewData para ser usada en la vista
+            ViewData["Usuarios"] = new SelectList(listaDeUsuarios, "id_usuario", "nombre");
+
             return View();
         }
 
-        // POST: VendedorController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> CreateTienda(tiendas nuevaTienda, IFormFile imagenFondo)
         {
-            try
+            if (imagenFondo != null && imagenFondo.Length > 0)
             {
-                return RedirectToAction(nameof(Index));
+                using (var ms = new System.IO.MemoryStream())
+                {
+                    imagenFondo.CopyTo(ms);
+                    nuevaTienda.imagenFondo = ms.ToArray();
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            _capibeadsDBContext.tiendas.Add(nuevaTienda);
+            await _capibeadsDBContext.SaveChangesAsync();
+            return RedirectToAction("SuccessTienda");
         }
 
-        // GET: VendedorController/Delete/5
-        public ActionResult Delete(int id)
+        public IActionResult SuccessTienda()
         {
             return View();
-        }
-
-        // POST: VendedorController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }
