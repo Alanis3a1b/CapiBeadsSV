@@ -47,14 +47,32 @@ namespace CapiBeadsSV.Controllers
                                       t.nombreTienda,
                                       t.descripcionTienda
 
-                                  }).Take(3).ToList(); //Máximo de filas (tickets) a mostrar en el Home de Cliente
+                                  }).Take(5).ToList(); //Máximo de filas (tickets) a mostrar en el Home de Cliente
 
             ViewBag.Tiendas = tiendasUsuario;
             return View();
         }
 
+        //Solamente tomara los productos que pertenezcan exclusivamente a las tiendas del usuario vendedor en cuestion
         public ActionResult Productos()
         {
+            var usuarioSesion = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+            var productoUsuario = (from p in _capibeadsDBContext.productos
+                                   join t in _capibeadsDBContext.tiendas on p.id_tienda equals t.id_tienda
+                                   join u in _capibeadsDBContext.usuarios on t.id_usuario equals u.id_usuario
+                                   join c in _capibeadsDBContext.categorias on p.id_categoria equals c.id_categoria
+                                   select new
+                                   {
+                                       p.id_producto,
+                                       nombreTienda = t.nombreTienda,
+                                       nombreProducto = p.nombreProducto,
+                                       descripcionProd = p.descripcion,
+                                       categoriaProd = c.nombreCategoria,
+                                       precioProd = p.precio
+                                   
+                                   }).ToList();
+
+            ViewBag.Productos = productoUsuario;
             return View();
         }
 
@@ -258,5 +276,23 @@ namespace CapiBeadsSV.Controllers
         {
             return View();
         }
+
+        //En progreso, aun la vista tiendas no funciona
+        public IActionResult VerTienda(int? id)
+        {
+            var tienda = (from t in _capibeadsDBContext.tiendas
+                               where t.id_tienda == id
+                               select new
+                               {
+                                   t.id_tienda,
+                                   t.id_usuario,
+                                   t.nombreTienda,
+                                   t.imagenFondo,
+                                   t.descripcionTienda
+                               }).FirstOrDefaultAsync();
+            return View();
+        }
+
+
     }
 }

@@ -1,5 +1,57 @@
 ﻿@{
     Layout = "_LayoutVendedor";
-    //var tiendas = ViewBag.Tiendas;
+    var productoUsuario = ViewBag.Productos;
+
 }
 
+<main>
+    @* Mostrar mensaje de confirmación *@
+    @if (TempData["Mensaje"] != null)
+    {
+        <div id="mensajeTemp" class="alert alert-success">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    <h2>Productos</h2>
+    <a asp-action="CreateUsuarioAdmin" class="btn btn-primary">Agregar Usuario</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID Producto</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var producto in productoUsuario)
+            {
+                <tr>
+                    <td>@producto.id_producto</td>
+                    <td>@producto.nombreTienda</td>
+                    <td>@producto.descripcionProd</td>
+                    <td>@producto.categoriaProd</td>
+                    <td>@producto.precioProd</td>
+                    <td>
+                        <a asp-action="EditProducto" asp-route-id="@producto.id_producto" class="btn btn-warning">Editar</a>
+                        <a asp-action="DeleteProducto" asp-route-id="@producto.id_producto" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</main>
+
+<script>
+    // Temporizador para ocultar el mensaje después de 5 segundos (5000 ms)
+    setTimeout(function () {
+        var mensaje = document.getElementById("mensajeTemp");
+        if (mensaje) {
+            mensaje.style.display = "none";
+        }
+    }, 5000); // Ajusta el tiempo (en milisegundos) según lo que necesites
+</script>

@@ -12,6 +12,9 @@
                 <th>ID Tienda</th>
                 <th>Nombre Tienda</th>
                 <th>Descripcion Tienda</th>
+                <th></th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -24,6 +27,7 @@
                     <td>
                         <a asp-action="EditTienda" asp-route-id="@tienda.id_tienda" class="btn btn-warning">Editar</a>
                         <a asp-action="DeleteTienda" asp-route-id="@tienda.id_tienda" class="btn btn-danger">Eliminar</a>
+                        <a asp-action="VerTienda" asp-route-id="@tienda.id_tienda" class="btn btn-danger">Ver Tienda</a>
                     </td>
                 </tr>
             }
