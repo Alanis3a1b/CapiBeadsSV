@@ -444,9 +444,11 @@ namespace CapiBeadsSV.Controllers
         }
 
         // Eliminar producto
+        // GET: Productos/DeleteProducto/5
         public async Task<IActionResult> DeleteProducto(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
             var producto = await (from p in _capibeadsDBContext.productos
                                   join t in _capibeadsDBContext.tiendas on p.id_tienda equals t.id_tienda
@@ -460,17 +462,20 @@ namespace CapiBeadsSV.Controllers
                                       TiendaNombre = t.nombreTienda
                                   }).FirstOrDefaultAsync();
 
-            if (producto == null) return NotFound();
+            if (producto == null)
+                return NotFound();
 
             ViewBag.Producto = producto;
             return View();
         }
 
+        // POST: Productos/DeleteProducto/5
         [HttpPost, ActionName("DeleteProducto")]
         public async Task<IActionResult> ConfirmDeleteProducto(int id)
         {
             var producto = await _capibeadsDBContext.productos.FindAsync(id);
-            if (producto == null) return NotFound();
+            if (producto == null)
+                return NotFound();
 
             _capibeadsDBContext.productos.Remove(producto);
             await _capibeadsDBContext.SaveChangesAsync();
@@ -479,6 +484,7 @@ namespace CapiBeadsSV.Controllers
             return RedirectToAction("Productos");
         }
 
+        // Success View for Deletion
         public IActionResult SuccessEliminarProducto()
         {
             return View();

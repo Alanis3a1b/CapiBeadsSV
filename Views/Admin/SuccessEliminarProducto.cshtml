@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Producto Eliminado";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container mt-5">
+    <div class="card mb-3">
+        <div class="card-header" style="background-color: #935E34; color: white;">
+            ¡Producto Eliminado Correctamente!
+        </div>
+        <div class="card-body" style="background-color: #d3d3d3; color: black;">
+            <p>El producto ha sido eliminado exitosamente.</p>
+            <a href="@Url.Action("Productos")" class="btn btn-primary">Volver a la Lista de Productos</a>
+        </div>
+    </div>
+</div>
