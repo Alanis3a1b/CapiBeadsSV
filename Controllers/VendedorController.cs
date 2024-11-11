@@ -293,6 +293,42 @@ namespace CapiBeadsSV.Controllers
             return View();
         }
 
+        public IActionResult CreateProducto()
+        {
+            ViewData["Tiendas"] = new SelectList(_capibeadsDBContext.tiendas, "id_tienda", "nombreTienda");
+            ViewData["Estados"] = new SelectList(_capibeadsDBContext.estados, "id_estadoProducto", "nombreEstado");
+            ViewData["Categorias"] = new SelectList(_capibeadsDBContext.categorias, "id_categoria", "nombreCategoria");
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProducto(productos nuevoProducto, IFormFile imagenProducto)
+        {
+            if (imagenProducto != null && imagenProducto.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    imagenProducto.CopyTo(ms);
+                    nuevoProducto.imagenProducto = ms.ToArray();
+                }
+            }
+
+            _capibeadsDBContext.productos.Add(nuevoProducto);
+            await _capibeadsDBContext.SaveChangesAsync();
+            return RedirectToAction("SuccessProducto");
+        }
+
+        public IActionResult SuccessProducto()
+        {
+            return View();
+        }
+
+        public IActionResult Pedidos()
+        {
+
+            return View();
+        }
 
     }
 }
