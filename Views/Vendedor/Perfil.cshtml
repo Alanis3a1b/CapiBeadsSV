@@ -107,6 +107,7 @@
             body: formData
         }).then(response => response.json())
             .then(data => {
+                //Este if es el que no funciona :"( salta de una al else
                 if (data.success) {
                     // Actualizar la imagen de perfil
                     document.getElementById('profileImage').src = data.newImageUrl;

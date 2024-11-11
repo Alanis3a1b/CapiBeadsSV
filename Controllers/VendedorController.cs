@@ -63,20 +63,21 @@ namespace CapiBeadsSV.Controllers
             var datosUsuario = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
             ViewBag.NombreUsuario = datosUsuario.nombre;
             ViewBag.CorreoUsuario = datosUsuario.correo;
+            ViewBag.FotoUsuario = datosUsuario.foto;
 
-            if (datosUsuario.foto != null)
-            {
-                string base64Image = Convert.ToBase64String(datosUsuario.foto);
-                ViewBag.FotoUsuario = $"data:image/png;base64,{base64Image}";
-            }
-            else if (!string.IsNullOrEmpty(datosUsuario.usuario))
-            {
-                ViewBag.FotoUsuario = "/" + datosUsuario.usuario.Replace("\\", "/");
-            }
-            else
-            {
-                ViewBag.FotoUsuario = null;
-            }
+            //if (datosUsuario.foto != null)
+            //{
+            //    string base64Image = Convert.ToBase64String(datosUsuario.foto);
+            //    ViewBag.FotoUsuario = $"data:image/png;base64,{base64Image}";
+            //}
+            //else if (!string.IsNullOrEmpty(datosUsuario.usuario))
+            //{
+            //    ViewBag.FotoUsuario = "/" + datosUsuario.usuario.Replace("\\", "/");
+            //}
+            //else
+            //{
+            //    ViewBag.FotoUsuario = null;
+            //}
 
             return View();
         }
@@ -113,6 +114,8 @@ namespace CapiBeadsSV.Controllers
             return Path.Combine("ProfileImg", fileName);
         }
 
+
+        //Se supone que funciona pero no guarda nada
         [HttpPost]
         public async Task<IActionResult> CambiarFotoPerfil(IFormFile photoUpload)
         {
@@ -183,6 +186,42 @@ namespace CapiBeadsSV.Controllers
             return Json(new { success = true, message = "Contraseña actualizada correctamente." });
         }
 
+
+        public async Task<IActionResult> DeleteTienda(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var tienda = await (from t in _capibeadsDBContext.tiendas                                  
+                                where t.id_tienda == id
+                                  select new
+                                  {
+                                      t.id_tienda,
+                                      t.id_usuario,
+                                      t.nombreTienda,
+                                      t.imagenFondo,
+                                      t.descripcionTienda
+                                  }).FirstOrDefaultAsync();
+
+            if (tienda == null) return NotFound();
+
+            ViewBag.tiendas = tienda;
+            return View();
+        }
+
+        //Confirmar la eliminacion de una tienda
+        public IActionResult ConfirmDelete(int? id)
+        {
+            var tienda = _capibeadsDBContext.tiendas.FirstOrDefault(m => m.id_tienda == id);
+
+            if (tienda == null)
+                return NotFound();
+
+            _capibeadsDBContext.tiendas.Remove(tienda);
+            _capibeadsDBContext.SaveChanges();
+
+            TempData["Mensaje"] = "Tienda eliminada correctamente.";
+            return RedirectToAction("IndexVendedor");
+        }
 
         //MORE METODS
         public ActionResult Details(int id)
