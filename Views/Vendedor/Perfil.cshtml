@@ -1,0 +1,146 @@
+﻿@{
+    Layout = "_LayoutVendedor";
+    var tiendas = ViewBag.Tiendas;
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Card Ajustes -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-white" style="background-color: #6f42c1;">
+                    AJUSTES
+                </div>
+
+                <form id="changeProfileForm" action="/Vendedor/CambiarFotoPerfil" method="post" enctype="multipart/form-data">
+                    <div class="card-body" style="background-color: #f8f9fa;">
+                        <div class="mb-3">
+                            <strong>Cambiar datos de perfil</strong>
+                        </div>
+                        <hr>
+                        <div class="row mb-3">
+                            <div class="mb-3">
+                                <label for="profilePicture" class="form-label">Foto de perfil:</label>
+                                <input type="file" class="form-control" id="profilePicture" name="photoUpload" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-primary rounded-pill" style="background-color: #0d6efd; border-color: #0d6efd; color: #ffffff;">GUARDAR CAMBIOS</button>
+                        </div>
+                    </div>
+                </form>
+
+                <form id="changePasswordForm" action="/Vendedor/CambiarContrasena" method="post">
+                    <div class="card-body" style="background-color: #f8f9fa;">
+                        <div class="mb-3">
+                            <strong>Cambiar contraseña</strong>
+                        </div>
+                        <hr>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="currentPassword" class="form-label">Contraseña actual:</label>
+                                <input type="password" class="form-control" id="currentPassword" name="currentPassword">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="newPassword" class="form-label">Nueva contraseña:</label>
+                                <input type="password" class="form-control" id="newPassword" name="newPassword">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirmNewPassword" class="form-label">Confirmar nueva contraseña:</label>
+                                <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword">
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-primary rounded-pill" style="background-color: #0d6efd; border-color: #0d6efd; color: #ffffff;">GUARDAR CAMBIOS</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Card Perfil de Cliente -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-white" style="background-color: #6f42c1;">
+                    PERFIL DE CLIENTE
+                </div>
+                <div class="card-body text-center" style="background-color: #f8f9fa;">
+                    <div class="mb-3">
+                        @if (ViewBag.FotoUsuario != null)
+                        {
+                            <img id="profileImage" src="@ViewBag.FotoUsuario" alt="Foto de perfil" style="width: 150px; height: 150px;">
+                        }
+                    </div>
+                    <div class="mb-3">
+                        <strong>Nombre:</strong>
+                        <p id="clientName">@ViewBag.NombreUsuario</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Correo:</strong>
+                        <p id="clientEmail">@ViewBag.CorreoUsuario</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    //Para cambiar foto de perfil (No funciona :'CCCCC)
+    document.getElementById('changeProfileForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var formData = new FormData(this);
+
+        fetch('/Vendedor/CambiarFotoPerfil', {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Actualizar la imagen de perfil
+                    document.getElementById('profileImage').src = data.newImageUrl;
+                    alert('Foto actualizada correctamente.');
+                } else {
+                    alert('Error al actualizar la foto.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+
+        document.getElementById("profilePicture").value = ""; // Limpia el campo de carga de la imagen
+    });
+
+    //Para validar y cambiar contrasennya, si funciona.
+    document.getElementById('changePasswordForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var formData = new FormData(this);
+
+        fetch('/Vendedor/CambiarContrasena', {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Contraseña actualizada correctamente.');
+                } else {
+                    alert('Error al actualizar la contraseña.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+
+        document.getElementById("currentPassword").value = ""; // Limpia el campo de contraseña actual
+        document.getElementById("newPassword").value = ""; // Limpia el campo de nueva contraseña
+        document.getElementById("confirmNewPassword").value = ""; // Limpia el campo de confirmar nueva contraseña
+    });
+</script>

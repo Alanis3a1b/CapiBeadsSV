@@ -1,17 +1,34 @@
 ﻿@{
-    Layout = "_LoginLayout";
+    Layout = "_LayoutVendedor";
+    var tiendas = ViewBag.Tiendas;
 }
-
-<head>
-    <link rel="stylesheet" href="/css/site.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-</head>
 
 
 <div class="Fondo">
    <h2>Vendedor</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID Tienda</th>
+                <th>Nombre Tienda</th>
+                <th>Descripcion Tienda</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tienda in tiendas)
+            {
+                <tr>
+                    <td>@tienda.id_tienda</td>
+                    <td>@tienda.nombreTienda</td>
+                    <td>@tienda.descripcionTienda</td>
+                    <td>
+                        <a asp-action="EditUsuario" asp-route-id="@tienda.id_tienda" class="btn btn-warning">Editar</a>
+                        <a asp-action="DeleteUsuario" asp-route-id="@tienda.id_tienda" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 
