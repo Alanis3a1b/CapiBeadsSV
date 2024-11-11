@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Eliminar Producto";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container mt-5">
+    <div class="card mb-3">
+        <div class="card-header" style="background-color: #935E34; color: white;">
+            Eliminar Producto
+        </div>
+
+        <div class="card-body" style="background-color: #d3d3d3; color: black;">
+            <h4>¿Estás seguro de que deseas eliminar el siguiente producto?</h4>
+            <dl class="row">
+                <dt class="col-sm-3">Nombre Producto:</dt>
+                <dd class="col-sm-9">@ViewBag.Producto.nombreProducto</dd>
+
+                <dt class="col-sm-3">Descripción:</dt>
+                <dd class="col-sm-9">@ViewBag.Producto.descripcion</dd>
+
+                <dt class="col-sm-3">Precio:</dt>
+                <dd class="col-sm-9">@ViewBag.Producto.precio</dd>
+
+                <dt class="col-sm-3">Tienda:</dt>
+                <dd class="col-sm-9">@ViewBag.Producto.TiendaNombre</dd>
+            </dl>
+
+            <form method="post">
+                <button type="submit" class="btn btn-danger">Eliminar Producto</button>
+                <a href="@Url.Action("Productos")" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
