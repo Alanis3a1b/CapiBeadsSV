@@ -1,0 +1,34 @@
+﻿@{
+    Layout = "_LayoutVendedor";
+    var tiendas = ViewBag.tiendas;
+}
+
+
+@if (tiendas != null)
+{
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header" style="background-color: #935E34; color: white;">
+                Confirmación de Eliminación
+            </div>
+            <div class="card-body">
+                <p>¿Estás seguro de que deseas eliminar la siguiente tienda?</p>
+                <p><strong>Nombre:</strong> @tiendas.nombreTienda</p>
+                <p><strong>Email:</strong> @tiendas.descripcionTienda</p>
+
+                <div class="d-flex justify-content-between">
+                    <!-- Botones para confirmar o cancelar -->
+                    <form asp-action="ConfirmDelete" asp-route-id="@tiendas.id_tienda">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+
+                    <a href="@Url.Action("IndexVendedor", "Vendedor")" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p class="text-danger">El usuario no existe o ya ha sido eliminado.</p>
+}
