@@ -3,3 +3,45 @@
     //var productoUsuario = ViewBag.Productos;
 
 }
+
+<div class="container mt-5">
+    <h2>Órdenes de Productos de la Tienda del Usuario</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID Orden</th>
+                <th>Dirección</th>
+                <th>Total</th>
+                <th>Fecha de Orden</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var orden in Model)
+            {
+                <tr>
+                    <td>@orden.id_orden</td>
+                    <td>@orden.direccion</td>
+                    <td>@orden.total</td>
+                    <td>@orden.fechaOrden.ToString("dd/MM/yyyy")</td>
+                    <td>@orden.id_estadoPedido</td>
+                    <td>
+                        <a asp-action="EditOrden" asp-route-id="@orden.id_producto" class="btn btn-warning">Editar</a>
+                        <a asp-action="DeleteOrden" asp-route-id="@orden.id_producto" class="btn btn-danger">Eliminar</a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Temporizador para ocultar el mensaje después de 5 segundos (5000 ms)
+    setTimeout(function () {
+        var mensaje = document.getElementById("mensajeTemp");
+        if (mensaje) {
+            mensaje.style.display = "none";
+        }
+    }, 5000); // Ajusta el tiempo (en milisegundos) según lo que necesites
+</script>

@@ -299,43 +299,21 @@ namespace CapiBeadsSV.Controllers
             return View();
         }
 
-        //public IActionResult Productos()
-        //{
-        //    // Obtener el usuario desde la sesión
-        //    var usuarioSesion = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
-
-        //    // Obtener las tiendas del usuario y sus productos
-        //    var tiendas = await _capibeadsDBContext.tiendas
-        //        .Where(t => t.id_usuario == usuarioSesion.id_usuario)
-        //        .Select(t => new
-        //        {
-        //            t.id_tienda,
-        //            t.nombreTienda,
-        //            t.descripcionTienda,
-        //            t.imagenFondo,
-        //            Productos = _capibeadsDBContext.productos
-        //                .Where(p => p.id_tienda == t.id_tienda)
-        //                .Select(p => new
-        //                {
-        //                    p.id_producto,
-        //                    p.nombreProducto,
-        //                    p.precio,
-        //                    p.imagenProducto,
-        //                    CategoriaNombre = _capibeadsDBContext.categorias
-        //                        .Where(c => c.id_categoria == p.id_categoria)
-        //                        .Select(c => c.nombreCategoria)
-        //                        .FirstOrDefault()
-        //                }).ToList()
-        //        }).ToListAsync();
-
-        //    // Pasar las tiendas con sus productos a la vista
-        //    ViewBag.Tiendas = tiendas;
-        //    return View();
-        //}
-
         public IActionResult CreateProducto()
         {
-            ViewData["Tiendas"] = new SelectList(_capibeadsDBContext.tiendas, "id_tienda", "nombreTienda");
+            var datosUsuario = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+            if (datosUsuario == null)
+            {
+                TempData["ErrorMessage"] = "Usuario no encontrado.";
+                return RedirectToAction("Perfil");
+            }
+
+            var listaTiendasporUsuario = (from m in _capibeadsDBContext.tiendas
+                                          where m.id_usuario == datosUsuario.id_usuario
+                                select m).ToList();
+
+            ViewData["Tiendas"] = new SelectList(listaTiendasporUsuario, "id_tienda", "nombreTienda");
+
             ViewData["Estados"] = new SelectList(_capibeadsDBContext.estados, "id_estadoProducto", "nombreEstado");
             ViewData["Categorias"] = new SelectList(_capibeadsDBContext.categorias, "id_categoria", "nombreCategoria");
 
@@ -366,9 +344,162 @@ namespace CapiBeadsSV.Controllers
 
         public IActionResult Pedidos()
         {
+            // Obtiene los datos del usuario desde la sesión
+            var datosUsuario = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+            if (datosUsuario == null)
+            {
+                TempData["ErrorMessage"] = "Usuario no encontrado.";
+                return RedirectToAction("Perfil");
+            }
 
+            // Obtiene las tiendas del usuario
+            var tiendasUsuario = _capibeadsDBContext.tiendas
+                                .Where(t => t.id_usuario == datosUsuario.id_usuario)
+                                .Select(t => t.id_tienda)
+                                .ToList();
+
+            // Obtiene los productos que pertenecen a las tiendas del usuario
+            var productosTienda = _capibeadsDBContext.productos
+                                 .Where(p => tiendasUsuario.Contains(p.id_tienda))
+                                 .Select(p => p.id_producto)
+                                 .ToList();
+
+            // Obtiene las órdenes que contienen productos exclusivos de las tiendas del usuario
+            var ordenesUsuario = _capibeadsDBContext.ordenes
+                                 .Where(o => _capibeadsDBContext.carritos
+                                                .Where(c => productosTienda.Contains(c.id_producto))
+                                                .Select(c => c.id_carrito)
+                                                .Contains(o.id_carrito))
+                                 .ToList();
+
+            return View(ordenesUsuario);
+        }
+
+        //AA: Funciones para editar usuarios
+        public async Task<IActionResult> EditTienda(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var tienda = await _capibeadsDBContext.tiendas.FindAsync(id);
+            if (tienda == null) return NotFound();
+
+            // Obtener la lista de usuarios con el rol deseado
+            var usuarios = await _capibeadsDBContext.usuarios
+                .Where(u => u.id_rol == 2)
+                .Select(u => new { u.id_usuario, u.nombre })
+                .ToListAsync();
+
+            // Crear el SelectList y pasar la tienda actual como valor seleccionado
+            ViewBag.Usuarios = new SelectList(usuarios, "id_usuario", "nombre", tienda.id_usuario);
+            ViewBag.Tienda = tienda;
+
+            return View(tienda);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditTienda(int id, tiendas tiendaModificada, IFormFile imagenFondo)
+        {
+            if (id != tiendaModificada.id_tienda) return NotFound();
+
+            var tienda = await _capibeadsDBContext.tiendas.FindAsync(id);
+            if (tienda == null) return NotFound();
+
+            // Actualizar los datos de la tienda
+            tienda.nombreTienda = tiendaModificada.nombreTienda;
+            tienda.descripcionTienda = tiendaModificada.descripcionTienda;
+            tienda.id_usuario = tiendaModificada.id_usuario;
+
+            // Verificar y actualizar la imagen de fondo si se proporciona una nueva
+            if (imagenFondo != null && imagenFondo.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    imagenFondo.CopyTo(ms);
+                    tienda.imagenFondo = ms.ToArray();
+                }
+            }
+
+            _capibeadsDBContext.Entry(tienda).State = EntityState.Modified;
+            await _capibeadsDBContext.SaveChangesAsync();
+
+            return RedirectToAction("SuccessModificarTienda");
+        }
+
+        public IActionResult SuccessModificarTienda()
+        {
             return View();
         }
+
+        //Metodos para editar los productos
+        public async Task<IActionResult> EditProducto(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var producto = await _capibeadsDBContext.productos.FindAsync(id);
+            if (producto == null)
+            {
+                return NotFound();
+            }
+
+            var datosUsuario = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+            if (datosUsuario == null)
+            {
+                TempData["ErrorMessage"] = "Usuario no encontrado.";
+                return RedirectToAction("Perfil");
+            }
+
+            //Los limite a que sean solo para las tiendas del usuario vendedor haya creado
+            var listaTiendasporUsuario = (from m in _capibeadsDBContext.tiendas
+                                          where m.id_usuario == datosUsuario.id_usuario
+                                          select m).ToList();
+
+            ViewData["Tiendas"] = new SelectList(listaTiendasporUsuario, "id_tienda", "nombreTienda");
+
+            ViewData["Categorias"] = new SelectList(_capibeadsDBContext.categorias, "id_categoria", "nombreCategoria", producto.id_categoria);
+            ViewData["Estados"] = new SelectList(_capibeadsDBContext.estados, "id_estadoProducto", "nombreEstado", producto.id_estadoProducto);
+
+            return View(producto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProducto(int id, productos productoEditado, IFormFile imagenProducto)
+        {
+            if (id != productoEditado.id_producto)
+            {
+                return BadRequest();
+            }
+
+            if (imagenProducto != null && imagenProducto.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    imagenProducto.CopyTo(ms);
+                    productoEditado.imagenProducto = ms.ToArray();
+                }
+            }
+            else
+            {
+                var productoExistente = await _capibeadsDBContext.productos
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.id_producto == id);
+                productoEditado.imagenProducto = productoExistente?.imagenProducto;
+            }
+
+            _capibeadsDBContext.Entry(productoEditado).State = EntityState.Modified;
+
+            await _capibeadsDBContext.SaveChangesAsync();
+            return RedirectToAction("SuccessModificarProducto");
+        }
+
+        // GET: Productos/SuccessModificarProducto
+        public IActionResult SuccessModificarProducto()
+        {
+            return View();
+        }
+
 
     }
 }
