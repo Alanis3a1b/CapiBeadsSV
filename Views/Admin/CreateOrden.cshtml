@@ -1,0 +1,39 @@
+﻿@model CapiBeadsSV.Models.ordenes
+@{
+    ViewData["Title"] = "Crear Orden";
+    Layout = "_LayoutAdmin";
+}
+<head>
+    <link rel="stylesheet" href="/css/Admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<div class="container mt-5">
+    <div class="card mb-3">
+        <div class="card-header" style="background-color: #935E34; color: white;">
+            Crear Nueva Orden
+        </div>
+        <div class="card-body" style="background-color: #d3d3d3; color: black;">
+            <hr>
+
+            <form asp-action="CreateOrden">
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" class="form-control" id="direccion" name="direccion" required />
+                </div>
+                <div class="form-group">
+                    <label for="total">Total</label>
+                    <input type="number" class="form-control" id="total" name="total" required />
+                </div>
+                <div class="form-group">
+                    <label for="id_estadoPedido">Estado de Pedido</label>
+                    <input type="number" class="form-control" id="id_estadoPedido" name="id_estadoPedido" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a href="@Url.Action("Pedidos", "Admin")" class="btn btn-secondary mt-2">Volver a la Lista de Ordenes</a>
+            </form>
+
+        </div>
+    </div>
+</div>

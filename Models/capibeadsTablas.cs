@@ -107,7 +107,28 @@ namespace CapiBeadsSV.Models
         //Esto me creará las fechas de forma automática
         public DateTime fechaOrden { get; set; } = DateTime.Now;
         public int id_estadoPedido { get; set; }
+        public int id_usuario { get; set; }
 
     }
+    public class carritoItems // Nueva tabla para los ítems del carrito
+    {
+        [Key]
+        public int id_carritoItem { get; set; }
+        public int id_carrito { get; set; }
+        public int id_producto { get; set; }
+        public int cantidad { get; set; }
+        public decimal precio_unitario { get; set; }
+    }
+    public class ordenItems
+    {
+        [Key]
+        public int id_ordenItem { get; set; }
 
+        public int id_orden { get; set; }
+
+        public int id_producto { get; set; }
+
+        public int cantidad { get; set; }
+        public decimal precio_unitario { get; set; }
+    }
 }

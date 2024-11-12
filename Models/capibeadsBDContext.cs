@@ -20,8 +20,10 @@ namespace CapiBeadsSV.Models
         public DbSet<estados> estados { get; set; }
         public DbSet<productos> productos { get; set; }
         public DbSet<carritos> carritos { get; set; }
+        public DbSet<carritoItems> carritoItems { get; set; } // Nueva tabla
         public DbSet<estadosPedidos> estadosPedidos { get; set; }
         public DbSet<ordenes> ordenes { get; set; }
+        public DbSet<ordenItems> ordenItems { get; set; }
 
     }
 }

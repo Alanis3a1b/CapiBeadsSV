@@ -583,11 +583,55 @@ namespace CapiBeadsSV.Controllers
             return View();
         }
 
-        public IActionResult Pedidos()
+        public async Task<IActionResult> Pedidos()
         {
+            var ordenes = await (from o in _capibeadsDBContext.ordenes
+                                 join ep in _capibeadsDBContext.estadosPedidos on o.id_estadoPedido equals ep.id_estadoPedido
+                                 join u in _capibeadsDBContext.usuarios on o.id_usuario equals u.id_usuario
+                                 select new
+                                 {
+                                     o.id_orden,
+                                     o.direccion,
+                                     o.total,
+                                     o.fechaOrden,
+                                     EstadoPedido = ep.nombreEstadoPedido,
+                                     Cliente = u.nombre,
+                                     Productos = (from oi in _capibeadsDBContext.ordenItems
+                                                  join p in _capibeadsDBContext.productos on oi.id_producto equals p.id_producto
+                                                  join t in _capibeadsDBContext.tiendas on p.id_tienda equals t.id_tienda
+                                                  where oi.id_orden == o.id_orden
+                                                  select new
+                                                  {
+                                                      Producto = p.nombreProducto,
+                                                      Tienda = t.nombreTienda,
+                                                      Cantidad = oi.cantidad,
+                                                      PrecioUnitario = oi.precio_unitario,
+                                                      ImagenProducto = p.imagenProducto
+                                                  }).ToList()
+                                 }).ToListAsync();
 
+            return View(ordenes);
+        }
+        public IActionResult CreateOrden()
+        {
             return View();
         }
+
+        // Método para crear una nueva orden (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateOrden([Bind("id_carrito,direccion,total,id_estadoPedido")] ordenes orden)
+        {
+            if (ModelState.IsValid)
+            {
+                orden.fechaOrden = DateTime.Now; // Establece la fecha actual
+                _capibeadsDBContext.Add(orden);
+                await _capibeadsDBContext.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(orden);
+        }
+
 
         public IActionResult Perfil()
         {
