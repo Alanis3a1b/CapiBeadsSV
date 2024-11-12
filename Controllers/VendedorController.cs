@@ -258,7 +258,6 @@ namespace CapiBeadsSV.Controllers
             return View();
         }
 
-        //En progreso, aun la vista tiendas no funciona
         public async Task<IActionResult> VerTienda(int? id)
         {
             if (id == null)
@@ -266,33 +265,37 @@ namespace CapiBeadsSV.Controllers
                 return NotFound();
             }
 
-            var tiendas = await (from p in _capibeadsDBContext.productos
-                               join t in _capibeadsDBContext.tiendas on p.id_tienda equals t.id_tienda
-                               where t.id_tienda == id
-                               select new
-                               {
-                                   t.id_tienda,
-                                   t.id_usuario,
-                                   t.nombreTienda,
-                                   t.imagenFondo,
-                                   t.descripcionTienda,
-                                   Productos = _capibeadsDBContext.productos
-                                                   .Where(p => p.id_tienda == t.id_tienda)
-                                                   .Select(p => new
-                                                   {
-                                                       p.id_producto,
-                                                       p.nombreProducto,
-                                                       p.precio,
-                                                       p.imagenProducto,
-                                                       CategoriaNombre = _capibeadsDBContext.categorias
-                                                           .Where(c => c.id_categoria == p.id_categoria)
-                                                           .Select(c => c.nombreCategoria)
-                                                           .FirstOrDefault()
-                                                   }).ToList()
-                               }).FirstOrDefaultAsync();
+            // Consulta para obtener la tienda y sus productos
+            var tienda = await _capibeadsDBContext.tiendas
+                .Where(t => t.id_tienda == id)
+                .Select(t => new
+                {
+                    t.id_tienda,
+                    t.nombreTienda,
+                    t.imagenFondo,
+                    t.descripcionTienda,
+                    Productos = _capibeadsDBContext.productos
+                        .Where(p => p.id_tienda == t.id_tienda)
+                        .Select(p => new
+                        {
+                            p.id_producto,
+                            p.nombreProducto,
+                            p.precio,
+                            p.imagenProducto,
+                            CategoriaNombre = _capibeadsDBContext.categorias
+                                .Where(c => c.id_categoria == p.id_categoria)
+                                .Select(c => c.nombreCategoria)
+                                .FirstOrDefault()
+                        }).ToList()
+                })
+                .FirstOrDefaultAsync();
 
-            ViewBag.Tiendas = tiendas;
+            if (tienda == null)
+            {
+                return NotFound();
+            }
 
+            ViewBag.Tienda = tienda;
             return View();
         }
 

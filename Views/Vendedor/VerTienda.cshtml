@@ -1,55 +1,53 @@
 ﻿@{
     ViewData["Title"] = "Productos del Vendedor";
     Layout = "_LayoutVendedor";
+    var tienda = ViewBag.Tienda;
 }
 
-@foreach (var tiendas in ViewBag.Tiendas)
-{
-    <div class="tienda-container">
-        <div class="tienda-header">
-            <h2>@tiendas.nombreTienda</h2>
-            <p>@tiendas.descripcionTienda</p>
+<div class="tienda-container">
+    <div class="tienda-header">
+        <h2>@tienda.nombreTienda</h2>
+        <p>@tienda.descripcionTienda</p>
 
-            @* Verificar si imagenFondo no es null antes de convertirla *@
-            @if (tiendas.imagenFondo != null)
-            {
-                <img src="data:image/png;base64,@Convert.ToBase64String((byte[])tiendas.imagenFondo)" alt="Imagen de la tienda" class="imagen-fondo" />
-            }
-            else
-            {
-                <img src="/images/default-store-background.png" alt="Imagen de fondo predeterminada" class="imagen-fondo" />
-            }
-        </div>
-
-        <div class="productos-grid">
-            @foreach (var producto in tiendas.Productos)
-            {
-                <div class="producto-card">
-
-                    @* Verificar si imagenProducto no es null antes de convertirla *@
-                    @if (producto.imagenProducto != null)
-                    {
-                        <img src="data:image/png;base64,@Convert.ToBase64String((byte[])producto.imagenProducto)" alt="@producto.nombreProducto" class="producto-imagen" />
-                    }
-                    else
-                    {
-                        <img src="/images/default-product.png" alt="Imagen de producto predeterminada" class="producto-imagen" />
-                    }
-
-                    <h3>@producto.nombreProducto</h3>
-                    <p>Precio: $@producto.precio</p>
-                    <p>Categoría: @producto.CategoriaNombre</p>
-                    <a href="@Url.Action("EditarProducto", "Productos", new { id = producto.id_producto })" class="btn-editar">Editar Producto</a>
-                </div>
-            }
-        </div>
-
-        <div class="acciones-tienda">
-            <a href="@Url.Action("AgregarProducto", "Productos", new { tiendaId = tiendas.id_tienda })" class="btn-agregar">+ Agregar producto</a>
-            <a href="@Url.Action("EditarTienda", "Tiendas", new { id = tiendas.id_tienda })" class="btn-editar-tienda">Editar tienda</a>
-        </div>
+        @* Verificar si imagenFondo no es null antes de convertirla *@
+        @if (tienda.imagenFondo != null)
+        {
+            <img src="data:image/png;base64,@Convert.ToBase64String((byte[])tienda.imagenFondo)" alt="Imagen de la tienda" class="imagen-fondo" />
+        }
+        else
+        {
+            <img src="/images/default-store-background.png" alt="Imagen de fondo predeterminada" class="imagen-fondo" />
+        }
     </div>
-}
+
+    <div class="productos-grid">
+        @foreach (var producto in tienda.Productos)
+        {
+            <div class="producto-card">
+
+                @* Verificar si imagenProducto no es null antes de convertirla *@
+                @if (producto.imagenProducto != null)
+                {
+                    <img src="data:image/png;base64,@Convert.ToBase64String((byte[])producto.imagenProducto)" alt="@producto.nombreProducto" class="producto-imagen" />
+                }
+                else
+                {
+                    <img src="/images/default-product.png" alt="Imagen de producto predeterminada" class="producto-imagen" />
+                }
+
+                <h3>@producto.nombreProducto</h3>
+                <p>Precio: $@producto.precio</p>
+                <p>Categoría: @producto.CategoriaNombre</p>
+                <a href="@Url.Action("EditarProducto", "Productos", new { id = producto.id_producto })" class="btn-editar">Editar Producto</a>
+            </div>
+        }
+    </div>
+
+    <div class="acciones-tienda">
+        <a href="@Url.Action("AgregarProducto", "Productos", new { tiendaId = tienda.id_tienda })" class="btn-agregar">+ Agregar producto</a>
+        <a href="@Url.Action("EditarTienda", "Tiendas", new { id = tienda.id_tienda })" class="btn-editar-tienda">Editar tienda</a>
+    </div>
+</div>
 
 <style>
     .tienda-container {
