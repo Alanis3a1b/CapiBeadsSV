@@ -612,27 +612,70 @@ namespace CapiBeadsSV.Controllers
 
             return View(ordenes);
         }
-        public IActionResult CreateOrden()
+        public async Task<IActionResult> EditOrden(int id)
         {
-            return View();
-        }
+            var orden = await (from o in _capibeadsDBContext.ordenes
+                               join ep in _capibeadsDBContext.estadosPedidos on o.id_estadoPedido equals ep.id_estadoPedido
+                               where o.id_orden == id
+                               select new
+                               {
+                                   o.id_orden,
+                                   o.direccion,
+                                   o.total,
+                                   o.fechaOrden,
+                                   EstadoPedido = ep.nombreEstadoPedido,
+                                   o.id_estadoPedido
+                               }).FirstOrDefaultAsync();
 
-        // Método para crear una nueva orden (POST)
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateOrden([Bind("id_carrito,direccion,total,id_estadoPedido")] ordenes orden)
-        {
-            if (ModelState.IsValid)
+            if (orden == null)
             {
-                orden.fechaOrden = DateTime.Now; // Establece la fecha actual
-                _capibeadsDBContext.Add(orden);
-                await _capibeadsDBContext.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
+
+            // Cargar los estados de pedido en ViewData para el dropdown en la vista
+            ViewData["Estados"] = new SelectList(_capibeadsDBContext.estadosPedidos, "id_estadoPedido", "nombreEstadoPedido", orden.id_estadoPedido);
+
             return View(orden);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EditOrden(int id, int id_estadoPedido)
+        {
+            var orden = await _capibeadsDBContext.ordenes.FindAsync(id);
+            if (orden == null)
+            {
+                return NotFound();
+            }
 
+            // Actualizar el estado del pedido
+            orden.id_estadoPedido = id_estadoPedido;
+            _capibeadsDBContext.Update(orden);
+            await _capibeadsDBContext.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Pedidos));
+        }
+        public async Task<IActionResult> DeleteOrden(int id)
+        {
+            var orden = await _capibeadsDBContext.ordenes.FindAsync(id);
+
+            if (orden == null)
+            {
+                return NotFound();
+            }
+
+            // Establecer el estado de la orden a "Cancelada" en lugar de eliminarla
+            var estadoCancelado = await _capibeadsDBContext.estadosPedidos
+                                    .FirstOrDefaultAsync(e => e.nombreEstadoPedido == "Cancelado");
+
+            if (estadoCancelado != null)
+            {
+                orden.id_estadoPedido = estadoCancelado.id_estadoPedido;
+                _capibeadsDBContext.ordenes.Update(orden);
+                await _capibeadsDBContext.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Pedidos));  // Redirige a la vista de órdenes
+        }
         public IActionResult Perfil()
         {
 

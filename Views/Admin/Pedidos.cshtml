@@ -27,7 +27,11 @@
                 <td>@orden.direccion</td>
                 <td>@orden.total.ToString("C2")</td>
                 <td>@orden.fechaOrden.ToShortDateString()</td>
-                <td>@orden.EstadoPedido</td>
+                <td class="estado-pedido @(orden.EstadoPedido == "Cancelado" ? "estado-cancelado" :
+                                           orden.EstadoPedido == "Entregado" ? "estado-entregado" :
+                                           orden.EstadoPedido == "En Proceso" ? "estado-en-proceso" : "")">
+                    @orden.EstadoPedido
+                </td>
                 <td>@orden.Cliente</td>
                 <td>
                     <table class="table table-sm table-striped">
@@ -66,10 +70,28 @@
                     </table>
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@orden.id_orden" class="btn btn-warning">Editar</a> |
-                    <a asp-action="Delete" asp-route-id="@orden.id_orden" class="btn btn-danger">Eliminar</a>
+                    <a asp-action="EditOrden" asp-route-id="@orden.id_orden" class="btn btn-warning">Editar</a> |
+                    <a asp-action="DeleteOrden" asp-route-id="@orden.id_orden" class="btn btn-danger">Cancelar</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<style>
+    /* Aumenta la especificidad para anular estilos de Bootstrap */
+    .estado-pedido.estado-cancelado {
+        background-color: red !important;
+        color: white !important;
+    }
+
+    .estado-pedido.estado-entregado {
+        background-color: green !important;
+        color: white !important;
+    }
+
+    .estado-pedido.estado-en-proceso {
+        background-color: blue !important;
+        color: black !important;
+    }
+</style>

@@ -342,38 +342,38 @@ namespace CapiBeadsSV.Controllers
             return View();
         }
 
-        public IActionResult Pedidos()
-        {
-            // Obtiene los datos del usuario desde la sesión
-            var datosUsuario = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
-            if (datosUsuario == null)
-            {
-                TempData["ErrorMessage"] = "Usuario no encontrado.";
-                return RedirectToAction("Perfil");
-            }
+        //public IActionResult Pedidos()
+        //{
+        //    // Obtiene los datos del usuario desde la sesión
+        //    var datosUsuario = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+        //    if (datosUsuario == null)
+        //    {
+        //        TempData["ErrorMessage"] = "Usuario no encontrado.";
+        //        return RedirectToAction("Perfil");
+        //    }
 
-            // Obtiene las tiendas del usuario
-            var tiendasUsuario = _capibeadsDBContext.tiendas
-                                .Where(t => t.id_usuario == datosUsuario.id_usuario)
-                                .Select(t => t.id_tienda)
-                                .ToList();
+        //    // Obtiene las tiendas del usuario
+        //    var tiendasUsuario = _capibeadsDBContext.tiendas
+        //                        .Where(t => t.id_usuario == datosUsuario.id_usuario)
+        //                        .Select(t => t.id_tienda)
+        //                        .ToList();
 
-            // Obtiene los productos que pertenecen a las tiendas del usuario
-            var productosTienda = _capibeadsDBContext.productos
-                                 .Where(p => tiendasUsuario.Contains(p.id_tienda))
-                                 .Select(p => p.id_producto)
-                                 .ToList();
+        //    // Obtiene los productos que pertenecen a las tiendas del usuario
+        //    var productosTienda = _capibeadsDBContext.productos
+        //                         .Where(p => tiendasUsuario.Contains(p.id_tienda))
+        //                         .Select(p => p.id_producto)
+        //                         .ToList();
 
-            // Obtiene las órdenes que contienen productos exclusivos de las tiendas del usuario
-            var ordenesUsuario = _capibeadsDBContext.ordenes
-                                 .Where(o => _capibeadsDBContext.carritos
-                                                .Where(c => productosTienda.Contains(c.id_producto))
-                                                .Select(c => c.id_carrito)
-                                                .Contains(o.id_carrito))
-                                 .ToList();
+        //    // Obtiene las órdenes que contienen productos exclusivos de las tiendas del usuario
+        //    var ordenesUsuario = _capibeadsDBContext.ordenes
+        //                         .Where(o => _capibeadsDBContext.carritos
+        //                                        .Where(c => productosTienda.Contains(c.id_producto))
+        //                                        .Select(c => c.id_carrito)
+        //                                        .Contains(o.id_carrito))
+        //                         .ToList();
 
-            return View(ordenesUsuario);
-        }
+        //    return View(ordenesUsuario);
+        //}
 
         //AA: Funciones para editar usuarios
         public async Task<IActionResult> EditTienda(int? id)

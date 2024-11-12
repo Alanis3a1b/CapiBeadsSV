@@ -101,7 +101,6 @@ namespace CapiBeadsSV.Models
     {
         [Key]
         public int id_orden { get; set; }
-        public int id_carrito { get; set; }
         public string direccion { get; set; }
         public decimal total { get; set; }
         //Esto me creará las fechas de forma automática

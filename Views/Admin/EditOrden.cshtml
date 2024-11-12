@@ -1,0 +1,30 @@
+﻿@model dynamic
+
+@{
+    ViewData["Title"] = "Editar Orden";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container mt-5">
+    <div class="card mb-3">
+        <div class="card-header" style="background-color: #935E34; color: white;">
+            Editar Orden
+        </div>
+
+        <div class="card-body" style="background-color: #d3d3d3; color: black;">
+
+            <form asp-action="EditOrden" method="post">
+                <input type="hidden" name="id" value="@Model.id_orden" />
+
+                <div class="form-group">
+                    <label for="id_estadoPedido">Estado del Pedido</label>
+                    <select id="id_estadoPedido" name="id_estadoPedido" class="form-control" asp-items="@(ViewData["Estados"] as SelectList)"></select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a asp-action="Pedidos" class="btn btn-secondary">Cancelar</a>
+            </form>
+
+        </div>
+    </div>
+</div>
