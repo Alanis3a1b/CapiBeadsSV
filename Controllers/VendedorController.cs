@@ -52,37 +52,26 @@ namespace CapiBeadsSV.Controllers
             ViewBag.Tiendas = tiendasUsuario;
             return View();
         }
+
         public async Task<IActionResult> Productos()
         {
-            // Obtener el usuario desde la sesión
             var usuarioSesion = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+            var productoUsuario = (from p in _capibeadsDBContext.productos
+                                   join t in _capibeadsDBContext.tiendas on p.id_tienda equals t.id_tienda
+                                   join u in _capibeadsDBContext.usuarios on t.id_usuario equals u.id_usuario
+                                   join c in _capibeadsDBContext.categorias on p.id_categoria equals c.id_categoria
+                                   select new
+                                   {
+                                       p.id_producto,
+                                       nombreTienda = t.nombreTienda,
+                                       nombreProducto = p.nombreProducto,
+                                       descripcionProd = p.descripcion,
+                                       categoriaProd = c.nombreCategoria,
+                                       precioProd = p.precio
 
-            // Obtener las tiendas del usuario y sus productos
-            var tiendas = await _capibeadsDBContext.tiendas
-                .Where(t => t.id_usuario == usuarioSesion.id_usuario)
-                .Select(t => new
-                {
-                    t.id_tienda,
-                    t.nombreTienda,
-                    t.descripcionTienda,
-                    t.imagenFondo,
-                    Productos = _capibeadsDBContext.productos
-                        .Where(p => p.id_tienda == t.id_tienda)
-                        .Select(p => new
-                        {
-                            p.id_producto,
-                            p.nombreProducto,
-                            p.precio,
-                            p.imagenProducto,
-                            CategoriaNombre = _capibeadsDBContext.categorias
-                                .Where(c => c.id_categoria == p.id_categoria)
-                                .Select(c => c.nombreCategoria)
-                                .FirstOrDefault()
-                        }).ToList()
-                }).ToListAsync();
+                                   }).ToList();
 
-            // Pasar las tiendas con sus productos a la vista
-            ViewBag.Tiendas = tiendas;
+            ViewBag.Productos = productoUsuario;
             return View();
         }
 
@@ -270,9 +259,15 @@ namespace CapiBeadsSV.Controllers
         }
 
         //En progreso, aun la vista tiendas no funciona
-        public IActionResult VerTienda(int? id)
+        public async Task<IActionResult> VerTienda(int? id)
         {
-            var tienda = (from t in _capibeadsDBContext.tiendas
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tiendas = await (from p in _capibeadsDBContext.productos
+                               join t in _capibeadsDBContext.tiendas on p.id_tienda equals t.id_tienda
                                where t.id_tienda == id
                                select new
                                {
@@ -280,10 +275,60 @@ namespace CapiBeadsSV.Controllers
                                    t.id_usuario,
                                    t.nombreTienda,
                                    t.imagenFondo,
-                                   t.descripcionTienda
+                                   t.descripcionTienda,
+                                   Productos = _capibeadsDBContext.productos
+                                                   .Where(p => p.id_tienda == t.id_tienda)
+                                                   .Select(p => new
+                                                   {
+                                                       p.id_producto,
+                                                       p.nombreProducto,
+                                                       p.precio,
+                                                       p.imagenProducto,
+                                                       CategoriaNombre = _capibeadsDBContext.categorias
+                                                           .Where(c => c.id_categoria == p.id_categoria)
+                                                           .Select(c => c.nombreCategoria)
+                                                           .FirstOrDefault()
+                                                   }).ToList()
                                }).FirstOrDefaultAsync();
+
+            ViewBag.Tiendas = tiendas;
+
             return View();
         }
+
+        //public IActionResult Productos()
+        //{
+        //    // Obtener el usuario desde la sesión
+        //    var usuarioSesion = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+
+        //    // Obtener las tiendas del usuario y sus productos
+        //    var tiendas = await _capibeadsDBContext.tiendas
+        //        .Where(t => t.id_usuario == usuarioSesion.id_usuario)
+        //        .Select(t => new
+        //        {
+        //            t.id_tienda,
+        //            t.nombreTienda,
+        //            t.descripcionTienda,
+        //            t.imagenFondo,
+        //            Productos = _capibeadsDBContext.productos
+        //                .Where(p => p.id_tienda == t.id_tienda)
+        //                .Select(p => new
+        //                {
+        //                    p.id_producto,
+        //                    p.nombreProducto,
+        //                    p.precio,
+        //                    p.imagenProducto,
+        //                    CategoriaNombre = _capibeadsDBContext.categorias
+        //                        .Where(c => c.id_categoria == p.id_categoria)
+        //                        .Select(c => c.nombreCategoria)
+        //                        .FirstOrDefault()
+        //                }).ToList()
+        //        }).ToListAsync();
+
+        //    // Pasar las tiendas con sus productos a la vista
+        //    ViewBag.Tiendas = tiendas;
+        //    return View();
+        //}
 
         public IActionResult CreateProducto()
         {

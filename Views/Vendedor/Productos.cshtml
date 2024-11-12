@@ -1,127 +1,57 @@
 ﻿@{
-    ViewData["Title"] = "Productos del Vendedor";
     Layout = "_LayoutVendedor";
+    var productoUsuario = ViewBag.Productos;
+
 }
 
-@foreach (var tienda in ViewBag.Tiendas)
-{
-    <div class="tienda-container">
-        <div class="tienda-header">
-            <h2>@tienda.nombreTienda</h2>
-            <p>@tienda.descripcionTienda</p>
-
-            @* Verificar si imagenFondo no es null antes de convertirla *@
-            @if (tienda.imagenFondo != null)
-            {
-                <img src="data:image/png;base64,@Convert.ToBase64String((byte[])tienda.imagenFondo)" alt="Imagen de la tienda" class="imagen-fondo" />
-            }
-            else
-            {
-                <img src="/images/default-store-background.png" alt="Imagen de fondo predeterminada" class="imagen-fondo" />
-            }
+<main>
+    @* Mostrar mensaje de confirmación *@
+    @if (TempData["Mensaje"] != null)
+    {
+        <div id="mensajeTemp" class="alert alert-success">
+            @TempData["Mensaje"]
         </div>
+    }
 
-        <div class="productos-grid">
-            @foreach (var producto in tienda.Productos)
+    <h2>Productos</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID Producto</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var producto in productoUsuario)
             {
-                <div class="producto-card">
-
-                    @* Verificar si imagenProducto no es null antes de convertirla *@
-                    @if (producto.imagenProducto != null)
-                    {
-                        <img src="data:image/png;base64,@Convert.ToBase64String((byte[])producto.imagenProducto)" alt="@producto.nombreProducto" class="producto-imagen" />
-                    }
-                    else
-                    {
-                        <img src="/images/default-product.png" alt="Imagen de producto predeterminada" class="producto-imagen" />
-                    }
-
-                    <h3>@producto.nombreProducto</h3>
-                    <p>Precio: $@producto.precio</p>
-                    <p>Categoría: @producto.CategoriaNombre</p>
-                    <a href="@Url.Action("EditarProducto", "Productos", new { id = producto.id_producto })" class="btn-editar">Editar Producto</a>
-                </div>
+                <tr>
+                    <td>@producto.id_producto</td>
+                    <td>@producto.nombreTienda</td>
+                    <td>@producto.descripcionProd</td>
+                    <td>@producto.categoriaProd</td>
+                    <td>@producto.precioProd</td>
+                    <td>
+                        <a asp-action="EditProducto" asp-route-id="@producto.id_producto" class="btn btn-warning">Editar</a>
+                        <a asp-action="DeleteProducto" asp-route-id="@producto.id_producto" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
             }
-        </div>
+        </tbody>
+    </table>
+    <a asp-action="CreateProductos" class="btn btn-primary">Agregar Producto</a> <!--Pendiente agregar funcionalidad, similar al de admin, aqui iran los pedidos que involucren a los productos de las tiendas del usuario-->
+</main>
 
-        <div class="acciones-tienda">
-            <a href="@Url.Action("AgregarProducto", "Productos", new { tiendaId = tienda.id_tienda })" class="btn-agregar">+ Agregar producto</a>
-            <a href="@Url.Action("EditarTienda", "Tiendas", new { id = tienda.id_tienda })" class="btn-editar-tienda">Editar tienda</a>
-        </div>
-    </div>
-}
-
-<style>
-    .tienda-container {
-        padding: 20px;
-        background-color: #1c1c1c;
-        color: white;
-        margin-bottom: 30px;
-        border-radius: 8px;
-    }
-
-    .tienda-header h2 {
-        font-size: 24px;
-    }
-
-    .imagen-fondo {
-        width: 100%;
-        height: auto;
-        max-height: 200px;
-        object-fit: cover;
-        border-radius: 8px;
-    }
-
-    .productos-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 15px;
-        margin-top: 20px;
-    }
-
-    .producto-card {
-        background-color: #2a2a2a;
-        padding: 10px;
-        border-radius: 8px;
-        text-align: center;
-    }
-
-    .producto-imagen {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 8px;
-    }
-
-    .btn-editar {
-        display: block;
-        margin-top: 10px;
-        padding: 5px 10px;
-        background-color: #ff5722;
-        color: white;
-        border-radius: 5px;
-        text-decoration: none;
-    }
-
-        .btn-editar:hover {
-            background-color: #e64a19;
+<script>
+    // Temporizador para ocultar el mensaje después de 5 segundos (5000 ms)
+    setTimeout(function () {
+        var mensaje = document.getElementById("mensajeTemp");
+        if (mensaje) {
+            mensaje.style.display = "none";
         }
-
-    .acciones-tienda {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 20px;
-    }
-
-    .btn-agregar, .btn-editar-tienda {
-        padding: 10px 15px;
-        background-color: #4caf50;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-
-        .btn-agregar:hover, .btn-editar-tienda:hover {
-            background-color: #43a047;
-        }
-</style>
+    }, 5000); // Ajusta el tiempo (en milisegundos) según lo que necesites
+</script>

@@ -1,3 +1,127 @@
 ﻿@{
+    ViewData["Title"] = "Productos del Vendedor";
     Layout = "_LayoutVendedor";
 }
+
+@foreach (var tiendas in ViewBag.Tiendas)
+{
+    <div class="tienda-container">
+        <div class="tienda-header">
+            <h2>@tiendas.nombreTienda</h2>
+            <p>@tiendas.descripcionTienda</p>
+
+            @* Verificar si imagenFondo no es null antes de convertirla *@
+            @if (tiendas.imagenFondo != null)
+            {
+                <img src="data:image/png;base64,@Convert.ToBase64String((byte[])tiendas.imagenFondo)" alt="Imagen de la tienda" class="imagen-fondo" />
+            }
+            else
+            {
+                <img src="/images/default-store-background.png" alt="Imagen de fondo predeterminada" class="imagen-fondo" />
+            }
+        </div>
+
+        <div class="productos-grid">
+            @foreach (var producto in tiendas.Productos)
+            {
+                <div class="producto-card">
+
+                    @* Verificar si imagenProducto no es null antes de convertirla *@
+                    @if (producto.imagenProducto != null)
+                    {
+                        <img src="data:image/png;base64,@Convert.ToBase64String((byte[])producto.imagenProducto)" alt="@producto.nombreProducto" class="producto-imagen" />
+                    }
+                    else
+                    {
+                        <img src="/images/default-product.png" alt="Imagen de producto predeterminada" class="producto-imagen" />
+                    }
+
+                    <h3>@producto.nombreProducto</h3>
+                    <p>Precio: $@producto.precio</p>
+                    <p>Categoría: @producto.CategoriaNombre</p>
+                    <a href="@Url.Action("EditarProducto", "Productos", new { id = producto.id_producto })" class="btn-editar">Editar Producto</a>
+                </div>
+            }
+        </div>
+
+        <div class="acciones-tienda">
+            <a href="@Url.Action("AgregarProducto", "Productos", new { tiendaId = tiendas.id_tienda })" class="btn-agregar">+ Agregar producto</a>
+            <a href="@Url.Action("EditarTienda", "Tiendas", new { id = tiendas.id_tienda })" class="btn-editar-tienda">Editar tienda</a>
+        </div>
+    </div>
+}
+
+<style>
+    .tienda-container {
+        padding: 20px;
+        background-color: #1c1c1c;
+        color: white;
+        margin-bottom: 30px;
+        border-radius: 8px;
+    }
+
+    .tienda-header h2 {
+        font-size: 24px;
+    }
+
+    .imagen-fondo {
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .productos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .producto-card {
+        background-color: #2a2a2a;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .producto-imagen {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .btn-editar {
+        display: block;
+        margin-top: 10px;
+        padding: 5px 10px;
+        background-color: #ff5722;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+        .btn-editar:hover {
+            background-color: #e64a19;
+        }
+
+    .acciones-tienda {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .btn-agregar, .btn-editar-tienda {
+        padding: 10px 15px;
+        background-color: #4caf50;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+        .btn-agregar:hover, .btn-editar-tienda:hover {
+            background-color: #43a047;
+        }
+</style>
