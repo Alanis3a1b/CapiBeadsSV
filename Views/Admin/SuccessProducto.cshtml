@@ -2,11 +2,87 @@
     Layout = "_LayoutAdmin";
 }
 
-<div class="container mt-5">
-    <div class="card-header" style="background-color: #935E34; color: white;">
-        Se ha modificado el Producto correctamemte!
+<div class="notification-container">
+    <div class="notification-header">
+        Notificación
     </div>
-    <div class="mt-3">
-        <a href="@Url.Action("Productos", "Admin")" class="btn btn-primary">Regresar</a>
+    <div class="notification-body">
+        <span class="notification-message">Se ha modificado el usuario correctamente</span><br /><br />
+        <span class="notification-submessage">Continúa gestionando usuarios con nosotros</span>
     </div>
+    <a href="@Url.Action("IndexAdmin", "Admin")" class="notification-button">Regresar</a>
+    <img src="~/IMG/pato.png" class="notification-image" alt="Imagen decorativa" />
 </div>
+
+<style>
+    .notification-container {
+        width: 679px;
+        height: 315px;
+        position: relative;
+        background: white;
+        box-shadow: 0px 4px 15px 5px rgba(0, 0, 0, 0.10);
+    }
+
+    .notification-header {
+        width: 679px;
+        height: 65px;
+        padding: 18px 0 17px 25px;
+        position: absolute;
+        background: #107A54;
+        color: white;
+        font-size: 18px;
+        font-family: Montserrat;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .notification-body {
+        width: 488px;
+        height: 81px;
+        position: absolute;
+        left: 192px;
+        top: 124px;
+        text-align: center;
+        font-family: Montserrat;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .notification-message {
+        color: black;
+    }
+
+    .notification-submessage {
+        color: #838383;
+    }
+
+    .notification-button {
+        width: 150px;
+        height: 50px;
+        position: absolute;
+        left: 342px;
+        top: 222px;
+        background: #A2845E;
+        color: white;
+        font-size: 18px;
+        font-family: Montserrat;
+        font-weight: 600;
+        text-align: center;
+        line-height: 50px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .notification-image {
+        width: 211px;
+        height: 210px;
+        position: absolute;
+        left: 236px;
+        top: 83px;
+        transform: rotate(180deg);
+    }
+
+</style>
