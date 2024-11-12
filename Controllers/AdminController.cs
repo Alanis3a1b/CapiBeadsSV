@@ -175,12 +175,104 @@ namespace CapiBeadsSV.Controllers
             return View();
         }
 
-        public IActionResult Categorias()
+        // Acción para mostrar el listado de categorías
+        public async Task<IActionResult> Categorias()
         {
-
+            var categorias = await _capibeadsDBContext.categorias.ToListAsync();
+            ViewBag.categorias = categorias;
+            return View(categorias);
+        }
+        // Vista para crear categoría
+        public IActionResult CreateCategoria()
+        {
             return View();
         }
 
+        // Crear categoría (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCategoria(categorias categoria)
+        {
+            if (ModelState.IsValid)
+            {
+                _capibeadsDBContext.Add(categoria);
+                await _capibeadsDBContext.SaveChangesAsync();
+                return RedirectToAction(nameof(Categorias));
+            }
+            return View(categoria);
+        }
+
+        // Vista para editar categoría
+        public async Task<IActionResult> EditCategoria(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var categoria = await _capibeadsDBContext.categorias.FindAsync(id);
+            if (categoria == null)
+            {
+                return NotFound();
+            }
+
+            return View(categoria);
+        }
+
+        // Editar categoría (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditCategoria(int id, categorias categoria)
+        {
+            if (id != categoria.id_categoria)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                _capibeadsDBContext.Update(categoria);
+                await _capibeadsDBContext.SaveChangesAsync();
+                return RedirectToAction(nameof(Categorias));
+            }
+
+            return View(categoria);
+        }
+
+        // Vista para eliminar categoría (GET)
+        public async Task<IActionResult> DeleteCategoria(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var categoria = await _capibeadsDBContext.categorias.FindAsync(id);
+            if (categoria == null)
+            {
+                return NotFound();
+            }
+
+            return View(categoria); // Pasamos la categoría a la vista
+        }
+
+        // Eliminar categoría (POST)
+        [HttpPost, ActionName("DeleteCategoria")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCategoriaConfirmed(int id)
+        {
+            var categoria = await _capibeadsDBContext.categorias.FindAsync(id);
+
+            if (categoria == null)
+            {
+                return NotFound();
+            }
+
+            _capibeadsDBContext.categorias.Remove(categoria); // Eliminamos la categoría
+            await _capibeadsDBContext.SaveChangesAsync(); // Guardamos los cambios
+
+            return RedirectToAction(nameof(Categorias)); // Redirigimos a la lista de categorías
+        }
         public IActionResult Tiendas()
         {
             var tiendas = (from t in _capibeadsDBContext.tiendas

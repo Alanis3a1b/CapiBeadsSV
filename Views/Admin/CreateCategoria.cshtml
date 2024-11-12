@@ -1,0 +1,30 @@
+﻿@model CapiBeadsSV.Models.categorias
+@{
+    Layout = "_LayoutAdmin";
+}
+<head>
+    <link rel="stylesheet" href="/css/Admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<div class="container mt-5">
+    <div class="card mb-3">
+        <div class="card-header" style="background-color: #935E34; color: white;">
+            Crear Nueva Categoría
+        </div>
+        <div class="card-body" style="background-color: #d3d3d3; color: black;">
+
+            <form asp-action="CreateCategoria" method="post">
+                <div class="form-group">
+                    <label for="nombreCategoria">Nombre de Categoría</label>
+                    <input asp-for="nombreCategoria" class="form-control" required />
+                    <span asp-validation-for="nombreCategoria" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+                <a asp-action="Categorias" class="btn btn-secondary mt-3">Cancelar</a>
+            </form>
+
+        </div>
+    </div>
+</div>

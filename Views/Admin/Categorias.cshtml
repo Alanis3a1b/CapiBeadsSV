@@ -1,3 +1,51 @@
-﻿@{
+﻿@model IEnumerable<CapiBeadsSV.Models.categorias>
+
+@{
+    ViewData["Title"] = "Categorías";
     Layout = "_LayoutAdmin";
 }
+
+<main>
+    @if (TempData["Mensaje"] != null)
+    {
+        <div id="mensajeTemp" class="alert alert-success">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    <div class="container mt-5">
+        <h2>Categorías</h2>
+        <a asp-action="CreateCategoria" class="btn btn-primary mb-3">Agregar Nueva Categoría</a>
+
+        <table class="table table-bordered text-center">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var categoria in Model)
+                {
+                    <tr>
+                        <td>@categoria.id_categoria</td>
+                        <td>@categoria.nombreCategoria</td>
+                        <td>
+                            <a asp-action="EditCategoria" asp-route-id="@categoria.id_categoria" class="btn btn-warning btn-sm">Editar</a>
+                            <a asp-action="DeleteCategoria" asp-route-id="@categoria.id_categoria" class="btn btn-danger btn-sm">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+<script>
+    setTimeout(function () {
+        var mensaje = document.getElementById("mensajeTemp");
+        if (mensaje) {
+            mensaje.style.display = "none";
+        }
+    }, 5000);
+</script>

@@ -1,0 +1,31 @@
+﻿@model CapiBeadsSV.Models.categorias
+
+@{
+    ViewData["Title"] = "Editar Tienda";
+    Layout = "_LayoutAdmin";
+}
+<div class="container mt-5">
+    <div class="card mb-3">
+        <div class="card-header" style="background-color: #935E34; color: white;">
+            Editar Categoría
+        </div>
+
+        <div class="card-body" style="background-color: #d3d3d3; color: black;">
+            <div class="contact-info">
+
+                <form asp-action="EditCategoria" method="post">
+                    <input type="hidden" asp-for="id_categoria" />
+                    <div class="form-group">
+                        <label for="nombreCategoria">Nombre de Categoría</label>
+                        <input asp-for="nombreCategoria" class="form-control" required />
+                        <span asp-validation-for="nombreCategoria" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Guardar Cambios</button>
+                    <a asp-action="IndexCategoria" class="btn btn-secondary mt-3">Cancelar</a>
+                </form>
+
+
+            </div>
+        </div>
+
+    </div>

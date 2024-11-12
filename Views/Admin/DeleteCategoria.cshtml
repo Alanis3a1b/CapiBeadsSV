@@ -1,0 +1,26 @@
+﻿@model CapiBeadsSV.Models.categorias
+@{
+    ViewData["Title"] = "Eliminar Categoría";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header" style="background-color: #935E34; color: white;">
+            Confirmación de Eliminación
+        </div>
+        <div class="card-body">
+            <p> ¿Estás seguro de que deseas eliminar la categoría <strong>@Model.nombreCategoria</strong>?</p>
+            <p><strong>Nombre de Categoría:</strong> @Model.nombreCategoria</p>
+
+            <div class="d-flex justify-content-between">
+                <!-- Botones para confirmar o cancelar -->
+                <form asp-action="DeleteCategoria" method="post">
+                    <input type="hidden" asp-for="id_categoria" value="@Model.id_categoria" />
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <a asp-action="Categorias" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
