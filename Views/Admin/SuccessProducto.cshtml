@@ -7,17 +7,19 @@
         Notificación
     </div>
     <div class="notification-body">
-        <span class="notification-message">Se ha modificado el usuario correctamente</span><br /><br />
-        <span class="notification-submessage">Continúa gestionando usuarios con nosotros</span>
+        <span class="notification-message">Se ha agregado el producto correctamente</span><br /><br />
+        <span class="notification-submessage">Continúa agregando tus productos con nosotros</span>
     </div>
-    <a href="@Url.Action("IndexAdmin", "Admin")" class="notification-button">Regresar</a>
-    <img src="~/IMG/pato.png" class="notification-image" alt="Imagen decorativa" />
+    <a href="@Url.Action("Productos")" class="notification-button">Regresar</a>
+    <img src="~/IMG/Sr_capibara.png" class="notification-image" alt="Imagen decorativa" />
 </div>
 
 <style>
     .notification-container {
         width: 679px;
         height: 315px;
+        top: 100px;
+        left: 500px;
         position: relative;
         background: white;
         box-shadow: 0px 4px 15px 5px rgba(0, 0, 0, 0.10);
@@ -80,9 +82,8 @@
         width: 211px;
         height: 210px;
         position: absolute;
-        left: 236px;
+        left: 20px;
         top: 83px;
-        transform: rotate(180deg);
     }
 
 </style>
