@@ -1,3 +1,124 @@
 ﻿@{
     Layout = "_LayoutAdmin";
+    var tiendas = ViewBag.Tiendas;
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
 }
+
+<head>
+    <link rel="stylesheet" href="/css/Admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Card Ajustes -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-white" style="background-color: #6f42c1;">
+                    AJUSTES
+                </div>
+
+                <!-- Formulario para cambiar foto de perfil -->
+                <form action="/Admin/CambiarFotoPerfil" method="post" enctype="multipart/form-data" class="mt-4">
+                    <div class="mb-3">
+                        <label for="profilePicture" class="form-label">Subir nueva foto de perfil:</label>
+                        <input type="file" class="form-control" id="profilePicture" name="photoUpload" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+
+                <h2>Cambiar Contraseña</h2>
+                <form asp-action="CambiarContrasena" method="post">
+                    <div class="form-group">
+                        <label for="currentPassword">Contraseña Actual</label>
+                        <input type="password" name="currentPassword" id="currentPassword" class="form-control" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newPassword">Nueva Contraseña</label>
+                        <input type="password" name="newPassword" id="newPassword" class="form-control" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmNewPassword">Confirmar Nueva Contraseña</label>
+                        <input type="password" name="confirmNewPassword" id="confirmNewPassword" class="form-control" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
+                </form>
+            </div>
+        </div>
+        <!-- Card Perfil de Cliente -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-white" style="background-color: #6f42c1;">
+                    PERFIL DE CLIENTE
+                </div>
+                <div class="card-body text-center" style="background-color: #f8f9fa;">
+                    <div class="mb-3">
+                        @if (ViewBag.FotoUsuario != null)
+                        {
+                            <img src="@ViewBag.FotoUsuario" alt="Foto de perfil" style="width: 150px; height: 150px;">
+                        }
+                        else
+                        {
+                            <p>No hay foto de perfil disponible.</p>
+                        }
+                    </div>
+                    <div class="mb-3">
+                        <strong>Nombre:</strong>
+                        <p>@ViewBag.NombreUsuario</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Correo:</strong>
+                        <p>@ViewBag.CorreoUsuario</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilos para hacer desaparecer el mensaje después de 3 segundos */
+    #tempMessage {
+        transition: opacity 3s ease - out;
+    }
+    h2{
+        margin-top:5px;
+        color:black;
+        padding:5px;
+    }
+    label{
+        color:black;
+    }
+</style>
+<script>
+
+    // Script para ocultar el mensaje después de 3 segundos
+    setTimeout(function () {
+        var message = document.getElementById("tempMessage");
+        if (message) {
+            message.style.opacity = "0";
+            setTimeout(() => message.remove(), 3000);  // Remueve el elemento completamente después de 3 segundos
+        }
+    }, 3000);
+</script>

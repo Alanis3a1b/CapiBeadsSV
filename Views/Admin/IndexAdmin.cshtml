@@ -1,7 +1,22 @@
 ﻿@{
     Layout = "_LayoutAdmin";
     var usuarios = ViewBag.usuarios;
+    var usuarioSesion = ViewBag.Usuario;
 }
+
+
+<hr>
+<div class="container-fluid">
+    <div class="card text-white bg-purple mb-3 mx-auto" style="background-color: #6a1b9a; border-radius: 8px; width: 80%;">
+        <div class="card-body d-flex align-items-center justify-content-center text-start" style="height: 100px;">
+            <h5 class="card-title">¡Bienvenido! administrador @usuarioSesion.usuario</h5>
+        </div>
+    </div>
+</div>
+
+    <div style="background-color: rgba(255, 255, 255, 0.8); color: #333; border-radius: 8px; padding: 15px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); margin-bottom: 20px; width: 100%; text-align: left;">
+        Lista usuarios dentro del sistema
+    </div>
 <main>
     @if (TempData["Mensaje"] != null)
     {
@@ -10,7 +25,6 @@
         </div>
     }
 
-    <h2>Usuarios</h2>
     <a asp-action="CreateUsuarioAdmin" class="btn btn-primary mb-3">Agregar Usuario</a>
 
     <table class="table table-bordered text-center table-sm" style="font-size: 0.9em;">

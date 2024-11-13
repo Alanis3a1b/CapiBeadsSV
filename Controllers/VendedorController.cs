@@ -61,7 +61,8 @@ namespace CapiBeadsSV.Controllers
             var productoUsuario = (from p in _capibeadsDBContext.productos
                                    join t in _capibeadsDBContext.tiendas on p.id_tienda equals t.id_tienda
                                    join e in _capibeadsDBContext.estados on p.id_estadoProducto equals e.id_estadoProducto
-                                   join c in _capibeadsDBContext.categorias on p.id_categoria equals c.id_categoria // Join con categorías
+                                   join c in _capibeadsDBContext.categorias on p.id_categoria equals c.id_categoria
+                                   where t.id_usuario == usuarioSesion.id_usuario
                                    select new
                                    {
                                        p.id_producto,
