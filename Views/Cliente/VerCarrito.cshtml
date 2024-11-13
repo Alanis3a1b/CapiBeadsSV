@@ -13,6 +13,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Producto</th>
                             <th>Cantidad</th>
                             <th>Precio Unitario</th>
@@ -22,17 +23,32 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td>@item.nombreProducto</td>
-                                <td>@item.cantidad</td>
-                                <td>$@item.precio_unitario</td>
-                                <td>$@item.subtotal</td>
+                            <tr data-id="@item.idCarritoItem">
+                                <td class="product-image-td">
+                                    <img src="data:image/jpeg;base64,@item.imagenProducto" alt="Imagen del Producto" class="product-image" />
+                                </td>
+                                <td>
+                                    @item.nombreProducto
+                                </td>
+                                <td>
+                                    <form asp-action="DisminuirCantidad" method="post" style="display: inline;">
+                                        <input type="hidden" name="idCarritoItem" value="@item.idCarritoItem" />
+                                        <button type="submit" class="decrease-btn">-</button>
+                                    </form>
+                                    <span class="quantity-field">@item.cantidad</span>
+                                    <form asp-action="IncrementarCantidad" method="post" style="display: inline;">
+                                        <input type="hidden" name="idCarritoItem" value="@item.idCarritoItem" />
+                                        <button type="submit" class="increase-btn">+</button>
+                                    </form>
+                                </td>
+                                <td class="unit-price">@string.Format("{0:F2}", item.precio_unitario)</td>
+                                <td class="subtotal">@string.Format("{0:F2}", item.cantidad * item.precio_unitario)</td>
                             </tr>
                         }
                     </tbody>
                 </table>
 
-                <p>Total: $@ViewBag.TotalCarrito</p>
+                <p>Total: $<span id="totalCarrito">@ViewBag.TotalCarrito.ToString("F2")</span></p>
 
                 <form asp-action="ProcesarCompra" method="post">
                     <button type="submit" class="procesar-compra-btn">Procesar Compra</button>
@@ -45,3 +61,151 @@
         </div>
     </main>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".increase-btn, .decrease-btn").click(function (e) {
+            e.preventDefault();
+            var form = $(this).closest("form");
+            var row = form.closest("tr");
+
+            $.post(form.attr("action"), form.serialize(), function (data) {
+                if (data.success) {
+                    if (data.removeItem) {
+                        row.remove(); // Remueve el producto de la vista si la cantidad es cero
+                    } else {
+                        // Actualiza la cantidad en la interfaz
+                        row.find(".quantity-field").text(data.newQuantity);
+                        // Actualiza el subtotal
+                        row.find(".subtotal").text(data.newSubtotal.toFixed(2));
+                    }
+
+                    // Actualiza el total del carrito
+                    if (data.carritoVacio) {
+                        $(".carrito-items").html("<p>Tu carrito está vacío.</p>");
+                    } else {
+                        $("#totalCarrito").text(data.newTotal.toFixed(2));
+                    }
+                }
+            });
+        });
+    });
+</script>
+<style>
+    /* Estilos para el carrito de compras */
+    .carrito-items {
+        margin-top: 20px;
+    }
+
+        .carrito-items table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .carrito-items th, .carrito-items td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .carrito-items th {
+            background-color: #935E34;
+        }
+
+        .carrito-items td img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        .carrito-items .quantity-field {
+            margin: 0 10px;
+        }
+
+    /* Estilo de la imagen en el carrito */
+    .product-image-td {
+        text-align: center;
+    }
+
+        .product-image-td p {
+            font-weight: bold;
+            margin-bottom: 5px; /* Espacio entre el título y la imagen */
+        }
+
+    .carrito-items td img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+    .decrease-btn, .increase-btn {
+        background-color: #ff6f61;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+        .decrease-btn:hover, .increase-btn:hover {
+            background-color: #ff3b2a;
+        }
+
+    .procesar-compra-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+    }
+
+        .procesar-compra-btn:hover {
+            background-color: #218838;
+        }
+
+    /* Estilo de la imagen en el carrito */
+    .product-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin-right: 10px;
+    }
+
+    /* Estilos generales para los productos destacados */
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .product-item {
+        background-color: #f9f9f9;
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+
+        .product-item:hover {
+            transform: scale(1.05);
+        }
+
+    .add-to-cart-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+        .add-to-cart-btn:hover {
+            background-color: #0056b3;
+        }
+</style>

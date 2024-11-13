@@ -4,12 +4,6 @@
     var tiendas = ViewBag.Tiendas;
     var productosAleatorios = ViewBag.ProductosAleatorios;
 }
-@if (TempData["Mensaje"] != null)
-{
-    <div id="mensajeTemp" class="alert alert-success">
-        @TempData["Mensaje"]
-    </div>
-}
 <div class="Fondo">
     <main class="main-content">
         <!-- Sección Destacado -->
@@ -25,7 +19,6 @@
                             <img src="data:image/jpeg;base64,@producto.FotoBase64" alt="Imagen del Producto" class="product-image" />
                         }
                         <p>Precio: $@producto.Precio</p>
-                        <p>Stock: @producto.Stock</p> <!-- Muestra el stock aquí -->
                         <!-- Formulario para agregar al carrito -->
                         <form asp-action="AgregarAlCarrito" method="post">
                             <input type="hidden" name="idProducto" value="@producto.Id" />
@@ -67,10 +60,37 @@
                             <img src="data:image/jpeg;base64,@producto.FotoBase64" alt="Imagen del Producto" class="product-image" />
                         }
                         <p>Precio: $@producto.Precio</p>
+                        <!-- Formulario para agregar al carrito -->
+                        <form asp-action="AgregarAlCarrito" method="post">
+                            <input type="hidden" name="idProducto" value="@producto.Id" />
+                            <button type="submit" class="add-to-cart-btn">Añadir al Carrito</button>
+                        </form>
                     </div>
                 }
             </div>
         </section>
-        <a asp-action="VerCarrito" asp-controller="Cliente" class="nav-link">Ver Carrito</a>
     </main>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function () {
+        // Manejar el botón de agregar al carrito
+        $(".add-to-cart-btn").click(function (e) {
+            e.preventDefault();
+            var form = $(this).closest("form");
+            $.post(form.attr("action"), form.serialize(), function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Agregado',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
+</script>

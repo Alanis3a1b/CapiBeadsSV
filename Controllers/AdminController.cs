@@ -446,6 +446,7 @@ namespace CapiBeadsSV.Controllers
                                        p.nombreProducto,
                                        p.descripcion,
                                        p.precio,
+                                       p.stock,
                                        p.imagenProducto,
                                        CategoriaNombre = c.nombreCategoria,
                                        TiendaNombre = t.nombreTienda,

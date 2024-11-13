@@ -99,48 +99,91 @@ namespace CapiBeadsSV.Controllers
             // Actualizar el total del carrito
             carrito.total += carritoItem.precio_unitario;
             await _context.SaveChangesAsync();
-            // Mensaje de éxito al agregar el producto
-            TempData["Mensaje"] = "Producto agregado correctamente al carrito.";
 
             // Redirigir a la vista actual o al carrito
-            return RedirectToAction("IndexCliente");
+            return Json(new { success = true, message = "Producto agregado correctamente al carrito." });
         }
         public IActionResult VerCarrito()
         {
-            // Verifica si la sesión contiene el usuario autenticado
             var usuarioSesion = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
-            if (usuarioSesion == null)
-            {
-                // Si el usuario no está autenticado, redirigir al inicio de sesión o manejar el caso apropiado
-                return RedirectToAction("Login", "Cuenta");
-            }
-
-            // Obtener el carrito del usuario actual
             var carrito = _context.carritos.FirstOrDefault(c => c.id_usuario == usuarioSesion.id_usuario);
-            if (carrito == null)
+
+            var carritoItems = _context.carritoItems.Where(ci => ci.id_carrito == carrito.id_carrito)
+                .Join(_context.productos, ci => ci.id_producto, p => p.id_producto, (ci, p) => new
+                {
+                    idCarritoItem = ci.id_carritoItem,
+                    nombreProducto = p.nombreProducto,
+                    cantidad = ci.cantidad,
+                    precio_unitario = ci.precio_unitario,
+                    subtotal = ci.cantidad * ci.precio_unitario,
+                    imagenProducto = p.imagenProducto != null ? Convert.ToBase64String(p.imagenProducto) : null
+                }).ToList();
+
+            ViewBag.TotalCarrito = carritoItems.Sum(ci => ci.subtotal);
+            return View("VerCarrito", carritoItems);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> IncrementarCantidad(int idCarritoItem)
+        {
+            var carritoItem = await _context.carritoItems.FindAsync(idCarritoItem);
+
+            if (carritoItem != null)
             {
-                // Si el carrito no existe, mostrar el carrito vacío
-                ViewBag.TotalCarrito = 0;
-                return View("VerCarrito", new List<dynamic>());
+                carritoItem.cantidad++;
+                await _context.SaveChangesAsync();
             }
 
-            // Obtén los items del carrito asociados al carrito del usuario actual
-            var carritoItems = from ci in _context.carritoItems
-                               join p in _context.productos on ci.id_producto equals p.id_producto
-                               where ci.id_carrito == carrito.id_carrito
-                               select new
-                               {
-                                   nombreProducto = p.nombreProducto,
-                                   cantidad = ci.cantidad,
-                                   precio_unitario = ci.precio_unitario,
-                                   subtotal = ci.cantidad * ci.precio_unitario
-                               };
+            var subtotal = carritoItem?.cantidad * carritoItem?.precio_unitario ?? 0;
+            var totalCarrito = await _context.carritoItems
+                .Where(ci => ci.id_carrito == carritoItem.id_carrito)
+                .SumAsync(ci => ci.cantidad * ci.precio_unitario);
 
-            // Calcula el total del carrito
-            var totalCarrito = carritoItems.Sum(ci => ci.subtotal);
-            ViewBag.TotalCarrito = totalCarrito;
+            return Json(new { success = true, newQuantity = carritoItem?.cantidad, newSubtotal = subtotal, newTotal = totalCarrito });
+        }
+        [HttpPost]
+        public async Task<IActionResult> DisminuirCantidad(int idCarritoItem)
+        {
+            var carritoItem = await _context.carritoItems.FindAsync(idCarritoItem);
+            bool removeItem = false;
 
-            return View("VerCarrito", carritoItems.ToList());
+            if (carritoItem != null)
+            {
+                if (carritoItem.cantidad > 1)
+                {
+                    carritoItem.cantidad--;
+                }
+                else
+                {
+                    _context.carritoItems.Remove(carritoItem);
+                    removeItem = true; // Indicar que el producto será eliminado
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+            // Verificar si el carrito está vacío
+            bool carritoVacio = carritoItem != null && !_context.carritoItems.Any(ci => ci.id_carrito == carritoItem.id_carrito);
+
+            // Calcular el total del carrito
+            var totalCarrito = carritoItem != null
+                ? await _context.carritoItems
+                    .Where(ci => ci.id_carrito == carritoItem.id_carrito)
+                    .SumAsync(ci => ci.cantidad * ci.precio_unitario)
+                : 0;
+
+            // Obtener los nuevos subtotales y cantidades
+            var nuevoSubtotal = carritoItem != null ? carritoItem.cantidad * carritoItem.precio_unitario : 0;
+
+            return Json(new
+            {
+                success = true,
+                newQuantity = carritoItem != null ? carritoItem.cantidad : 0,
+                newSubtotal = nuevoSubtotal,
+                removeItem, // Indica si el producto fue eliminado
+                carritoVacio,
+                newTotal = totalCarrito
+            });
         }
     }
 }

@@ -43,6 +43,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Stock:</label>
+                    <input type="number" name="stock" class="form-control" required />
+                </div>
+
+                <div class="form-group">
                     <label for="id_categoria">Categoría</label>
                     <select class="form-control" id="id_categoria" name="id_categoria">
                         @foreach (var categoria in (SelectList)ViewData["Categorias"])
