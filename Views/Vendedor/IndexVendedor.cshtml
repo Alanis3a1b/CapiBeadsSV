@@ -1,17 +1,30 @@
 ﻿@{
     Layout = "_LayoutVendedor";
     var tiendas = ViewBag.Tiendas;
+    var usuarioSesion = ViewBag.Usuario;
 }
 
 
 <div class="Fondo">
-   <h2>Vendedor</h2>
+    <div class="container">
+        <div class="card text-white bg-purple mb-3 w-100 rounded" style="background-color: #6a1b9a; border-radius: 8px">
+            <div class="card-body ">
+                <h5 class="card-title">¡Bienvenido! @usuarioSesion.usuario</h5>
+            </div>
+        </div>
+    </div>
+
+    <div style="background-color: rgba(255, 255, 255, 0.8); color: #333; border-radius: 8px; padding: 15px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); margin-bottom: 20px; width: 100%; text-align: left;">
+        Lista de tiendas del usuario @usuarioSesion.usuario
+    </div>
+
     <table class="table">
         <thead>
             <tr>
                 <th>ID Tienda</th>
                 <th>Nombre Tienda</th>
                 <th>Descripcion Tienda</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>

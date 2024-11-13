@@ -4,44 +4,89 @@
 
 }
 
-<div class="container mt-5">
-    <h2>Órdenes de Productos de la Tienda del Usuario</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID Orden</th>
-                <th>Dirección</th>
-                <th>Total</th>
-                <th>Fecha de Orden</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var orden in Model)
-            {
-                <tr>
-                    <td>@orden.id_orden</td>
-                    <td>@orden.direccion</td>
-                    <td>@orden.total</td>
-                    <td>@orden.fechaOrden.ToString("dd/MM/yyyy")</td>
-                    <td>@orden.id_estadoPedido</td>
-                    <td>
-                        <a asp-action="EditOrden" asp-route-id="@orden.id_producto" class="btn btn-warning">Editar</a>
-                        <a asp-action="DeleteOrden" asp-route-id="@orden.id_producto" class="btn btn-danger">Eliminar</a>
-                    </td>
-
-                </tr>
-            }
-        </tbody>
-    </table>
+<div style="background-color: rgba(255, 255, 255, 0.8); color: #333; border-radius: 8px; padding: 15px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); margin-bottom: 20px; width: 100%; text-align: left;">
+    Lista de pedidos de los productos de las tiendas
 </div>
-
-<script>
-    // Temporizador para ocultar el mensaje después de 5 segundos (5000 ms)
-    setTimeout(function () {
-        var mensaje = document.getElementById("mensajeTemp");
-        if (mensaje) {
-            mensaje.style.display = "none";
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Dirección</th>
+            <th>Total</th>
+            <th>Fecha de Orden</th>
+            <th>Cliente</th>
+            <th>Productos</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var orden in Model)
+        {
+            <tr>
+                <td>@orden.Orden.id_orden</td>
+                <td>@orden.Orden.direccion</td>
+                <td>@orden.Orden.total.ToString("C2")</td>
+                <td>@orden.Orden.fechaOrden.ToShortDateString()</td>
+                <td>@orden.Orden.id_usuario</td>
+                <td>
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Tienda</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Imagen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var producto in orden.Productos)
+                            {
+                                <tr>
+                                    <td>@producto.Producto</td>
+                                    <td>@producto.Tienda</td>
+                                    <td>@producto.Cantidad</td>
+                                    <td>@producto.PrecioUnitario.ToString("C2")</td>
+                                    <td>
+                                        @if (producto.ImagenProducto != null)
+                                        {
+                                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(producto.ImagenProducto)"
+                                                 alt="@producto.Producto"
+                                                 style="max-height: 50px; max-width: 50px; object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <span>No disponible</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </td>
+                <td>
+                    <a asp-action="EditOrden" asp-route-id="@orden.Orden.id_orden" class="btn btn-warning">Editar</a> |
+                    <a asp-action="DeleteOrden" asp-route-id="@orden.Orden.id_orden" class="btn btn-danger">Cancelar</a>
+                </td>
+            </tr>
         }
-    }, 5000); // Ajusta el tiempo (en milisegundos) según lo que necesites
-</script>
+    </tbody>
+</table>
+
+<style>
+    /* Aumenta la especificidad para anular estilos de Bootstrap */
+    .estado-pedido.estado-cancelado {
+        background-color: red !important;
+        color: white !important;
+    }
+
+    .estado-pedido.estado-entregado {
+        background-color: green !important;
+        color: white !important;
+    }
+
+    .estado-pedido.estado-en-proceso {
+        background-color: blue !important;
+        color: black !important;
+    }
+</style>

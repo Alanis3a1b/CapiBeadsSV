@@ -13,16 +13,20 @@
         </div>
     }
 
-    <h2>Productos</h2>
+    <div style="background-color: rgba(255, 255, 255, 0.8); color: #333; border-radius: 8px; padding: 15px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); margin-bottom: 20px; width: 100%; text-align: left;">
+        Todos los productos
+    </div>
+
     <table class="table">
         <thead>
             <tr>
                 <th>ID Producto</th>
                 <th>Nombre</th>
+                <th>Tienda</th>
                 <th>Descripción</th>
                 <th>Categoría</th>
                 <th>Precio</th>
-                <th></th>
+                <th>Imagen</th>
                 <th></th>
             </tr>
         </thead>
@@ -31,10 +35,21 @@
             {
                 <tr>
                     <td>@producto.id_producto</td>
+                    <td>@producto.nombreProducto</td>
                     <td>@producto.nombreTienda</td>
-                    <td>@producto.descripcionProd</td>
-                    <td>@producto.categoriaProd</td>
-                    <td>@producto.precioProd</td>
+                    <td>@producto.descripcion</td>
+                    <td>@producto.CategoriaNombre</td>
+                        <td>@producto.precio</td>
+                        <td>
+                        @if (producto.imagenProducto != null)
+                        {
+                                <img src="data:image;base64,@(Convert.ToBase64String(producto.imagenProducto))" width="50" height="50" alt="Imagen del producto" />
+                        }
+                        else
+                        {
+                                <span>No disponible</span>
+                        }
+                    </td>
                     <td>
                         <a asp-action="EditProducto" asp-route-id="@producto.id_producto" class="btn btn-warning">Editar</a>
                         <a asp-action="DeleteProducto" asp-route-id="@producto.id_producto" class="btn btn-danger">Eliminar</a>
