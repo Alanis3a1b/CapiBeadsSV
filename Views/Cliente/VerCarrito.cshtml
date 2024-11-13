@@ -1,0 +1,47 @@
+﻿@model IEnumerable<dynamic>
+@{
+    Layout = "_LayoutCliente";
+    var carritoItems = Model;
+    var totalCarrito = ViewBag.TotalCarrito;
+}
+<div class="Fondo">
+    <main class="main-content">
+        <h2>Carrito de Compras</h2>
+        <div class="carrito-items">
+            @if (Model != null && Model.Any())
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.nombreProducto</td>
+                                <td>@item.cantidad</td>
+                                <td>$@item.precio_unitario</td>
+                                <td>$@item.subtotal</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <p>Total: $@ViewBag.TotalCarrito</p>
+
+                <form asp-action="ProcesarCompra" method="post">
+                    <button type="submit" class="procesar-compra-btn">Procesar Compra</button>
+                </form>
+            }
+            else
+            {
+                <p>Tu carrito está vacío.</p>
+            }
+        </div>
+    </main>
+</div>

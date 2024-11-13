@@ -3,17 +3,18 @@
     var productos = ((IEnumerable<dynamic>)ViewBag.Productos).ToList();
     var tiendas = ViewBag.Tiendas;
     var productosAleatorios = ViewBag.ProductosAleatorios;
-    var contadorCarrito = ViewBag.ContadorCarrito ?? 0; // Si ContadorCarrito es nulo, inicializa en 0
+}
+@if (TempData["Mensaje"] != null)
+{
+    <div id="mensajeTemp" class="alert alert-success">
+        @TempData["Mensaje"]
+    </div>
 }
 <div class="Fondo">
     <main class="main-content">
         <!-- Sección Destacado -->
         <section class="featured glass">
             <h2>Productos Destacados</h2>
-            <div class="cart">
-                <span>Carrito: </span>
-                <span id="cart-count">@contadorCarrito</span> <!-- Usar el valor de ViewBag -->
-            </div>
             <div class="product-grid">
                 @foreach (var producto in productos.Take(6))
                 {
@@ -24,10 +25,15 @@
                             <img src="data:image/jpeg;base64,@producto.FotoBase64" alt="Imagen del Producto" class="product-image" />
                         }
                         <p>Precio: $@producto.Precio</p>
-                        <!-- Botón para añadir al carrito -->
-                        <button onclick="addToCart(@producto.Id)" class="add-to-cart-btn">Añadir al Carrito</button>
+                        <p>Stock: @producto.Stock</p> <!-- Muestra el stock aquí -->
+                        <!-- Formulario para agregar al carrito -->
+                        <form asp-action="AgregarAlCarrito" method="post">
+                            <input type="hidden" name="idProducto" value="@producto.Id" />
+                            <button type="submit" class="add-to-cart-btn">Añadir al Carrito</button>
+                        </form>
                     </div>
                 }
+
             </div>
         </section>
 
@@ -65,26 +71,6 @@
                 }
             </div>
         </section>
+        <a asp-action="VerCarrito" asp-controller="Cliente" class="nav-link">Ver Carrito</a>
     </main>
 </div>
-<script>
-    function addToCart(productId) {
-        fetch(`/Controlador/AgregarAlCarrito?idProducto=${productId}&cantidad=1`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '@Html.AntiForgeryToken()' // Si estás usando anti-CSRF
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert("Producto agregado al carrito.");
-                } else {
-                    alert("Hubo un error al agregar el producto al carrito.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-            });
-    }
-</script>
