@@ -1,0 +1,197 @@
+﻿/* Estilos generales */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-image: url(/IMG/Fondo.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #ffffff;
+    font-family: 'Press Start 2P', sans-serif;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Navbar fija en la parte superior */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 1000;
+    padding: 10px 20px;
+}
+
+.menu-container {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 1rem 1.5rem;
+}
+
+.menu-item {
+    background-color: #ECE2D0;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    margin: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s;
+}
+
+.menu-item-2 {
+    width: 250px;
+    border-radius: 8px;
+}
+
+.menu-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+.menu-item-2 img {
+    width: 250px;
+    height: 100px;
+    border-radius: 12px;
+}
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #D4C4A8;
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin-left: 10px;
+}
+
+    .search-container input {
+        border: none;
+        background: transparent;
+        outline: none;
+        padding: 5px;
+        font-size: 16px;
+        color: #333;
+        max-width:100px;
+    }
+
+/* Barra lateral */
+.sidebar {
+    width: 250px;
+    margin-right: 20px;
+    position: fixed;
+    left: 25px;
+    top:100px;
+    background-color: #34495e;
+    padding: 20px;
+    border-radius: 8px;
+    color: #ecf0f1;
+}
+
+    .sidebar h2 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar li {
+        margin-bottom: 10px;
+        padding: 5px 10px;
+        background-color: #3d566e;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .sidebar li:hover {
+            background-color: #1abc9c;
+        }
+
+/* Contenido principal */
+main {
+    flex: 1;
+    margin-left: 100px;
+    padding: 20px;
+    margin-top:50px;
+}
+
+
+/* Sección de productos, redes y nuevos productos */
+.featured, .social, .new-products {
+    padding: 20px;
+    border-radius: 15px;
+}
+
+/* Grid para productos y redes */
+.product-grid, .social-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.product-item, .social-item {
+    background-color: rgba(61, 86, 110, 0.8); /* Fondo oscuro translúcido */
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    color: #ffffff;
+    position: relative;
+}
+
+/* Estilos para las imágenes */
+.product-image, .store-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    max-width: 100px;
+}
+
+/* Estilo de efecto glass */
+.glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Títulos y precios */
+.product-item h3, .social-item h3 {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.product-item p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+/* Media queries para dispositivos móviles */
+@media (max-width: 768px) {
+    .product-grid, .social-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .product-grid, .social-grid {
+        grid-template-columns: 1fr;
+    }
+}

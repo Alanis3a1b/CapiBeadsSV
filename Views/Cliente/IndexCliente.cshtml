@@ -1,17 +1,90 @@
 ﻿@{
     Layout = "_LayoutCliente";
+    var productos = ((IEnumerable<dynamic>)ViewBag.Productos).ToList();
+    var tiendas = ViewBag.Tiendas;
+    var productosAleatorios = ViewBag.ProductosAleatorios;
+    var contadorCarrito = ViewBag.ContadorCarrito ?? 0; // Si ContadorCarrito es nulo, inicializa en 0
 }
-
-<head>
-    <link rel="stylesheet" href="/css/site.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-</head>
-
-
 <div class="Fondo">
-    <h2>Cliente</h2>
+    <main class="main-content">
+        <!-- Sección Destacado -->
+        <section class="featured glass">
+            <h2>Productos Destacados</h2>
+            <div class="cart">
+                <span>Carrito: </span>
+                <span id="cart-count">@contadorCarrito</span> <!-- Usar el valor de ViewBag -->
+            </div>
+            <div class="product-grid">
+                @foreach (var producto in productos.Take(6))
+                {
+                    <div class="product-item">
+                        <h3>@producto.Nombre</h3>
+                        @if (producto.FotoBase64 != null)
+                        {
+                            <img src="data:image/jpeg;base64,@producto.FotoBase64" alt="Imagen del Producto" class="product-image" />
+                        }
+                        <p>Precio: $@producto.Precio</p>
+                        <!-- Botón para añadir al carrito -->
+                        <button onclick="addToCart(@producto.Id)" class="add-to-cart-btn">Añadir al Carrito</button>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <!-- Sección Redes (Tiendas) -->
+        <section class="social glass">
+            <h2>Tiendas</h2>
+            <div class="social-grid">
+                @foreach (var tienda in tiendas)
+                {
+                    <div class="social-item">
+                        <h3>@tienda.nombreTienda</h3>
+                        @if (tienda.FotoBase64 != null)
+                        {
+                            <img src="data:image/jpeg;base64,@tienda.FotoBase64" alt="Imagen de la Tienda" class="store-image" />
+                        }
+                    </div>
+                }
+            </div>
+        </section>
+
+        <!-- Sección Nuevos Productos (Aleatorios) -->
+        <section class="new-products glass">
+            <h2>Nuevos Productos</h2>
+            <div class="product-grid">
+                @foreach (var producto in productosAleatorios)
+                {
+                    <div class="product-item">
+                        <h3>@producto.Nombre</h3>
+                        @if (producto.FotoBase64 != null)
+                        {
+                            <img src="data:image/jpeg;base64,@producto.FotoBase64" alt="Imagen del Producto" class="product-image" />
+                        }
+                        <p>Precio: $@producto.Precio</p>
+                    </div>
+                }
+            </div>
+        </section>
+    </main>
 </div>
-
-
+<script>
+    function addToCart(productId) {
+        fetch(`/Controlador/AgregarAlCarrito?idProducto=${productId}&cantidad=1`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '@Html.AntiForgeryToken()' // Si estás usando anti-CSRF
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("Producto agregado al carrito.");
+                } else {
+                    alert("Hubo un error al agregar el producto al carrito.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+    }
+</script>

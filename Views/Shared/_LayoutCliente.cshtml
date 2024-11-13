@@ -1,7 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
     ViewData["Title"] = "_LayoutCliente";
 }
 <!DOCTYPE html>
@@ -9,129 +6,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-    .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    z-index: 1000;
-    }
+    <link rel="stylesheet" href="/css/Cliente.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    .menu-container {
-    display: flex;
-    align-items: center;
-    max-width:700px;
-    padding: 1rem 1.5rem;
-    }
-
-    .menu-item {
-    background-color: #ECE2D0; /* Fondo beige para cada ícono */
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    margin: 0 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s;
-    }
-    .menu-item-2{
-            width: 250px;
-            height: 100px;
-            transition: transform 0.3s;
-            border-radius: 8px;
-    }
-    .menu-item-2 img{
-     width: 250px;
-     height: 100px;
-    }
-    .menu-item:hover {
-    transform: scale(1.1);
-    }
-
-    .menu-item img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    }
-
-    .search-container {
-    display: flex;
-    align-items: center;
-    background-color: #D4C4A8;
-    border-radius: 15px;
-    padding: 5px 10px;
-    margin-left: 10px;
-    }
-
-    .search-container input {
-    border: none;
-    background: transparent;
-    outline: none;
-    padding: 5px;
-    font-size: 16px;
-    color: #333;
-    max-width:100px
-    }
-
-    .search-container button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    }
-
-    .glass {
-     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
-     backdrop-filter: blur(10px);
-     -webkit-backdrop-filter: blur(10px);
-     border-radius: 20px;
-     border: 1px solid rgba(255, 255, 255, 0.18);
-     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.37);
-    }
-    </style>
 </head>
 <body>
     <!-- Navbar fija en la parte superior -->
     <div class="navbar">
         <div class="menu-container glass">
-            <!-- Íconos de cada página -->
-            <a href="/pagina1" class="menu-item">
-                <img src="/IMG/capifigura.png" alt="Capy Purosos">
-            </a>
-            <a href="/pagina2" class="menu-item">
-                <img src="/IMG/capicarrito.png" alt="Capy Carrito">
-            </a>
-            <a href="/pagina3" class="menu-item-2">
-                <img src="/IMG/logo.jpg" alt="Capy Beads">
-            </a>
-            <a href="/pagina4" class="menu-item">
-                <img src="/IMG/capiuser.png" alt="Perfil">
-            </a>
-
-            <!-- Contenedor de búsqueda -->
-            <div class="search-container">
-                <input type="text" placeholder="productos">
-                <button type="submit">
-                    🔍 <!-- Puedes reemplazar este ícono con una imagen si prefieres -->
-                </button>
-            </div>
+            <a href="/pagina1" class="menu-item"><img src="/IMG/capifigura.png" alt="Capy Purosos"></a>
+            <a href="/pagina2" class="menu-item"><img src="/IMG/capicarrito.png" alt="Capy Carrito"></a>
+            <a href="/pagina3" class="menu-item-2"><img src="/IMG/logo.jpg" alt="Capy Beads"></a>
+            <a href="/pagina4" class="menu-item"><img src="/IMG/capiuser.png" alt="Perfil"></a>
+            <div class="search-container"><input type="text" placeholder="productos"><button type="submit">🔍</button></div>
         </div>
     </div>
-    <main>
-        <div class="container-fluid px-4">
-            @RenderBody()
-        </div>
-    </main>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Barra Lateral -->
+        <aside class="sidebar glass">
+            <h2>Categorías</h2>
+            <ul class="categories">
+                <li>Todo</li>
+                <li>Anime</li>
+                <li>Series</li>
+                <li>Accesorios</li>
+                <li>Animales</li>
+                <li>Películas</li>
+            </ul>
+            <h2>Tiendas</h2>
+            <ul class="stores">
+                <li>Capibeads</li>
+                <li>Kat Pin</li>
+                <li>Duck Loot</li>
+                <li>Todas</li>
+            </ul>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main>
+            <div class="container-fluid px-4">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
 </body>
 </html>

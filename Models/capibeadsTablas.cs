@@ -84,9 +84,8 @@ namespace CapiBeadsSV.Models
         [Key]
         public int id_carrito { get; set; }
         public int id_usuario { get; set; }
-        public int id_producto { get; set; }
-        public int cantidad { get; set; }
-        public decimal precio_unitario { get; set; }
+        public DateTime fechaCreacion { get; set; } = DateTime.Now;
+        public decimal total { get; set; }
     }
 
     public class estadosPedidos
@@ -101,12 +100,11 @@ namespace CapiBeadsSV.Models
     {
         [Key]
         public int id_orden { get; set; }
+        public int id_usuario { get; set; }
         public string direccion { get; set; }
         public decimal total { get; set; }
-        //Esto me creará las fechas de forma automática
         public DateTime fechaOrden { get; set; } = DateTime.Now;
         public int id_estadoPedido { get; set; }
-        public int id_usuario { get; set; }
 
     }
     public class carritoItems // Nueva tabla para los ítems del carrito
@@ -122,11 +120,8 @@ namespace CapiBeadsSV.Models
     {
         [Key]
         public int id_ordenItem { get; set; }
-
         public int id_orden { get; set; }
-
         public int id_producto { get; set; }
-
         public int cantidad { get; set; }
         public decimal precio_unitario { get; set; }
     }
