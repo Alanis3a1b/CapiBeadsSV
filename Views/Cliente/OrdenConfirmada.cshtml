@@ -2,19 +2,73 @@
 @{
     Layout = "_LayoutCliente";
 }
+<main>
+    <div class="orden-confirmada">
+        <h2>¡Orden Confirmada!</h2>
+        <p>Su orden ha sido creada exitosamente.</p>
 
-<div class="orden-confirmada">
-    <h2>¡Orden Confirmada!</h2>
-    <p>Su orden ha sido creada exitosamente.</p>
+        <div class="orden-detalles">
+            <p><strong>ID de Orden:</strong> @Model.id_orden</p>
+            <p><strong>Total:</strong> $@Model.total.ToString("F2")</p>
+            <p><strong>Dirección de Envío:</strong> @Model.direccion</p>
+            <p><strong>Fecha de Orden:</strong> @Model.fechaOrden.ToString("g")</p>
+        </div>
 
-    <div class="orden-detalles">
-        <p><strong>ID de Orden:</strong> @Model.id_orden</p>
-        <p><strong>Total:</strong> $@Model.total.ToString("F2")</p>
-        <p><strong>Dirección de Envío:</strong> @Model.direccion</p>
-        <p><strong>Fecha de Orden:</strong> @Model.fechaOrden.ToString("g")</p>
+        <div class="mt-3">
+            <a href="@Url.Action("IndexCliente", "Cliente")" class="btn btn-primary">Regresar</a>
+        </div>
     </div>
+</main>
+<style>
+    .orden-confirmada {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9; /* Fondo claro */
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
 
-    <div class="mt-3">
-        <a href="@Url.Action("IndexCliente", "Cliente")" class="btn btn-primary">Regresar</a>
-    </div>
-</div>
+        .orden-confirmada h2 {
+            color: #4CAF50; /* Color verde para resaltar el éxito */
+            font-size: 34px;
+            margin-bottom: 15px;
+        }
+
+        .orden-confirmada p {
+            font-size: 24px;
+            color: #555;
+            margin: 8px 0;
+        }
+
+    .orden-detalles p {
+        font-size: 24px;
+        color: #333;
+    }
+
+    .orden-detalles strong {
+        color: #333;
+    }
+
+    .mt-3 {
+        margin-top: 20px;
+    }
+
+    .btn-primary {
+        background-color: #4CAF50; /* Botón con color verde */
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+
+</style>

@@ -4,116 +4,6 @@
     var carritoItems = Model;
     var totalCarrito = ViewBag.TotalCarrito;
 }
-<div class="Fondo">
-    <main class="main-content">
-        <h2>Carrito de Compras</h2>
-        <div class="carrito-items">
-            @if (Model != null && Model.Any())
-            {
-                <table>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th>Precio Unitario</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr data-id="@item.idCarritoItem">
-                                <td class="product-image-td">
-                                    <img src="data:image/jpeg;base64,@item.imagenProducto" alt="Imagen del Producto" class="product-image" />
-                                </td>
-                                <td>
-                                    @item.nombreProducto
-                                </td>
-                                <td>
-                                    <form asp-action="DisminuirCantidad" method="post" style="display: inline;">
-                                        <input type="hidden" name="idCarritoItem" value="@item.idCarritoItem" />
-                                        <button type="submit" class="decrease-btn">-</button>
-                                    </form>
-                                    <span class="quantity-field">@item.cantidad</span>
-                                    <form asp-action="IncrementarCantidad" method="post" style="display: inline;">
-                                        <input type="hidden" name="idCarritoItem" value="@item.idCarritoItem" />
-                                        <button type="submit" class="increase-btn">+</button>
-                                    </form>
-                                </td>
-                                <td class="unit-price">@string.Format("{0:F2}", item.precio_unitario)</td>
-                                <td class="subtotal">@string.Format("{0:F2}", item.cantidad * item.precio_unitario)</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-
-                <p>Total: $<span id="totalCarrito">@ViewBag.TotalCarrito.ToString("F2")</span></p>
-
-                <a asp-action="ProcesarCompra" asp-route-id_carrito="@ViewBag.IdCarrito" asp-route-totalCarrito="@ViewBag.TotalCarrito" class="btn btn-warning btn-sm">Procesar Compra</a>
-
-                @* <a asp-action="ProcesarCompra" asp-route-id="@ViewBag.TotalCarrito" class="btn btn-warning btn-sm">Procesar Compra</a> *@
-
-@*                 <form asp-action="ProcesarCompra" method="post">
-                    <button type="submit" class="procesar-compra-btn">Procesar Compra</button>
-                </form> *@
-            }
-            else
-            {
-                <p>Tu carrito está vacío.</p>
-            }
-        </div>
-    </main>
-</div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $(".increase-btn, .decrease-btn").click(function (e) {
-            e.preventDefault();
-            var form = $(this).closest("form");
-            var button = $(this); // El botón clicado (aumentar/disminuir)
-            var row = form.closest("tr");
-
-            // Deshabilitar el botón temporalmente para evitar múltiples clics
-            button.prop("disabled", true);
-
-            $.post({
-                url: form.attr("action"),
-                data: form.serialize(),
-                dataType: "json",
-                success: function (data) {
-                    if (data.success) {
-                        if (data.removeItem) {
-                            // Remueve el producto de la vista si la cantidad es cero
-                            row.remove();
-                        } else {
-                            // Actualiza la cantidad en la interfaz
-                            row.find(".quantity-field").text(data.newQuantity);
-                            // Actualiza el subtotal
-                            row.find(".subtotal").text(data.newSubtotal.toFixed(2));
-                        }
-
-                        // Actualiza el total del carrito
-                        if (data.carritoVacio) {
-                            $(".carrito-items").html("<p>Tu carrito está vacío.</p>");
-                        } else {
-                            $("#totalCarrito").text(data.newTotal.toFixed(2));
-                        }
-                    } else {
-                        alert("Hubo un problema al actualizar el carrito. Por favor, intenta de nuevo.");
-                    }
-                },
-                error: function () {
-                    alert("Error de conexión. Revisa tu conexión a internet e intenta nuevamente.");
-                },
-                complete: function () {
-                    // Habilitar el botón nuevamente al finalizar la solicitud
-                    button.prop("disabled", false);
-                }
-            });
-        });
-    });
-</script>
 <style>
     /* Estilos para el carrito de compras */
     .carrito-items {
@@ -162,6 +52,7 @@
         height: 100px;
         object-fit: cover;
     }
+
     .decrease-btn, .increase-btn {
         background-color: #ff6f61;
         color: white;
@@ -230,4 +121,128 @@
         .add-to-cart-btn:hover {
             background-color: #0056b3;
         }
+
+    .btnConf {
+        padding: 10px 15px;
+        background-color: #935E34;
+        text-decoration:none;
+        list-style:none;
+        border-radius:8px;
+        color:white;
+    }
+
+        .btnConf:hover {
+            background-color: #ff6f61;
+        }
 </style>
+<div class="Fondo">
+    <main>
+        <h2>Carrito de Compras</h2>
+        <div class="carrito-items">
+            @if (Model != null && Model.Any())
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr data-id="@item.idCarritoItem">
+                                <td class="product-image-td">
+                                    <img src="data:image/jpeg;base64,@item.imagenProducto" alt="Imagen del Producto" class="product-image" />
+                                </td>
+                                <td>
+                                    @item.nombreProducto
+                                </td>
+                                <td>
+                                    <form asp-action="DisminuirCantidad" method="post" style="display: inline;">
+                                        <input type="hidden" name="idCarritoItem" value="@item.idCarritoItem" />
+                                        <button type="submit" class="decrease-btn">-</button>
+                                    </form>
+                                    <span class="quantity-field">@item.cantidad</span>
+                                    <form asp-action="IncrementarCantidad" method="post" style="display: inline;">
+                                        <input type="hidden" name="idCarritoItem" value="@item.idCarritoItem" />
+                                        <button type="submit" class="increase-btn">+</button>
+                                    </form>
+                                </td>
+                                <td class="unit-price">@string.Format("{0:F2}", item.precio_unitario)</td>
+                                <td class="subtotal">@string.Format("{0:F2}", item.cantidad * item.precio_unitario)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <p>Total: $<span id="totalCarrito">@ViewBag.TotalCarrito.ToString("F2")</span></p>
+
+                <a asp-action="ProcesarCompra" asp-route-id_carrito="@ViewBag.IdCarrito" class="btnConf">Procesar Compra</a>
+
+
+                @* <a asp-action="ProcesarCompra" asp-route-id="@ViewBag.TotalCarrito" class="btn btn-warning btn-sm">Procesar Compra</a> *@
+
+@*                 <form asp-action="ProcesarCompra" method="post">
+                    <button type="submit" class="procesar-compra-btn">Procesar Compra</button>
+                </form> *@
+            }
+            else
+            {
+                <p>Tu carrito está vacío.</p>
+            }
+        </div>
+    </main>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".increase-btn, .decrease-btn").click(function (e) {
+            e.preventDefault();
+            var form = $(this).closest("form");
+            var button = $(this); // El botón clicado (aumentar/disminuir)
+            var row = form.closest("tr");
+
+            // Deshabilitar el botón temporalmente para evitar múltiples clics
+            button.prop("disabled", true);
+
+            $.post({
+                url: form.attr("action"),
+                data: form.serialize(),
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        if (data.removeItem) {
+                            // Remueve el producto de la vista si la cantidad es cero
+                            row.remove();
+                        } else {
+                            // Actualiza la cantidad en la interfaz
+                            row.find(".quantity-field").text(data.newQuantity);
+                            // Actualiza el subtotal
+                            row.find(".subtotal").text(data.newSubtotal.toFixed(2));
+                        }
+
+                        // Actualiza el total del carrito
+                        if (data.carritoVacio) {
+                            $(".carrito-items").html("<p>Tu carrito está vacío.</p>");
+                        } else {
+                            $("#totalCarrito").text(data.newTotal.toFixed(2));
+                        }
+                    } else {
+                        alert("Hubo un problema al actualizar el carrito. Por favor, intenta de nuevo.");
+                    }
+                },
+                error: function () {
+                    alert("Error de conexión. Revisa tu conexión a internet e intenta nuevamente.");
+                },
+                complete: function () {
+                    // Habilitar el botón nuevamente al finalizar la solicitud
+                    button.prop("disabled", false);
+                }
+            });
+        });
+    });
+</script>

@@ -3,23 +3,117 @@
     var idCarrito = ViewBag.IdCarrito;
     var totalCarrito = ViewBag.TotalCarrito;
 }
+<main>
+    <div class="compra-container">
+        <h2>Confirmar Compra</h2>
+        <div class="compra-detalles">
+            <p><strong>ID Carrito:</strong> @idCarrito</p>
+            <p><strong>Total:</strong> $@totalCarrito</p>
 
-<div class="compra-container">
-    <h2>Confirmar Compra</h2>
-    <div class="compra-detalles">
-        <p><strong>ID Carrito:</strong> @idCarrito</p>
-        <p><strong>Total:</strong> $@totalCarrito</p>
+            <form asp-action="ProcesarCompraConfirmacion" method="post">
+                <input type="hidden" name="id_carrito" value="@idCarrito" />
+                <input type="hidden" name="totalCarrito" value="@totalCarrito" />
 
-        <form asp-action="ProcesarCompraConfirmacion" method="post">
-            <input type="hidden" name="id_carrito" value="@idCarrito" />
-            <input type="hidden" name="totalCarrito" value="@totalCarrito" />
+                <div class="form-group">
+                    <label for="direccion">Dirección de Envío:</label>
+                    <input type="text" name="direccion" id="direccion" class="form-control" required />
+                </div>
 
-            <div class="form-group">
-                <label for="direccion">Dirección de Envío:</label>
-                <input type="text" name="direccion" id="direccion" class="form-control" required />
-            </div>
+                <button type="submit" class="btn btn-success">Confirmar y Crear Orden</button>
+            </form>
 
-            <button type="submit" class="btn btn-success">Confirmar y Crear Orden</button>
-        </form>
+            <form asp-action="CancelarOrden" method="post" style="display: inline-block;">
+                <input type="hidden" name="id_carrito" value="@ViewBag.IdCarrito" />
+                <button type="submit" class="btn-cancel">Cancelar Orden</button>
+            </form>
+        </div>
     </div>
-</div>
+</main>
+<style>
+    .compra-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f4f4f9;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+
+        .compra-container h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+    .compra-detalles p {
+        font-size: 20px;
+        color: #555;
+        margin: 10px 0;
+    }
+
+    .compra-detalles strong {
+        color: #333;
+    }
+
+    .form-group {
+        margin-top: 20px;
+        text-align: left;
+    }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .form-group .form-control {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+            .form-group .form-control:focus {
+                border-color: #4CAF50;
+                outline: none;
+                box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+            }
+
+    .btn-success {
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        margin-bottom: 50px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+    }
+
+        .btn-success:hover {
+            background-color: #45a049;
+        }
+
+    .btn-cancel {
+        background-color: #d9534f; /* Color rojo */
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+    }
+
+        .btn-cancel:hover {
+            background-color: #c9302c; /* Rojo más oscuro para hover */
+        }
+</style>

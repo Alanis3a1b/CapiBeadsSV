@@ -132,7 +132,6 @@ namespace CapiBeadsSV.Controllers
 
             return View("VerCarrito", carritoItems);
         }
-
         [HttpPost]
         public async Task<IActionResult> IncrementarCantidad(int idCarritoItem)
         {
@@ -141,6 +140,14 @@ namespace CapiBeadsSV.Controllers
             if (carritoItem != null)
             {
                 carritoItem.cantidad++;
+                await _context.SaveChangesAsync();
+
+                // Actualizar total de carrito en la base de datos
+                var carrito = await _context.carritos.FindAsync(carritoItem.id_carrito);
+                carrito.total = await _context.carritoItems
+                    .Where(ci => ci.id_carrito == carritoItem.id_carrito)
+                    .SumAsync(ci => ci.cantidad * ci.precio_unitario);
+
                 await _context.SaveChangesAsync();
             }
 
@@ -162,12 +169,8 @@ namespace CapiBeadsSV.Controllers
             {
                 var carrito = await _context.carritos.FindAsync(carritoItem.id_carrito);
 
-                // Verificar si el carrito y el item existen
                 if (carrito != null)
                 {
-                    // Calcular el monto que se debe restar del total
-                    decimal montoARestar = carritoItem.precio_unitario;
-
                     if (carritoItem.cantidad > 1)
                     {
                         carritoItem.cantidad--;
@@ -175,25 +178,23 @@ namespace CapiBeadsSV.Controllers
                     else
                     {
                         _context.carritoItems.Remove(carritoItem);
-                        removeItem = true; // Indicar que el producto será eliminado
+                        removeItem = true;
                     }
 
-                    // Actualizar el total del carrito restando el monto correspondiente
-                    carrito.total -= montoARestar;
+                    await _context.SaveChangesAsync();
 
-                    // Guardar cambios en la base de datos
+                    carrito.total = await _context.carritoItems
+                        .Where(ci => ci.id_carrito == carritoItem.id_carrito)
+                        .SumAsync(ci => ci.cantidad * ci.precio_unitario);
+
                     await _context.SaveChangesAsync();
                 }
             }
 
-            // Calcular el nuevo total del carrito después de la operación
-            var totalCarrito = carritoItem != null
-                ? await _context.carritoItems
-                    .Where(ci => ci.id_carrito == carritoItem.id_carrito)
-                    .SumAsync(ci => ci.cantidad * ci.precio_unitario)
-                : 0;
+            var totalCarrito = await _context.carritoItems
+                .Where(ci => ci.id_carrito == carritoItem.id_carrito)
+                .SumAsync(ci => ci.cantidad * ci.precio_unitario);
 
-            // Obtener el nuevo subtotal para el carrito item
             var nuevoSubtotal = carritoItem != null ? carritoItem.cantidad * carritoItem.precio_unitario : 0;
 
             return Json(new
@@ -201,7 +202,7 @@ namespace CapiBeadsSV.Controllers
                 success = true,
                 newQuantity = carritoItem != null ? carritoItem.cantidad : 0,
                 newSubtotal = nuevoSubtotal,
-                removeItem, // Indica si el producto fue eliminado
+                removeItem,
                 carritoVacio = totalCarrito == 0,
                 newTotal = totalCarrito
             });
@@ -238,15 +239,31 @@ namespace CapiBeadsSV.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult ProcesarCompra(int id_carrito, decimal totalCarrito)
+        public IActionResult ProcesarCompra(int id_carrito)
         {
-            // Pasa los valores necesarios a la vista
+            // Recalcula el total del carrito basado en los items actuales
+            var carritoItems = _context.carritoItems
+                                       .Where(ci => ci.id_carrito == id_carrito)
+                                       .ToList();
+
+            // Calcula el total sumando cada subtotal
+            decimal totalCarrito = carritoItems.Sum(ci => ci.cantidad * ci.precio_unitario);
+
+            // Pasar valores a la vista
             ViewBag.IdCarrito = id_carrito;
             ViewBag.TotalCarrito = totalCarrito;
 
             // Devuelve la vista para confirmar la compra
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult CancelarOrden(int id_carrito)
+        {
+            // Aquí puedes realizar cualquier limpieza necesaria, como anular el carrito, eliminar los ítems, etc.
+
+            // Redirige a la acción que muestra el carrito
+            return RedirectToAction("VerCarrito");
         }
 
         [HttpPost]
