@@ -345,7 +345,6 @@ namespace CapiBeadsSV.Controllers
         {
             return View();
         }
-
         public IActionResult Pedidos()
         {
             // Obtiene los datos del usuario desde la sesión
@@ -358,26 +357,28 @@ namespace CapiBeadsSV.Controllers
 
             // Obtiene las tiendas que pertenecen al usuario logueado
             var tiendasUsuario = _capibeadsDBContext.tiendas
-                                .Where(t => t.id_usuario == datosUsuario.id_usuario)
-                                .Select(t => t.id_tienda)
-                                .ToList();
+                                        .Where(t => t.id_usuario == datosUsuario.id_usuario)
+                                        .Select(t => t.id_tienda)
+                                        .ToList();
 
             // Obtiene los productos que pertenecen a esas tiendas
             var productosTienda = _capibeadsDBContext.productos
-                                 .Where(p => tiendasUsuario.Contains(p.id_tienda))
-                                 .Select(p => p.id_producto)
-                                 .ToList();
+                                         .Where(p => tiendasUsuario.Contains(p.id_tienda))
+                                         .Select(p => p.id_producto)
+                                         .ToList();
 
             // Obtiene las órdenes y detalles de productos asociados a esos productos
-            var ordenesUsuario = _capibeadsDBContext.ordenes
-                                 .Where(o => _capibeadsDBContext.ordenItems
-                                                 .Where(oi => productosTienda.Contains(oi.id_producto))
-                                                 .Select(oi => oi.id_orden)
-                                                 .Contains(o.id_orden))
-                                 .Select(o => new
-                                 {
-                                     Orden = o,
-                                     Productos = _capibeadsDBContext.ordenItems
+            var ordenesUsuario = (from o in _capibeadsDBContext.ordenes
+                                  join u in _capibeadsDBContext.usuarios on o.id_usuario equals u.id_usuario
+                                  where _capibeadsDBContext.ordenItems
+                                         .Where(oi => productosTienda.Contains(oi.id_producto))
+                                         .Select(oi => oi.id_orden)
+                                         .Contains(o.id_orden)
+                                  select new
+                                  {
+                                      Orden = o,
+                                      UsuarioNombre = u.nombre, // Se obtiene el nombre del usuario
+                                      Productos = _capibeadsDBContext.ordenItems
                                                  .Where(oi => oi.id_orden == o.id_orden)
                                                  .Select(oi => new
                                                  {
@@ -391,8 +392,7 @@ namespace CapiBeadsSV.Controllers
                                                      ImagenProducto = _capibeadsDBContext.productos
                                                                 .FirstOrDefault(p => p.id_producto == oi.id_producto).imagenProducto
                                                  }).ToList()
-                                 })
-                                 .ToList();
+                                  }).ToList();
 
             // Pasa los datos de las órdenes y productos a la vista
             return View(ordenesUsuario);
