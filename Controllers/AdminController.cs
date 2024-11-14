@@ -607,10 +607,12 @@ namespace CapiBeadsSV.Controllers
                                      o.fechaOrden,
                                      EstadoPedido = ep.nombreEstadoPedido,
                                      Cliente = u.nombre,
-                                     Productos = (from oi in _capibeadsDBContext.ordenItems
+                                     Productos = (from oi in _capibeadsDBContext.carritoItems
                                                   join p in _capibeadsDBContext.productos on oi.id_producto equals p.id_producto
                                                   join t in _capibeadsDBContext.tiendas on p.id_tienda equals t.id_tienda
-                                                  where oi.id_orden == o.id_orden
+                                                  where oi.id_carrito == (from c in _capibeadsDBContext.carritos
+                                                                          where c.id_usuario == o.id_usuario
+                                                                          select c.id_carrito).FirstOrDefault()
                                                   select new
                                                   {
                                                       Producto = p.nombreProducto,
@@ -623,6 +625,8 @@ namespace CapiBeadsSV.Controllers
 
             return View(ordenes);
         }
+
+
         public async Task<IActionResult> EditOrden(int id)
         {
             var orden = await (from o in _capibeadsDBContext.ordenes
