@@ -1,0 +1,50 @@
+﻿@model IEnumerable<dynamic>
+@{
+    Layout = "_LayoutCliente";
+}
+
+<div class="Fondo">
+    <main class="main-content">
+        <h2>@(ViewBag.CategoriaSeleccionada != null ? "Productos Filtrados" : "Todos los Productos")</h2>
+        <div class="product-grid">
+            @foreach (var producto in ViewBag.Productos)
+            {
+                <div class="product-item" data-category="@producto.IdCategoria">
+                    <h3>@producto.Nombre</h3>
+                    @if (producto.FotoBase64 != null)
+                    {
+                        <img src="data:image/jpeg;base64,@producto.FotoBase64" alt="Imagen del Producto" class="product-image" />
+                    }
+                    <p>Precio: $@producto.Precio</p>
+                    <form asp-action="AgregarAlCarrito" method="post">
+                        <input type="hidden" name="idProducto" value="@producto.Id" />
+                        <button type="submit" class="add-to-cart-btn">Añadir al Carrito</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </main>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function () {
+        // Manejar el botón de agregar al carrito
+        $(".add-to-cart-btn").click(function (e) {
+            e.preventDefault();
+            var form = $(this).closest("form");
+            $.post(form.attr("action"), form.serialize(), function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Agregado',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
+</script>

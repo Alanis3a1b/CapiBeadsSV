@@ -87,48 +87,11 @@ body {
         color: #333;
         max-width:100px;
     }
-
-/* Barra lateral */
-.sidebar {
-    width: 250px;
-    margin-right: 20px;
-    position: fixed;
-    left: 25px;
-    top:100px;
-    background-color: #34495e;
-    padding: 20px;
-    border-radius: 8px;
-    color: #ecf0f1;
-}
-
-    .sidebar h2 {
-        font-size: 18px;
-        margin-bottom: 10px;
-    }
-
-    .sidebar ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    .sidebar li {
-        margin-bottom: 10px;
-        padding: 5px 10px;
-        background-color: #3d566e;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-        .sidebar li:hover {
-            background-color: #1abc9c;
-        }
-
-/* Contenido principal */
 main {
     flex: 1;
-    margin-left: 100px;
+    margin-left: 87px;
     padding: 20px;
-    margin-top:50px;
+    margin-top: 50px;
 }
 
 
@@ -194,4 +157,8 @@ main {
     .product-grid, .social-grid {
         grid-template-columns: 1fr;
     }
+}
+.categories .active {
+    font-weight: bold;
+    color: #007bff; /* Color que prefieras */
 }

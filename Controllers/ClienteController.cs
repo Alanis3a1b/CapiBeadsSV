@@ -6,6 +6,7 @@ using System.Text.Json;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CapiBeadsSV.Controllers
 {
@@ -184,6 +185,37 @@ namespace CapiBeadsSV.Controllers
                 carritoVacio,
                 newTotal = totalCarrito
             });
+        }
+        // Método que se ejecuta antes de cada acción
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            // Cargar las categorías y almacenarlas en ViewBag
+            var categorias = _context.categorias.ToList();
+            ViewBag.Categorias = categorias;
+
+            base.OnActionExecuting(context);
+        }
+
+        public async Task<IActionResult> TodosLosProductos(int? idCategoria = null)
+        {
+            // Obtener todos los productos o filtrar por categoría si se proporciona idCategoria
+            var productos = await _context.productos
+                .Where(p => !idCategoria.HasValue || p.id_categoria == idCategoria)
+                .Select(p => new
+                {
+                    Id = p.id_producto,
+                    Nombre = p.nombreProducto,
+                    Precio = p.precio,
+                    FotoBase64 = p.imagenProducto != null ? Convert.ToBase64String(p.imagenProducto) : null,
+                    Descripcion = p.descripcion,
+                    Stock = p.stock,
+                    IdCategoria = p.id_categoria
+                }).ToListAsync();
+
+            ViewBag.Productos = productos;
+            ViewBag.CategoriaSeleccionada = idCategoria;
+
+            return View();
         }
     }
 }
