@@ -104,6 +104,7 @@ namespace CapiBeadsSV.Controllers
             // Redirigir a la vista actual o al carrito
             return Json(new { success = true, message = "Producto agregado correctamente al carrito." });
         }
+
         public IActionResult VerCarrito()
         {
             var usuarioSesion = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
@@ -121,6 +122,8 @@ namespace CapiBeadsSV.Controllers
                 }).ToList();
 
             ViewBag.TotalCarrito = carritoItems.Sum(ci => ci.subtotal);
+            ViewBag.IdCarrito = carrito?.id_carrito; // Pasar el ID del carrito al ViewBag
+
             return View("VerCarrito", carritoItems);
         }
 
@@ -216,6 +219,55 @@ namespace CapiBeadsSV.Controllers
             ViewBag.CategoriaSeleccionada = idCategoria;
 
             return View();
+        }
+
+
+        [HttpGet]
+        public IActionResult ProcesarCompra(int id_carrito, decimal totalCarrito)
+        {
+            // Pasa los valores necesarios a la vista
+            ViewBag.IdCarrito = id_carrito;
+            ViewBag.TotalCarrito = totalCarrito;
+
+            // Devuelve la vista para confirmar la compra
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ProcesarCompraConfirmacion(int id_carrito, decimal totalCarrito, string direccion)
+        {
+            var usuarioSesion = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+
+            // Crear la nueva orden
+            var nuevaOrden = new ordenes
+            {
+                id_usuario = usuarioSesion.id_usuario,
+                direccion = direccion,
+                total = totalCarrito,
+                fechaOrden = DateTime.Now,
+                id_estadoPedido = 1 // Asume que 1 es el estado inicial para "pendiente" o similar
+            };
+
+            _context.ordenes.Add(nuevaOrden);
+            await _context.SaveChangesAsync();
+
+            // Redirigir a una vista de confirmación o al historial de pedidos
+            return RedirectToAction("OrdenConfirmada", new { id = nuevaOrden.id_orden });
+        }
+
+        [HttpGet]
+        public IActionResult OrdenConfirmada(int id)
+        {
+            // Obtener la orden creada usando el ID
+            var orden = _context.ordenes.FirstOrDefault(o => o.id_orden == id);
+
+            if (orden == null)
+            {
+                return NotFound("Orden no encontrada.");
+            }
+
+            // Pasar los datos de la orden a la vista
+            return View(orden);
         }
     }
 }
