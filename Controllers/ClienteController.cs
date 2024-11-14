@@ -7,16 +7,22 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Hosting;
+using CapiBeadsSV.Serv;
 
 namespace CapiBeadsSV.Controllers
 {
     public class ClienteController : Controller
     {
         private readonly capibeadsBDContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IUserService _userService;
 
-        public ClienteController(capibeadsBDContext context)
+        public ClienteController(capibeadsBDContext context, IWebHostEnvironment webHostEnvironment, IUserService userService)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
+            _userService = userService;
         }
 
         public async Task<IActionResult> IndexCliente()
@@ -313,5 +319,120 @@ namespace CapiBeadsSV.Controllers
             // Pasar los datos de la orden a la vista
             return View(orden);
         }
+
+
+        //AA: Aqui involutra TODO lo que tiene que ver con el perfil
+        public IActionResult Perfil()
+        {
+            var datosUsuario = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+            if (datosUsuario != null)
+            {
+                ViewBag.NombreUsuario = datosUsuario.nombre;
+                ViewBag.CorreoUsuario = datosUsuario.correo;
+                ViewBag.FotoUsuario = datosUsuario.foto != null
+                    ? $"data:image/png;base64,{Convert.ToBase64String(datosUsuario.foto)}"
+                    : null;
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CambiarFotoPerfil(IFormFile photoUpload)
+        {
+            var datosUsuario = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+
+            if (datosUsuario == null || photoUpload == null || photoUpload.Length == 0)
+            {
+                TempData["Message"] = "Error al cargar la imagen.";
+                return RedirectToAction("Perfil");
+            }
+
+            try
+            {
+                // Consultar el usuario de la base de datos para obtener todos sus campos
+                var usuario = await _context.usuarios
+                    .FirstOrDefaultAsync(u => u.id_usuario == datosUsuario.id_usuario);
+
+                if (usuario == null)
+                {
+                    TempData["Message"] = "Usuario no encontrado.";
+                    return RedirectToAction("Perfil");
+                }
+
+                // Guardar la foto en el servidor
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(photoUpload.FileName);
+                string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "ProfileImg");
+
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+
+                string filePath = Path.Combine(uploadPath, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photoUpload.CopyToAsync(stream);
+                }
+
+                // Actualizar la foto en el objeto usuario
+                usuario.foto = System.IO.File.ReadAllBytes(filePath);
+                _context.usuarios.Update(usuario);
+                await _context.SaveChangesAsync();
+
+                // Actualizar sesión con los datos completos
+                HttpContext.Session.SetString("user", JsonSerializer.Serialize(usuario));
+
+                TempData["Message"] = "Foto actualizada correctamente.";
+            }
+            catch (Exception)
+            {
+                TempData["Message"] = "Hubo un error al guardar la imagen.";
+            }
+
+            return RedirectToAction("Perfil");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CambiarContrasena(string currentPassword, string newPassword, string confirmNewPassword)
+        {
+            // Obtenemos los datos del usuario desde la sesión
+            var datosUsuario = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+            if (datosUsuario == null)
+            {
+                TempData["ErrorMessage"] = "Usuario no encontrado.";
+                return RedirectToAction("Perfil");
+            }
+
+            // Verificar si la contraseña actual coincide
+            var usuario = await _context.usuarios
+                                    .FirstOrDefaultAsync(u => u.id_usuario == datosUsuario.id_usuario && u.contrasenya == currentPassword);
+
+            if (usuario == null)
+            {
+                TempData["ErrorMessage"] = "La contraseña actual es incorrecta.";
+                return RedirectToAction("Perfil");
+            }
+
+            // Validar que la nueva contraseña y la confirmación coincidan
+            if (newPassword != confirmNewPassword)
+            {
+                TempData["ErrorMessage"] = "Las contraseñas nuevas no coinciden.";
+                return RedirectToAction("Perfil");
+            }
+
+            // Actualizar la contraseña en la base de datos
+            usuario.contrasenya = newPassword;
+            _context.usuarios.Update(usuario);
+            await _context.SaveChangesAsync();
+
+            // Actualizar la sesión con los nuevos datos del usuario
+            HttpContext.Session.SetString("user", JsonSerializer.Serialize(usuario));
+
+            TempData["SuccessMessage"] = "Contraseña actualizada correctamente.";
+            return RedirectToAction("Perfil");
+        }
     }
+
+
 }
