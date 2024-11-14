@@ -3,18 +3,20 @@
 @{
     ViewData["Title"] = "Editar Tienda";
     Layout = "_LayoutVendedor";
+    var usuarioNombre = ViewBag.UsuarioNombre as string;
+    var usuarioId = ViewBag.UsuarioId as int?;
 }
+
 <div class="container mt-5">
     <div class="card mb-3">
         <div class="card-header" style="background-color: #935E34; color: white;">
             Editar Tienda
         </div>
-
         <div class="card-body" style="background-color: #d3d3d3; color: black;">
             <div class="contact-info">
-
                 <form asp-action="EditTienda" method="post" enctype="multipart/form-data">
                     <input type="hidden" asp-for="id_tienda" />
+                    <input type="hidden" name="id_usuario" value="@usuarioId" /> <!-- Campo oculto para id_usuario -->
 
                     <div class="form-group">
                         <label asp-for="nombreTienda"></label>
@@ -27,8 +29,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Usuario</label>
-                        <select asp-for="id_usuario" asp-items="ViewBag.Usuarios" class="form-control"></select>
+                        <label>Propietario</label>
+                        <input type="text" class="form-control" value="@usuarioNombre" readonly />
                     </div>
 
                     <div class="form-group">
@@ -39,9 +41,7 @@
                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     <a asp-action="IndexVendedor" class="btn btn-secondary">Cancelar</a>
                 </form>
-
-
             </div>
         </div>
-
     </div>
+</div>

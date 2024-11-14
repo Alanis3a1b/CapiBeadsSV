@@ -1,6 +1,9 @@
-﻿@{
+﻿@model CapiBeadsSV.Models.tiendas
+@{
     ViewData["Title"] = "Crear Tienda";
     Layout = "_LayoutVendedor";
+    // Asignar valores del ViewBag a variables locales para evitar problemas con expresiones dinámicas
+    var usuarioNombre = ViewBag.UsuarioNombre as string;
 }
 <head>
     <link rel="stylesheet" href="/css/Admin.css" />
@@ -27,14 +30,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="id_usuario">Propietario</label>
-                    <select class="form-control" id="id_usuario" name="id_usuario">
-                        @foreach (var usuario in ViewData["Usuarios"] as SelectList)
-                        {
-                            <option value="@usuario.Value">@usuario.Text</option>
-                        }
-                    </select>
+                    <label>Propietario</label>
+                    <input type="text" class="form-control" value="@usuarioNombre" readonly />
                 </div>
+
 
 
                 <div class="form-group">

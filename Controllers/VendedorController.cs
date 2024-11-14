@@ -194,16 +194,16 @@ namespace CapiBeadsSV.Controllers
         {
             if (id == null) return NotFound();
 
-            var tienda = await (from t in _capibeadsDBContext.tiendas                                  
+            var tienda = await (from t in _capibeadsDBContext.tiendas
                                 where t.id_tienda == id
-                                  select new
-                                  {
-                                      t.id_tienda,
-                                      t.id_usuario,
-                                      t.nombreTienda,
-                                      t.imagenFondo,
-                                      t.descripcionTienda
-                                  }).FirstOrDefaultAsync();
+                                select new
+                                {
+                                    t.id_tienda,
+                                    t.id_usuario,
+                                    t.nombreTienda,
+                                    t.imagenFondo,
+                                    t.descripcionTienda
+                                }).FirstOrDefaultAsync();
 
             if (tienda == null) return NotFound();
 
@@ -229,13 +229,13 @@ namespace CapiBeadsSV.Controllers
         //Crear tienda para los vendedores
         public IActionResult CreateTienda()
         {
-            // Filtramos los usuarios con id_rol = 2
-            var listaDeUsuarios = _capibeadsDBContext.usuarios
-                                                    .Where(u => u.id_rol == 2)
-                                                    .ToList();
+            // Obtener el usuario en sesión
+            var usuarioSesion = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+            int usuarioId = usuarioSesion.id_usuario;
 
-            // Asignamos la lista filtrada al ViewData para ser usada en la vista
-            ViewData["Usuarios"] = new SelectList(listaDeUsuarios, "id_usuario", "nombre");
+            // Pasa el usuarioId directamente a la vista
+            ViewBag.UsuarioId = usuarioId;
+            ViewBag.UsuarioNombre = usuarioSesion.nombre; // Para mostrar el nombre si es necesario
 
             return View();
         }
@@ -243,6 +243,10 @@ namespace CapiBeadsSV.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTienda(tiendas nuevaTienda, IFormFile imagenFondo)
         {
+            // Obtener el usuario en sesión
+            var usuarioSesion = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+            nuevaTienda.id_usuario = usuarioSesion.id_usuario;
+
             if (imagenFondo != null && imagenFondo.Length > 0)
             {
                 using (var ms = new System.IO.MemoryStream())
@@ -255,11 +259,6 @@ namespace CapiBeadsSV.Controllers
             _capibeadsDBContext.tiendas.Add(nuevaTienda);
             await _capibeadsDBContext.SaveChangesAsync();
             return RedirectToAction("SuccessTienda");
-        }
-
-        public IActionResult SuccessTienda()
-        {
-            return View();
         }
 
         public async Task<IActionResult> VerTienda(int? id)
@@ -314,7 +313,7 @@ namespace CapiBeadsSV.Controllers
 
             var listaTiendasporUsuario = (from m in _capibeadsDBContext.tiendas
                                           where m.id_usuario == datosUsuario.id_usuario
-                                select m).ToList();
+                                          select m).ToList();
 
             ViewData["Tiendas"] = new SelectList(listaTiendasporUsuario, "id_tienda", "nombreTienda");
 
@@ -398,7 +397,6 @@ namespace CapiBeadsSV.Controllers
             return View(ordenesUsuario);
         }
 
-        //AA: Funciones para editar usuarios
         public async Task<IActionResult> EditTienda(int? id)
         {
             if (id == null) return NotFound();
@@ -406,15 +404,10 @@ namespace CapiBeadsSV.Controllers
             var tienda = await _capibeadsDBContext.tiendas.FindAsync(id);
             if (tienda == null) return NotFound();
 
-            // Obtener la lista de usuarios con el rol deseado
-            var usuarios = await _capibeadsDBContext.usuarios
-                .Where(u => u.id_rol == 2)
-                .Select(u => new { u.id_usuario, u.nombre })
-                .ToListAsync();
-
-            // Crear el SelectList y pasar la tienda actual como valor seleccionado
-            ViewBag.Usuarios = new SelectList(usuarios, "id_usuario", "nombre", tienda.id_usuario);
-            ViewBag.Tienda = tienda;
+            // Obtener el usuario en sesión y pasarlo a la vista
+            var usuarioSesion = JsonSerializer.Deserialize<usuarios>(HttpContext.Session.GetString("user"));
+            ViewBag.UsuarioId = usuarioSesion.id_usuario;
+            ViewBag.UsuarioNombre = usuarioSesion.nombre;
 
             return View(tienda);
         }
@@ -430,7 +423,7 @@ namespace CapiBeadsSV.Controllers
             // Actualizar los datos de la tienda
             tienda.nombreTienda = tiendaModificada.nombreTienda;
             tienda.descripcionTienda = tiendaModificada.descripcionTienda;
-            tienda.id_usuario = tiendaModificada.id_usuario;
+            tienda.id_usuario = tiendaModificada.id_usuario; // Actualizar solo si es necesario
 
             // Verificar y actualizar la imagen de fondo si se proporciona una nueva
             if (imagenFondo != null && imagenFondo.Length > 0)
@@ -565,6 +558,10 @@ namespace CapiBeadsSV.Controllers
 
         // Success View for Deletion
         public IActionResult SuccessEliminarProducto()
+        {
+            return View();
+        }
+        public IActionResult SuccessTienda()
         {
             return View();
         }
