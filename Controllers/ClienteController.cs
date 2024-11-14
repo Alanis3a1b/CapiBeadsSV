@@ -145,6 +145,7 @@ namespace CapiBeadsSV.Controllers
 
             return Json(new { success = true, newQuantity = carritoItem?.cantidad, newSubtotal = subtotal, newTotal = totalCarrito });
         }
+
         [HttpPost]
         public async Task<IActionResult> DisminuirCantidad(int idCarritoItem)
         {
@@ -153,30 +154,40 @@ namespace CapiBeadsSV.Controllers
 
             if (carritoItem != null)
             {
-                if (carritoItem.cantidad > 1)
-                {
-                    carritoItem.cantidad--;
-                }
-                else
-                {
-                    _context.carritoItems.Remove(carritoItem);
-                    removeItem = true; // Indicar que el producto será eliminado
-                }
+                var carrito = await _context.carritos.FindAsync(carritoItem.id_carrito);
 
-                await _context.SaveChangesAsync();
+                // Verificar si el carrito y el item existen
+                if (carrito != null)
+                {
+                    // Calcular el monto que se debe restar del total
+                    decimal montoARestar = carritoItem.precio_unitario;
+
+                    if (carritoItem.cantidad > 1)
+                    {
+                        carritoItem.cantidad--;
+                    }
+                    else
+                    {
+                        _context.carritoItems.Remove(carritoItem);
+                        removeItem = true; // Indicar que el producto será eliminado
+                    }
+
+                    // Actualizar el total del carrito restando el monto correspondiente
+                    carrito.total -= montoARestar;
+
+                    // Guardar cambios en la base de datos
+                    await _context.SaveChangesAsync();
+                }
             }
 
-            // Verificar si el carrito está vacío
-            bool carritoVacio = carritoItem != null && !_context.carritoItems.Any(ci => ci.id_carrito == carritoItem.id_carrito);
-
-            // Calcular el total del carrito
+            // Calcular el nuevo total del carrito después de la operación
             var totalCarrito = carritoItem != null
                 ? await _context.carritoItems
                     .Where(ci => ci.id_carrito == carritoItem.id_carrito)
                     .SumAsync(ci => ci.cantidad * ci.precio_unitario)
                 : 0;
 
-            // Obtener los nuevos subtotales y cantidades
+            // Obtener el nuevo subtotal para el carrito item
             var nuevoSubtotal = carritoItem != null ? carritoItem.cantidad * carritoItem.precio_unitario : 0;
 
             return Json(new
@@ -185,11 +196,10 @@ namespace CapiBeadsSV.Controllers
                 newQuantity = carritoItem != null ? carritoItem.cantidad : 0,
                 newSubtotal = nuevoSubtotal,
                 removeItem, // Indica si el producto fue eliminado
-                carritoVacio,
+                carritoVacio = totalCarrito == 0,
                 newTotal = totalCarrito
             });
         }
-        // Método que se ejecuta antes de cada acción
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             // Cargar las categorías y almacenarlas en ViewBag
@@ -249,6 +259,40 @@ namespace CapiBeadsSV.Controllers
             };
 
             _context.ordenes.Add(nuevaOrden);
+            await _context.SaveChangesAsync();
+
+            // Obtener los items del carrito del usuario
+            var carritoItems = await _context.carritoItems
+                .Where(ci => ci.id_carrito == id_carrito)
+                .ToListAsync();
+
+            // Transferir cada item del carrito a la tabla ordenItems
+            foreach (var item in carritoItems)
+            {
+                var ordenItem = new ordenItems
+                {
+                    id_orden = nuevaOrden.id_orden,
+                    id_producto = item.id_producto,
+                    cantidad = item.cantidad,
+                    precio_unitario = item.precio_unitario
+                };
+                _context.ordenItems.Add(ordenItem);
+            }
+
+            // Guardar los cambios para insertar los items en ordenItems
+            await _context.SaveChangesAsync();
+
+            // Vaciar el carrito eliminando los items del carrito del usuario
+            _context.carritoItems.RemoveRange(carritoItems);
+
+            // Restablecer el total del carrito a cero
+            var carrito = await _context.carritos.FindAsync(id_carrito);
+            if (carrito != null)
+            {
+                carrito.total = 0;
+            }
+
+            // Guardar cambios finales
             await _context.SaveChangesAsync();
 
             // Redirigir a una vista de confirmación o al historial de pedidos

@@ -65,32 +65,50 @@
         </div>
     </main>
 </div>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
         $(".increase-btn, .decrease-btn").click(function (e) {
             e.preventDefault();
             var form = $(this).closest("form");
+            var button = $(this); // El botón clicado (aumentar/disminuir)
             var row = form.closest("tr");
 
-            $.post(form.attr("action"), form.serialize(), function (data) {
-                if (data.success) {
-                    if (data.removeItem) {
-                        row.remove(); // Remueve el producto de la vista si la cantidad es cero
-                    } else {
-                        // Actualiza la cantidad en la interfaz
-                        row.find(".quantity-field").text(data.newQuantity);
-                        // Actualiza el subtotal
-                        row.find(".subtotal").text(data.newSubtotal.toFixed(2));
-                    }
+            // Deshabilitar el botón temporalmente para evitar múltiples clics
+            button.prop("disabled", true);
 
-                    // Actualiza el total del carrito
-                    if (data.carritoVacio) {
-                        $(".carrito-items").html("<p>Tu carrito está vacío.</p>");
+            $.post({
+                url: form.attr("action"),
+                data: form.serialize(),
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        if (data.removeItem) {
+                            // Remueve el producto de la vista si la cantidad es cero
+                            row.remove();
+                        } else {
+                            // Actualiza la cantidad en la interfaz
+                            row.find(".quantity-field").text(data.newQuantity);
+                            // Actualiza el subtotal
+                            row.find(".subtotal").text(data.newSubtotal.toFixed(2));
+                        }
+
+                        // Actualiza el total del carrito
+                        if (data.carritoVacio) {
+                            $(".carrito-items").html("<p>Tu carrito está vacío.</p>");
+                        } else {
+                            $("#totalCarrito").text(data.newTotal.toFixed(2));
+                        }
                     } else {
-                        $("#totalCarrito").text(data.newTotal.toFixed(2));
+                        alert("Hubo un problema al actualizar el carrito. Por favor, intenta de nuevo.");
                     }
+                },
+                error: function () {
+                    alert("Error de conexión. Revisa tu conexión a internet e intenta nuevamente.");
+                },
+                complete: function () {
+                    // Habilitar el botón nuevamente al finalizar la solicitud
+                    button.prop("disabled", false);
                 }
             });
         });
