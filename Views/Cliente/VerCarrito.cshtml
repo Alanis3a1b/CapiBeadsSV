@@ -50,9 +50,13 @@
 
                 <p>Total: $<span id="totalCarrito">@ViewBag.TotalCarrito.ToString("F2")</span></p>
 
-                <form asp-action="ProcesarCompra" method="post">
+                <a asp-action="ProcesarCompra" asp-route-id_carrito="@ViewBag.IdCarrito" asp-route-totalCarrito="@ViewBag.TotalCarrito" class="btn btn-warning btn-sm">Procesar Compra</a>
+
+                @* <a asp-action="ProcesarCompra" asp-route-id="@ViewBag.TotalCarrito" class="btn btn-warning btn-sm">Procesar Compra</a> *@
+
+@*                 <form asp-action="ProcesarCompra" method="post">
                     <button type="submit" class="procesar-compra-btn">Procesar Compra</button>
-                </form>
+                </form> *@
             }
             else
             {

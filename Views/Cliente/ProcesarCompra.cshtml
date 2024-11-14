@@ -1,0 +1,25 @@
+﻿@{
+    Layout = "_LayoutCliente";
+    var idCarrito = ViewBag.IdCarrito;
+    var totalCarrito = ViewBag.TotalCarrito;
+}
+
+<div class="compra-container">
+    <h2>Confirmar Compra</h2>
+    <div class="compra-detalles">
+        <p><strong>ID Carrito:</strong> @idCarrito</p>
+        <p><strong>Total:</strong> $@totalCarrito</p>
+
+        <form asp-action="ProcesarCompraConfirmacion" method="post">
+            <input type="hidden" name="id_carrito" value="@idCarrito" />
+            <input type="hidden" name="totalCarrito" value="@totalCarrito" />
+
+            <div class="form-group">
+                <label for="direccion">Dirección de Envío:</label>
+                <input type="text" name="direccion" id="direccion" class="form-control" required />
+            </div>
+
+            <button type="submit" class="btn btn-success">Confirmar y Crear Orden</button>
+        </form>
+    </div>
+</div>
