@@ -607,12 +607,10 @@ namespace CapiBeadsSV.Controllers
                                      o.fechaOrden,
                                      EstadoPedido = ep.nombreEstadoPedido,
                                      Cliente = u.nombre,
-                                     Productos = (from oi in _capibeadsDBContext.carritoItems
+                                     Productos = (from oi in _capibeadsDBContext.ordenItems
                                                   join p in _capibeadsDBContext.productos on oi.id_producto equals p.id_producto
                                                   join t in _capibeadsDBContext.tiendas on p.id_tienda equals t.id_tienda
-                                                  where oi.id_carrito == (from c in _capibeadsDBContext.carritos
-                                                                          where c.id_usuario == o.id_usuario
-                                                                          select c.id_carrito).FirstOrDefault()
+                                                  where oi.id_orden == o.id_orden
                                                   select new
                                                   {
                                                       Producto = p.nombreProducto,
