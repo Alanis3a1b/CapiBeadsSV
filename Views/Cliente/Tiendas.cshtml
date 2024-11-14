@@ -1,0 +1,125 @@
+﻿@{
+    Layout = "_LayoutCliente";
+    var tiendas = ViewBag.Tiendas;
+}
+
+<h2>Tiendas</h2>
+<div class="tiendas-container">
+    @foreach (var tienda in tiendas)
+    {
+        <div class="tienda-card glass">
+            <h2>@tienda.nombreTienda</h2>
+            <p>@tienda.descripcionTienda</p>
+
+            <img src="data:image/png;base64,@tienda.FotoTiendaBase64" alt="Imagen de la tienda" class="imagen-tienda" />
+
+            <div class="productos-container">
+                @foreach (var producto in tienda.Productos)
+                {
+                    <div class="producto-card">
+                        <img src="data:image/png;base64,@producto.FotoProductoBase64" alt="Imagen del producto" class="imagen-producto" />
+                        <h4>@producto.Nombre</h4>
+                        <p>Precio: $@producto.Precio</p>
+
+                        <form asp-action="AgregarAlCarrito" method="post">
+                            <input type="hidden" name="idProducto" value="@producto.Id" />
+                            <button type="submit" class="btn btn-primary add-to-cart-btn">Añadir al Carrito</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .tiendas-container {
+        gap: 20px;
+        padding: 20px;
+        margin-left: 100px;
+    }
+
+    .tienda-card {
+        margin:30px;
+        background-color: #1c1c1c;
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .imagen-tienda {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .productos-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .producto-card {
+        flex: 1 1 150px;
+        background-color: #2a2a2a;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+        color: #ffffff;
+    }
+
+    .imagen-producto {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        background-color: #4caf50;
+        color: white;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .btn:hover {
+            background-color: #43a047;
+        }
+    /* Estilo de efecto glass */
+    .glass {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function () {
+        // Manejar el botón de agregar al carrito
+        $(".add-to-cart-btn").click(function (e) {
+            e.preventDefault();
+            var form = $(this).closest("form");
+            $.post(form.attr("action"), form.serialize(), function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Agregado',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
+</script>

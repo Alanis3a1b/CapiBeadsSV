@@ -31,7 +31,17 @@
                 <td>@tienda.nombreTienda</td>
                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@tienda.descripcionTienda</td>
                 <td>@tienda.UsuarioNombre</td>
-                <td>@tienda.imagenFondo</td>
+                <td>
+                    @if (tienda.imagenFondo != null)
+                    {
+                        var base64Image = Convert.ToBase64String(tienda.imagenFondo);
+                        <img src="data:image/jpeg;base64,@base64Image" alt="Imagen de Tienda" style="width: 100px; height: auto;" />
+                    }
+                    else
+                    {
+                        <span>Sin imagen</span>
+                    }
+                </td>
                 <td>
                     <a class="btn btn-warning" href="@Url.Action("EditTienda", new { id = tienda.id_tienda })">Editar</a> |
                     <a class="btn btn-danger" href="@Url.Action("DeleteTienda", new { id = tienda.id_tienda })">Eliminar</a>

@@ -7,7 +7,7 @@
 <div class="Fondo">
     <main class="main-content">
         <!-- Sección Destacado -->
-        <section class="featured glass">
+        <section class="featured">
             <h2>Productos Destacados</h2>
             <div class="product-grid">
                 @foreach (var producto in productos.Take(6))
@@ -22,7 +22,7 @@
                         <!-- Formulario para agregar al carrito -->
                         <form asp-action="AgregarAlCarrito" method="post">
                             <input type="hidden" name="idProducto" value="@producto.Id" />
-                            <button type="submit" class="add-to-cart-btn">Añadir al Carrito</button>
+                            <button type="submit" class="btn btn-primary add-to-cart-btn">Añadir al Carrito</button>
                         </form>
                     </div>
                 }
@@ -31,7 +31,7 @@
         </section>
 
         <!-- Sección Redes (Tiendas) -->
-        <section class="social glass">
+        <section class="social">
             <h2>Tiendas</h2>
             <div class="social-grid">
                 @foreach (var tienda in tiendas)
@@ -48,7 +48,7 @@
         </section>
 
         <!-- Sección Nuevos Productos (Aleatorios) -->
-        <section class="new-products glass">
+        <section class="new-products">
             <h2>Nuevos Productos</h2>
             <div class="product-grid">
                 @foreach (var producto in productosAleatorios)
@@ -63,7 +63,7 @@
                         <!-- Formulario para agregar al carrito -->
                         <form asp-action="AgregarAlCarrito" method="post">
                             <input type="hidden" name="idProducto" value="@producto.Id" />
-                            <button type="submit" class="add-to-cart-btn">Añadir al Carrito</button>
+                            <button type="submit" class="btn btn-primary add-to-cart-btn">Añadir al Carrito</button>
                         </form>
                     </div>
                 }
@@ -94,3 +94,17 @@
         });
     });
 </script>
+<style>
+    .btn {
+        background-color: #4caf50;
+        color: white;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .btn:hover {
+            background-color: #43a047;
+        }
+</style>

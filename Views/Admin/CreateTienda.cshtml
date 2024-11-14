@@ -2,6 +2,7 @@
     ViewData["Title"] = "Crear Tienda";
     Layout = "_LayoutAdmin";
 }
+
 <head>
     <link rel="stylesheet" href="/css/Admin.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -36,16 +37,14 @@
                     </select>
                 </div>
 
-
                 <div class="form-group">
-                    <label for="PhotoUpload">Imagen de Fondo</label>
-                    <input type="file" class="form-control" id="PhotoUpload" name="PhotoUpload" />
+                    <label for="imagenFondo">Imagen de Fondo</label>
+                    <input type="file" class="form-control" id="imagenFondo" name="imagenFondo" />
                 </div>
 
                 <button type="submit" class="btn btn-success">Crear Tienda</button>
                 <a href="@Url.Action("Tiendas")" class="btn btn-secondary mt-2">Volver a la Lista de Tiendas</a>
             </form>
-            
         </div>
     </div>
 </div>

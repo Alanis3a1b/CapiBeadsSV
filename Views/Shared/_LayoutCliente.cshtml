@@ -68,6 +68,7 @@
             {
                 <p>No hay categorías disponibles.</p>
             }
+        <a asp-action="Tiendas" class="button-Tiendas">Ver Tiendas</a>
         </aside>
 
         <!-- Contenido principal -->
@@ -142,5 +143,23 @@
         .category-item a.active {
             background-color: #16a085;
             color: #ffffff;
+        }
+    /* Botón de Ver Tiendas */
+    .button-Tiendas {
+        display: block;
+        padding: 10px;
+        background-color: #935E34;
+        color: #ecf0f1;
+        text-align: center;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .button-Tiendas:hover {
+            background-color: #1abc9c;
+            color: #ffffff;
+            font-weight: bold;
         }
 </style>

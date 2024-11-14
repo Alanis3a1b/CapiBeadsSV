@@ -449,7 +449,28 @@ namespace CapiBeadsSV.Controllers
             TempData["SuccessMessage"] = "Contraseña actualizada correctamente.";
             return RedirectToAction("Perfil");
         }
+        public async Task<IActionResult> Tiendas()
+        {
+            // Obtiene todas las tiendas junto con sus productos usando join
+            var tiendasConProductos = await (from t in _context.tiendas
+                                             join p in _context.productos on t.id_tienda equals p.id_tienda into productosTienda
+                                             select new
+                                             {
+                                                 t.id_tienda,
+                                                 t.nombreTienda,
+                                                 t.descripcionTienda,
+                                                 FotoTiendaBase64 = t.imagenFondo != null ? Convert.ToBase64String(t.imagenFondo) : null,
+                                                 Productos = productosTienda.Select(p => new
+                                                 {
+                                                     Id = p.id_producto,
+                                                     Nombre = p.nombreProducto,
+                                                     Precio = p.precio,
+                                                     FotoProductoBase64 = p.imagenProducto != null ? Convert.ToBase64String(p.imagenProducto) : null
+                                                 }).ToList()
+                                             }).ToListAsync();
+
+            ViewBag.Tiendas = tiendasConProductos;
+            return View();
+        }
     }
-
-
 }

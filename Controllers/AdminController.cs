@@ -312,8 +312,6 @@ namespace CapiBeadsSV.Controllers
 
             return View();
         }
-
-
         // POST: Admin/CreateTienda
         [HttpPost]
         public async Task<IActionResult> CreateTienda(tiendas nuevaTienda, IFormFile imagenFondo)
@@ -345,16 +343,16 @@ namespace CapiBeadsSV.Controllers
             var tienda = await _capibeadsDBContext.tiendas.FindAsync(id);
             if (tienda == null) return NotFound();
 
+            // Convertir la imagen de fondo a Base64 para la vista
+            ViewBag.FotoTiendaBase64 = tienda.imagenFondo != null ? Convert.ToBase64String(tienda.imagenFondo) : null;
+
             // Obtener la lista de usuarios con el rol deseado
             var usuarios = await _capibeadsDBContext.usuarios
                 .Where(u => u.id_rol == 2)
                 .Select(u => new { u.id_usuario, u.nombre })
                 .ToListAsync();
 
-            // Crear el SelectList y pasar la tienda actual como valor seleccionado
             ViewBag.Usuarios = new SelectList(usuarios, "id_usuario", "nombre", tienda.id_usuario);
-            ViewBag.Tienda = tienda;
-
             return View(tienda);
         }
 
@@ -367,12 +365,12 @@ namespace CapiBeadsSV.Controllers
             var tienda = await _capibeadsDBContext.tiendas.FindAsync(id);
             if (tienda == null) return NotFound();
 
-            // Actualizar los datos de la tienda
+            // Actualizar datos básicos de la tienda
             tienda.nombreTienda = tiendaModificada.nombreTienda;
             tienda.descripcionTienda = tiendaModificada.descripcionTienda;
             tienda.id_usuario = tiendaModificada.id_usuario;
 
-            // Verificar y actualizar la imagen de fondo si se proporciona una nueva
+            // Verificar y actualizar la imagen solo si se proporciona una nueva
             if (imagenFondo != null && imagenFondo.Length > 0)
             {
                 using (var ms = new MemoryStream())
